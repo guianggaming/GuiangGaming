@@ -182,7 +182,7 @@
             </div>
         </section>
 
-        <!-- PRO SCRIMS / TOURNAMENTS SCHEDULE & REQUEST (Supports unlimited slots + Live Stream Scrim Availability) -->
+        <!-- PRO SCRIMS / TOURNAMENTS SCHEDULE & REQUEST -->
         <section id="scrims-section" class="space-y-4 scroll-mt-20">
             <div class="flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center space-x-2.5">
@@ -274,7 +274,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="glass-card p-4 rounded-2xl space-y-2.5">
                     <h3 class="text-[11px] font-black uppercase tracking-wider text-slate-400 px-1">Team Groups</h3>
-                    <div id="team-groups-list" class="space-y-2">
+                    <div id="team-groups-list" class="space-y-2 max-h-[420px] overflow-y-auto pr-1">
                         <p class="text-xs text-slate-400 italic px-1">Loading team groups...</p>
                     </div>
                 </div>
@@ -365,7 +365,7 @@
                     <div class="w-1 h-4 bg-red-600 rounded"></div>
                     <h2 class="display-font font-black text-xs sm:text-sm text-white uppercase">Contacts</h2>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <a href="https://discord.com/invite/DWHRWaYsGv" target="_blank" class="glass-card hover:border-indigo-500/40 p-4 rounded-xl flex items-center space-x-3 transition">
                         <div class="w-10 h-10 rounded-lg bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-400 text-lg"><i class="fa-brands fa-discord"></i></div>
                         <div>
@@ -380,13 +380,21 @@
                             <p class="text-xs font-extrabold text-white">fb.com/GuiangGaming</p>
                         </div>
                     </a>
-                    <a id="contact-email-link" href="mailto:brian.guiang@gmail.com,kushimetakeku2004@gmail.com" class="glass-card hover:border-red-500/40 p-4 rounded-xl flex items-center space-x-3 transition">
-                        <div class="w-10 h-10 rounded-lg bg-red-500/15 border border-red-500/30 flex items-center justify-center text-red-400 text-lg"><i class="fa-solid fa-envelope"></i></div>
-                        <div class="min-w-0">
-                            <p class="text-[10px] font-bold uppercase text-slate-400">Email</p>
-                            <p id="contact-email-text" class="text-xs font-extrabold text-white truncate">brian.guiang@gmail.com, kushimetakeku2004@gmail.com</p>
+                    <div class="glass-card hover:border-red-500/40 p-4 rounded-xl space-y-2">
+                        <a id="contact-owner-email-link" href="mailto:brian.guiang@gmail.com" class="flex items-center space-x-3 group">
+                            <div class="w-10 h-10 rounded-lg bg-red-500/15 border border-red-500/30 flex items-center justify-center text-red-400 text-lg shrink-0"><i class="fa-solid fa-envelope"></i></div>
+                            <div class="min-w-0">
+                                <p class="text-[10px] font-bold uppercase text-red-400">Guiang Gaming (Owner Email)</p>
+                                <p id="contact-owner-email-text" class="text-xs font-extrabold text-white group-hover:text-red-300 truncate">brian.guiang@gmail.com</p>
+                            </div>
+                        </a>
+                        <div class="pt-2 border-t border-white/10">
+                            <p class="text-[10px] font-bold uppercase text-amber-300 mb-1">Admins & Mods Emails</p>
+                            <div id="contact-staff-emails" class="space-y-1">
+                                <a href="mailto:kushimetakeku2004@gmail.com" class="block text-[11px] text-slate-200 hover:text-amber-300 truncate">kushimetakeku2004@gmail.com</a>
+                            </div>
                         </div>
-                    </a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -402,16 +410,16 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- 1. Cover Photo, Background Photo, Logo, About & Contact Email -->
+                <!-- 1. Cover Photo, Background Photo, Logo, About & Emails -->
                 <div class="glass-card p-5 rounded-xl space-y-3">
-                    <h4 class="text-xs font-black uppercase text-red-400">1. Cover, Background, Logo, About & Email</h4>
+                    <h4 class="text-xs font-black uppercase text-red-400">1. Cover, Background, Logo, About & Contacts</h4>
 
                     <div>
                         <label class="text-[10px] font-bold uppercase text-slate-400">Cover Photo</label>
                         <div class="flex items-center gap-2 mt-1">
                             <img id="preview-site-cover" src="" onerror="handleImgError(this, 'cover')" class="w-12 h-9 rounded object-cover border border-white/10 shrink-0">
                             <input type="text" id="adm-cover-url" placeholder="Cover Photo URL or PNG" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
-                            <button type="button" onclick="triggerFilePicker('site-cover')" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
+                            <button type="button" onclick="triggerFilePicker('site-cover', 1024, false)" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
                                 <i class="fa-solid fa-folder-open mr-1"></i>Add Photo
                             </button>
                             <input type="file" id="file-site-cover" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-cover-url', 'preview-site-cover', 1024)">
@@ -423,7 +431,7 @@
                         <div class="flex items-center gap-2 mt-1">
                             <img id="preview-site-bg" src="" onerror="handleImgError(this, 'cover')" class="w-12 h-9 rounded object-cover border border-white/10 shrink-0">
                             <input type="text" id="adm-bg-url" placeholder="Background Photo URL or PNG (optional)" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
-                            <button type="button" onclick="triggerFilePicker('site-bg')" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
+                            <button type="button" onclick="triggerFilePicker('site-bg', 1024, false)" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
                                 <i class="fa-solid fa-folder-open mr-1"></i>Add Photo
                             </button>
                             <input type="file" id="file-site-bg" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-bg-url', 'preview-site-bg', 1024)">
@@ -435,17 +443,23 @@
                         <div class="flex items-center gap-2 mt-1">
                             <img id="preview-site-logo" src="" onerror="handleImgError(this, 'logo')" class="w-9 h-9 rounded object-cover border border-white/10 shrink-0">
                             <input type="text" id="adm-logo-url" placeholder="Logo URL or PNG" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
-                            <button type="button" onclick="triggerFilePicker('site-logo')" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
-                                <i class="fa-solid fa-folder-open mr-1"></i>Add Photo
+                            <button type="button" onclick="triggerFilePicker('site-logo', 320, true)" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
+                                <i class="fa-solid fa-crop-simple mr-1"></i>Crop Photo
                             </button>
                             <input type="file" id="file-site-logo" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-logo-url', 'preview-site-logo', 320)">
                         </div>
                     </div>
 
                     <div>
-                        <label class="text-[10px] font-bold uppercase text-slate-400">Scrim / Business Emails (comma separated)</label>
-                        <input type="text" id="adm-contact-email" placeholder="brian.guiang@gmail.com, kushimetakeku2004@gmail.com" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white mt-1">
+                        <label class="text-[10px] font-bold uppercase text-slate-400">Guiang Gaming Owner Email</label>
+                        <input type="text" id="adm-owner-email" placeholder="brian.guiang@gmail.com" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white mt-1">
                     </div>
+
+                    <div>
+                        <label class="text-[10px] font-bold uppercase text-slate-400">Admins & Mods Emails (comma or new line separated)</label>
+                        <textarea id="adm-staff-emails" rows="2" placeholder="kushimetakeku2004@gmail.com, mod2@example.com" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white mt-1"></textarea>
+                    </div>
+
                     <div>
                         <label class="text-[10px] font-bold uppercase text-slate-400">About Guiang Gaming</label>
                         <textarea id="adm-about-text" rows="2" placeholder="About Guiang Gaming..." class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white mt-1"></textarea>
@@ -461,31 +475,31 @@
                         <div class="bg-[#090a0f]/80 p-2 rounded-lg border border-white/10 flex items-center gap-2">
                             <img id="preview-role-baron" src="" onerror="handleImgError(this, 'role-baron')" class="w-8 h-8 rounded object-cover border border-white/10 shrink-0">
                             <input type="text" id="role-url-baron" placeholder="Baron PNG / URL" class="flex-1 bg-[#12141e] border border-white/10 rounded px-2 py-1.5 text-[11px] text-white min-w-0">
-                            <button type="button" onclick="triggerFilePicker('role-baron')" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded text-[10px] font-bold shrink-0">Baron Photo</button>
+                            <button type="button" onclick="triggerFilePicker('role-baron', 256, true)" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded text-[10px] font-bold shrink-0">Baron Photo</button>
                             <input type="file" id="file-role-baron" accept="image/*" class="hidden" onchange="handleImageFile(this, 'role-url-baron', 'preview-role-baron', 256)">
                         </div>
                         <div class="bg-[#090a0f]/80 p-2 rounded-lg border border-white/10 flex items-center gap-2">
                             <img id="preview-role-jungle" src="" onerror="handleImgError(this, 'role-jungle')" class="w-8 h-8 rounded object-cover border border-white/10 shrink-0">
                             <input type="text" id="role-url-jungle" placeholder="Jungle PNG / URL" class="flex-1 bg-[#12141e] border border-white/10 rounded px-2 py-1.5 text-[11px] text-white min-w-0">
-                            <button type="button" onclick="triggerFilePicker('role-jungle')" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded text-[10px] font-bold shrink-0">Jungle Photo</button>
+                            <button type="button" onclick="triggerFilePicker('role-jungle', 256, true)" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded text-[10px] font-bold shrink-0">Jungle Photo</button>
                             <input type="file" id="file-role-jungle" accept="image/*" class="hidden" onchange="handleImageFile(this, 'role-url-jungle', 'preview-role-jungle', 256)">
                         </div>
                         <div class="bg-[#090a0f]/80 p-2 rounded-lg border border-white/10 flex items-center gap-2">
                             <img id="preview-role-mid" src="" onerror="handleImgError(this, 'role-mid')" class="w-8 h-8 rounded object-cover border border-white/10 shrink-0">
                             <input type="text" id="role-url-mid" placeholder="Mid PNG / URL" class="flex-1 bg-[#12141e] border border-white/10 rounded px-2 py-1.5 text-[11px] text-white min-w-0">
-                            <button type="button" onclick="triggerFilePicker('role-mid')" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded text-[10px] font-bold shrink-0">Mid Photo</button>
+                            <button type="button" onclick="triggerFilePicker('role-mid', 256, true)" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded text-[10px] font-bold shrink-0">Mid Photo</button>
                             <input type="file" id="file-role-mid" accept="image/*" class="hidden" onchange="handleImageFile(this, 'role-url-mid', 'preview-role-mid', 256)">
                         </div>
                         <div class="bg-[#090a0f]/80 p-2 rounded-lg border border-white/10 flex items-center gap-2">
                             <img id="preview-role-adc" src="" onerror="handleImgError(this, 'role-adc')" class="w-8 h-8 rounded object-cover border border-white/10 shrink-0">
                             <input type="text" id="role-url-adc" placeholder="ADC PNG / URL" class="flex-1 bg-[#12141e] border border-white/10 rounded px-2 py-1.5 text-[11px] text-white min-w-0">
-                            <button type="button" onclick="triggerFilePicker('role-adc')" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded text-[10px] font-bold shrink-0">ADC Photo</button>
+                            <button type="button" onclick="triggerFilePicker('role-adc', 256, true)" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded text-[10px] font-bold shrink-0">ADC Photo</button>
                             <input type="file" id="file-role-adc" accept="image/*" class="hidden" onchange="handleImageFile(this, 'role-url-adc', 'preview-role-adc', 256)">
                         </div>
                         <div class="bg-[#090a0f]/80 p-2 rounded-lg border border-white/10 flex items-center gap-2">
                             <img id="preview-role-support" src="" onerror="handleImgError(this, 'role-support')" class="w-8 h-8 rounded object-cover border border-white/10 shrink-0">
                             <input type="text" id="role-url-support" placeholder="Support PNG / URL" class="flex-1 bg-[#12141e] border border-white/10 rounded px-2 py-1.5 text-[11px] text-white min-w-0">
-                            <button type="button" onclick="triggerFilePicker('role-support')" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded text-[10px] font-bold shrink-0">Support Photo</button>
+                            <button type="button" onclick="triggerFilePicker('role-support', 256, true)" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded text-[10px] font-bold shrink-0">Support Photo</button>
                             <input type="file" id="file-role-support" accept="image/*" class="hidden" onchange="handleImageFile(this, 'role-url-support', 'preview-role-support', 256)">
                         </div>
                     </div>
@@ -577,10 +591,10 @@
                     <div id="adm-scrim-list" class="space-y-1.5 max-h-28 overflow-y-auto"></div>
                 </div>
 
-                <!-- 6. Team Groups & Sub-Teams + Team Achievements -->
+                <!-- 6. Team Groups & Sub-Teams + Team Achievements + Photo Cropper -->
                 <div class="glass-card p-5 rounded-xl space-y-3">
                     <div class="flex justify-between items-center">
-                        <h4 class="text-xs font-black uppercase text-red-400">6A. Team Group</h4>
+                        <h4 class="text-xs font-black uppercase text-red-400">6A. Team Group (Add Many)</h4>
                         <button id="cancel-group-btn" type="button" onclick="resetForm('group')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
                     </div>
                     <input type="hidden" id="edit-group-id">
@@ -588,22 +602,22 @@
                     <input type="text" id="adm-group-achievements" placeholder="Group Achievements (e.g. Top Group 2025, Champion 2026)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
                     <div class="flex items-center gap-2">
                         <img id="preview-group-logo" src="" onerror="handleImgError(this, 'logo')" class="w-9 h-9 rounded-lg object-cover border border-white/10 shrink-0">
-                        <input type="text" id="adm-group-logo" placeholder="Group Logo URL or PNG" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
-                        <button type="button" onclick="triggerFilePicker('group-logo')" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
-                            <i class="fa-solid fa-folder-open mr-1"></i>Add Photo
+                        <input type="text" id="adm-group-logo" placeholder="Group Logo URL or Cropped PNG" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
+                        <button type="button" onclick="triggerFilePicker('group-logo', 256, true)" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
+                            <i class="fa-solid fa-crop-simple mr-1"></i>Crop Photo
                         </button>
                         <input type="file" id="file-group-logo" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-group-logo', 'preview-group-logo', 256)">
                     </div>
                     <button id="save-group-btn" type="button" onclick="saveTeamGroup()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Add / Save Team Group</button>
-                    <div id="adm-group-list" class="space-y-1.5 max-h-24 overflow-y-auto"></div>
+                    <div id="adm-group-list" class="space-y-1.5 max-h-28 overflow-y-auto"></div>
 
                     <div class="pt-2 border-t border-white/10 space-y-2">
                         <div class="flex justify-between items-center">
-                            <h4 class="text-xs font-black uppercase text-red-400">6B. Team Inside Group</h4>
+                            <h4 class="text-xs font-black uppercase text-red-400">6B. Team Inside Group (Add Many)</h4>
                             <button id="cancel-subteam-btn" type="button" onclick="resetForm('subteam')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
                         </div>
                         <input type="hidden" id="edit-subteam-id">
-                        <select id="adm-subteam-group" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white"></select>
+                        <select id="adm-subteam-group" onchange="renderAdminSubTeamList()" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white"></select>
                         <div class="grid grid-cols-2 gap-2">
                             <input type="text" id="adm-subteam-name" placeholder="Team (Tag)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
                             <input type="text" id="adm-subteam-game" placeholder="Game" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
@@ -611,25 +625,25 @@
                         <input type="text" id="adm-subteam-achievements" placeholder="Team Achievements (e.g. Top Team Wildrounds Smash Last Year, Champion This Year)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
                         <div class="flex items-center gap-2">
                             <img id="preview-subteam-logo" src="" onerror="handleImgError(this, 'logo')" class="w-9 h-9 rounded-lg object-cover border border-white/10 shrink-0">
-                            <input type="text" id="adm-subteam-logo" placeholder="Team Logo URL or PNG" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
-                            <button type="button" onclick="triggerFilePicker('subteam-logo')" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
-                                <i class="fa-solid fa-folder-open mr-1"></i>Add Photo
+                            <input type="text" id="adm-subteam-logo" placeholder="Team Logo URL or Cropped PNG" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
+                            <button type="button" onclick="triggerFilePicker('subteam-logo', 256, true)" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
+                                <i class="fa-solid fa-crop-simple mr-1"></i>Crop Photo
                             </button>
                             <input type="file" id="file-subteam-logo" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-subteam-logo', 'preview-subteam-logo', 256)">
                         </div>
                         <button id="save-subteam-btn" type="button" onclick="saveSubTeam()" class="w-full bg-slate-700 hover:bg-slate-600 py-2 rounded text-xs font-bold uppercase">Add / Save Team</button>
-                        <div id="adm-subteam-list" class="space-y-1.5 max-h-24 overflow-y-auto"></div>
+                        <div id="adm-subteam-list" class="space-y-1.5 max-h-32 overflow-y-auto"></div>
                     </div>
                 </div>
 
-                <!-- 7. Players Inside Teams -->
+                <!-- 7. Players Inside Teams + Photo Cropper + Auto Lane Order -->
                 <div class="glass-card p-5 rounded-xl space-y-3">
                     <div class="flex justify-between items-center">
-                        <h4 class="text-xs font-black uppercase text-red-400">7. Players Info Inside Teams</h4>
+                        <h4 class="text-xs font-black uppercase text-red-400">7. Players Info Inside Teams (Auto Baron→Supp Order)</h4>
                         <button id="cancel-player-btn" type="button" onclick="resetForm('player')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
                     </div>
                     <input type="hidden" id="edit-player-id">
-                    <select id="adm-player-team" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white"></select>
+                    <select id="adm-player-team" onchange="renderAdminPlayerList()" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white"></select>
                     <div class="grid grid-cols-2 gap-2">
                         <input type="text" id="adm-player-ign" placeholder="Player IGN" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
                         <select id="adm-player-role" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
@@ -642,9 +656,9 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <img id="preview-player-pfp" src="" onerror="handleImgError(this, 'player')" class="w-10 h-10 rounded-lg object-cover border border-white/10 shrink-0">
-                        <input type="text" id="adm-player-pfp" placeholder="Player Profile Photo URL or PNG" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
-                        <button type="button" onclick="triggerFilePicker('player-pfp')" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
-                            <i class="fa-solid fa-folder-open mr-1"></i>Add Photo
+                        <input type="text" id="adm-player-pfp" placeholder="Player Profile Photo URL or Cropped PNG" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
+                        <button type="button" onclick="triggerFilePicker('player-pfp', 256, true)" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
+                            <i class="fa-solid fa-crop-simple mr-1"></i>Crop Photo
                         </button>
                         <input type="file" id="file-player-pfp" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-player-pfp', 'preview-player-pfp', 256)">
                     </div>
@@ -653,7 +667,7 @@
                         <textarea id="adm-player-achievements" rows="2" placeholder="e.g. Top Team - Wildrounds Smash Last Year, Champion This Year" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white mt-1"></textarea>
                     </div>
                     <button id="save-player-btn" type="button" onclick="savePlayer()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Add / Save Player</button>
-                    <div id="adm-player-list" class="space-y-1.5 max-h-32 overflow-y-auto"></div>
+                    <div id="adm-player-list" class="space-y-1.5 max-h-36 overflow-y-auto"></div>
                 </div>
 
                 <!-- 8. Match History -->
@@ -673,13 +687,13 @@
                         <div class="bg-[#090a0f]/80 p-2 rounded-lg border border-white/10 flex items-center gap-1.5">
                             <img id="preview-m-team-logo" src="" onerror="handleImgError(this, 'logo')" class="w-7 h-7 rounded object-cover border border-white/10 shrink-0">
                             <input type="text" id="adm-m-team-logo" placeholder="Team A Logo URL/PNG" class="flex-1 bg-[#12141e] border border-white/10 rounded px-2 py-1 text-[11px] text-white min-w-0">
-                            <button type="button" onclick="triggerFilePicker('m-team-logo')" class="bg-slate-700 hover:bg-slate-600 text-white px-2 py-1 rounded text-[10px] font-bold shrink-0">Add Photo</button>
+                            <button type="button" onclick="triggerFilePicker('m-team-logo', 200, true)" class="bg-slate-700 hover:bg-slate-600 text-white px-2 py-1 rounded text-[10px] font-bold shrink-0">Crop Photo</button>
                             <input type="file" id="file-m-team-logo" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-m-team-logo', 'preview-m-team-logo', 200)">
                         </div>
                         <div class="bg-[#090a0f]/80 p-2 rounded-lg border border-white/10 flex items-center gap-1.5">
                             <img id="preview-m-opp-logo" src="" onerror="handleImgError(this, 'logo')" class="w-7 h-7 rounded object-cover border border-white/10 shrink-0">
                             <input type="text" id="adm-m-opp-logo" placeholder="Team B Logo URL/PNG" class="flex-1 bg-[#12141e] border border-white/10 rounded px-2 py-1 text-[11px] text-white min-w-0">
-                            <button type="button" onclick="triggerFilePicker('m-opp-logo')" class="bg-slate-700 hover:bg-slate-600 text-white px-2 py-1 rounded text-[10px] font-bold shrink-0">Add Photo</button>
+                            <button type="button" onclick="triggerFilePicker('m-opp-logo', 200, true)" class="bg-slate-700 hover:bg-slate-600 text-white px-2 py-1 rounded text-[10px] font-bold shrink-0">Crop Photo</button>
                             <input type="file" id="file-m-opp-logo" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-m-opp-logo', 'preview-m-opp-logo', 200)">
                         </div>
                     </div>
@@ -720,6 +734,32 @@
             </div>
         </section>
     </main>
+
+    <!-- PHOTO CROPPER MODAL -->
+    <div id="crop-modal" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-card border border-red-500/35 rounded-2xl p-5 w-full max-w-md space-y-4 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
+                <h3 class="display-font text-xs sm:text-sm font-black text-white uppercase">Crop Photo (1:1 Square)</h3>
+                <button type="button" onclick="closeCropModal()" class="text-slate-400 hover:text-white text-sm">✕</button>
+            </div>
+
+            <div class="flex flex-col items-center space-y-3">
+                <canvas id="crop-stage-canvas" width="280" height="280" class="w-[260px] h-[260px] sm:w-[280px] sm:h-[280px] rounded-xl border-2 border-red-500/50 bg-[#06070a] cursor-grab active:cursor-grabbing touch-none"></canvas>
+                <div class="w-full space-y-1">
+                    <div class="flex justify-between text-[10px] font-bold uppercase text-slate-400">
+                        <span>Drag image to position</span>
+                        <span id="crop-zoom-label">Zoom: 100%</span>
+                    </div>
+                    <input type="range" id="crop-zoom-slider" min="1" max="3" step="0.05" value="1" oninput="updateCropZoom(this.value)" class="w-full accent-red-600">
+                </div>
+            </div>
+
+            <div class="flex gap-2 pt-1">
+                <button type="button" onclick="closeCropModal()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-white py-2 rounded-lg text-xs font-bold uppercase">Cancel</button>
+                <button type="button" onclick="applyCroppedImage()" class="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg text-xs font-extrabold uppercase">Crop & Use Photo</button>
+            </div>
+        </div>
+    </div>
 
     <!-- ADMIN PASSWORD MODAL (Password: GuiangGaming) -->
     <div id="admin-modal" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
@@ -847,7 +887,8 @@
 
         const DEFAULT_COVER = "https://cdn.corenexis.com/f/BsdCzsDL.jpg";
         const DEFAULT_LOGO = "https://cdn.corenexis.com/f/TQWKyUMU.jpg";
-        const SCRIM_EMAILS = ["brian.guiang@gmail.com", "kushimetakeku2004@gmail.com"];
+        const OWNER_EMAIL = "brian.guiang@gmail.com";
+        const DEFAULT_ADMIN_EMAILS = ["kushimetakeku2004@gmail.com"];
 
         function setAdminStatus(msg, isError = false) {
             const el = document.getElementById("admin-status-banner");
@@ -914,17 +955,176 @@
             }
         }
 
-        function triggerFilePicker(key) {
+        /* PHOTO CROPPER STATE & LOGIC */
+        let cropState = {
+            targetInputId: '',
+            previewImgId: '',
+            maxDim: 256,
+            img: null,
+            zoom: 1,
+            offsetX: 0,
+            offsetY: 0,
+            dragging: false,
+            lastX: 0,
+            lastY: 0
+        };
+
+        function triggerFilePicker(key, maxDim = 256, useCropper = true) {
             const inp = document.getElementById(`file-${key}`);
-            if (inp) inp.click();
+            if (!inp) return;
+            inp.dataset.maxDim = String(maxDim);
+            inp.dataset.useCropper = useCropper ? '1' : '0';
+            inp.value = '';
+            inp.click();
         }
 
-        function handleImageFile(fileInput, targetInputId, previewImgId, maxDim = 256) {
+        function openCropModal(dataUrl, targetInputId, previewImgId, maxDim = 256) {
+            const img = new Image();
+            img.onload = function () {
+                cropState = {
+                    targetInputId,
+                    previewImgId,
+                    maxDim,
+                    img,
+                    zoom: 1,
+                    offsetX: 0,
+                    offsetY: 0,
+                    dragging: false,
+                    lastX: 0,
+                    lastY: 0
+                };
+                const slider = document.getElementById('crop-zoom-slider');
+                const zoomLabel = document.getElementById('crop-zoom-label');
+                if (slider) slider.value = '1';
+                if (zoomLabel) zoomLabel.textContent = 'Zoom: 100%';
+                drawCropStage();
+                document.getElementById('crop-modal').classList.remove('hidden');
+            };
+            img.src = dataUrl;
+        }
+
+        function closeCropModal() {
+            document.getElementById('crop-modal').classList.add('hidden');
+            cropState.img = null;
+        }
+
+        function updateCropZoom(val) {
+            cropState.zoom = parseFloat(val) || 1;
+            const zoomLabel = document.getElementById('crop-zoom-label');
+            if (zoomLabel) zoomLabel.textContent = `Zoom: ${Math.round(cropState.zoom * 100)}%`;
+            drawCropStage();
+        }
+
+        function drawCropStage() {
+            const canvas = document.getElementById('crop-stage-canvas');
+            if (!canvas || !cropState.img) return;
+            const ctx = canvas.getContext('2d');
+            const size = canvas.width;
+            ctx.clearRect(0, 0, size, size);
+            ctx.fillStyle = '#06070a';
+            ctx.fillRect(0, 0, size, size);
+
+            const iw = cropState.img.width;
+            const ih = cropState.img.height;
+            const baseScale = Math.max(size / iw, size / ih);
+            const drawW = iw * baseScale * cropState.zoom;
+            const drawH = ih * baseScale * cropState.zoom;
+
+            const maxOffsetX = Math.max(0, (drawW - size) / 2);
+            const maxOffsetY = Math.max(0, (drawH - size) / 2);
+            cropState.offsetX = Math.max(-maxOffsetX, Math.min(maxOffsetX, cropState.offsetX));
+            cropState.offsetY = Math.max(-maxOffsetY, Math.min(maxOffsetY, cropState.offsetY));
+
+            const dx = (size - drawW) / 2 + cropState.offsetX;
+            const dy = (size - drawH) / 2 + cropState.offsetY;
+            ctx.drawImage(cropState.img, dx, dy, drawW, drawH);
+
+            ctx.strokeStyle = 'rgba(255,255,255,0.22)';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(size / 3, 0, size / 3, size);
+            ctx.strokeRect(0, size / 3, size, size / 3);
+        }
+
+        function applyCroppedImage() {
+            if (!cropState.img) return;
+            const outSize = cropState.maxDim || 256;
+            const outCanvas = document.createElement('canvas');
+            outCanvas.width = outSize;
+            outCanvas.height = outSize;
+            const ctx = outCanvas.getContext('2d');
+
+            const iw = cropState.img.width;
+            const ih = cropState.img.height;
+            const baseScale = Math.max(outSize / iw, outSize / ih);
+            const drawW = iw * baseScale * cropState.zoom;
+            const drawH = ih * baseScale * cropState.zoom;
+
+            const ratio = outSize / 280;
+            const dx = (outSize - drawW) / 2 + (cropState.offsetX * ratio);
+            const dy = (outSize - drawH) / 2 + (cropState.offsetY * ratio);
+
+            ctx.drawImage(cropState.img, dx, dy, drawW, drawH);
+            const croppedDataUrl = outCanvas.toDataURL('image/png');
+
+            const urlInput = document.getElementById(cropState.targetInputId);
+            if (urlInput) urlInput.value = croppedDataUrl;
+
+            const prevImg = document.getElementById(cropState.previewImgId);
+            if (prevImg) {
+                delete prevImg.dataset.fb;
+                prevImg.src = croppedDataUrl;
+            }
+
+            closeCropModal();
+            setAdminStatus('Cropped photo applied! Click Save/Add to store.');
+        }
+
+        (function initCropPointerEvents() {
+            const canvas = document.getElementById('crop-stage-canvas');
+            if (!canvas) return;
+            const getPos = (e) => {
+                if (e.touches && e.touches.length) return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                return { x: e.clientX, y: e.clientY };
+            };
+            const onStart = (e) => {
+                if (!cropState.img) return;
+                cropState.dragging = true;
+                const p = getPos(e);
+                cropState.lastX = p.x;
+                cropState.lastY = p.y;
+            };
+            const onMove = (e) => {
+                if (!cropState.dragging || !cropState.img) return;
+                e.preventDefault();
+                const p = getPos(e);
+                cropState.offsetX += (p.x - cropState.lastX);
+                cropState.offsetY += (p.y - cropState.lastY);
+                cropState.lastX = p.x;
+                cropState.lastY = p.y;
+                drawCropStage();
+            };
+            const onEnd = () => { cropState.dragging = false; };
+
+            canvas.addEventListener('mousedown', onStart);
+            window.addEventListener('mousemove', onMove);
+            window.addEventListener('mouseup', onEnd);
+            canvas.addEventListener('touchstart', onStart, { passive: false });
+            window.addEventListener('touchmove', onMove, { passive: false });
+            window.addEventListener('touchend', onEnd);
+        })();
+
+        function handleImageFile(fileInput, targetInputId, previewImgId, fallbackMaxDim = 256) {
             const file = fileInput.files && fileInput.files[0];
             if (!file) return;
+            const maxDim = parseInt(fileInput.dataset.maxDim || String(fallbackMaxDim), 10) || fallbackMaxDim;
+            const useCropper = fileInput.dataset.useCropper !== '0';
 
             const reader = new FileReader();
             reader.onload = function (e) {
+                if (useCropper) {
+                    openCropModal(e.target.result, targetInputId, previewImgId, maxDim);
+                    return;
+                }
                 const img = new Image();
                 img.onload = function () {
                     let w = img.width;
@@ -975,7 +1175,14 @@
         }
 
         let state = {
-            settings: { cover: DEFAULT_COVER, bg: '', logo: DEFAULT_LOGO, email: SCRIM_EMAILS.join(', '), about: '' },
+            settings: {
+                cover: DEFAULT_COVER,
+                bg: '',
+                logo: DEFAULT_LOGO,
+                ownerEmail: OWNER_EMAIL,
+                adminEmails: DEFAULT_ADMIN_EMAILS.join(', '),
+                about: ''
+            },
             liveScrimStatus: { status: 'Active', note: '' },
             rolePhotos: { baron: '', jungle: '', mid: '', adc: '', support: '' },
             news: [],
@@ -1017,6 +1224,20 @@
             return 'baron';
         }
 
+        function getRoleRank(roleName) {
+            const k = getRoleKey(roleName);
+            const order = { baron: 1, jungle: 2, mid: 3, adc: 4, support: 5 };
+            return order[k] || 99;
+        }
+
+        function sortPlayersByRole(playersArr) {
+            return [...playersArr].sort((a, b) => {
+                const diff = getRoleRank(a.role) - getRoleRank(b.role);
+                if (diff !== 0) return diff;
+                return (a.ign || '').localeCompare(b.ign || '');
+            });
+        }
+
         function getRolePhoto(roleName) {
             const k = getRoleKey(roleName);
             return state.rolePhotos[k] || DEFAULT_ROLE_PHOTOS[k] || ROLE_SVG_FALLBACKS[k];
@@ -1033,9 +1254,40 @@
             return raw.split(/[\n,]+/).map(s => s.trim()).filter(Boolean);
         }
 
-        function getRecipientEmails() {
-            const custom = (state.settings.email || '').split(',').map(e => e.trim()).filter(Boolean);
-            return Array.from(new Set([...SCRIM_EMAILS, ...custom]));
+        function parseEmailList(raw) {
+            if (!raw) return [];
+            return raw.split(/[\n,]+/).map(e => e.trim()).filter(Boolean);
+        }
+
+        function getOwnerEmail() {
+            return (state.settings.ownerEmail || OWNER_EMAIL).trim() || OWNER_EMAIL;
+        }
+
+        function getAdminEmailsList() {
+            const parsed = parseEmailList(state.settings.adminEmails);
+            const combined = parsed.length ? parsed : DEFAULT_ADMIN_EMAILS;
+            return Array.from(new Set(combined));
+        }
+
+        function getAllScrimEmails() {
+            return Array.from(new Set([getOwnerEmail(), ...getAdminEmailsList()]));
+        }
+
+        function renderContactsUI() {
+            const ownerEmail = getOwnerEmail();
+            const staffEmails = getAdminEmailsList();
+
+            const ownerText = document.getElementById('contact-owner-email-text');
+            const ownerLink = document.getElementById('contact-owner-email-link');
+            if (ownerText) ownerText.textContent = ownerEmail;
+            if (ownerLink) ownerLink.href = `mailto:${ownerEmail}`;
+
+            const staffBox = document.getElementById('contact-staff-emails');
+            if (staffBox) {
+                staffBox.innerHTML = staffEmails.map(em => `
+                    <a href="mailto:${em}" class="block text-[11px] text-slate-200 hover:text-amber-300 truncate">${em}</a>
+                `).join('');
+            }
         }
 
         function renderLiveScrimStatus() {
@@ -1111,22 +1363,22 @@
                 cover: d.cover || DEFAULT_COVER,
                 bg: d.bg || '',
                 logo: d.logo || DEFAULT_LOGO,
-                email: d.email || SCRIM_EMAILS.join(', '),
+                ownerEmail: d.ownerEmail || OWNER_EMAIL,
+                adminEmails: d.adminEmails || DEFAULT_ADMIN_EMAILS.join(', '),
                 about: d.about || document.getElementById('about-text').textContent.trim()
             };
             setCleanImgSrc(document.getElementById('site-logo'), state.settings.logo, 'logo');
             setCleanImgSrc(document.getElementById('hero-cover-img'), state.settings.cover, 'cover');
             applyWebsiteBackground(state.settings.bg);
 
-            const recipients = getRecipientEmails();
             document.getElementById('about-text').textContent = state.settings.about;
-            document.getElementById('contact-email-text').textContent = recipients.join(', ');
-            document.getElementById('contact-email-link').href = `mailto:${recipients.join(',')}`;
+            renderContactsUI();
 
             document.getElementById('adm-cover-url').value = state.settings.cover;
             document.getElementById('adm-bg-url').value = state.settings.bg;
             document.getElementById('adm-logo-url').value = state.settings.logo;
-            document.getElementById('adm-contact-email').value = state.settings.email;
+            document.getElementById('adm-owner-email').value = state.settings.ownerEmail;
+            document.getElementById('adm-staff-emails').value = state.settings.adminEmails;
             document.getElementById('adm-about-text').value = state.settings.about;
 
             setCleanImgSrc(document.getElementById('preview-site-cover'), state.settings.cover, 'cover');
@@ -1170,6 +1422,7 @@
             db.ref(`guiangHub/${path}`).on('value', snap => {
                 const arr = [];
                 if (snap.exists()) snap.forEach(c => arr.push({ id: c.key, ...c.val() }));
+                arr.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
                 state[key] = arr;
                 onUpdateFn();
                 renderAdminSelects();
@@ -1318,11 +1571,12 @@
         function sendScrimViaEmail() {
             const msg = buildScrimRequestText();
             if (!msg) return;
-            const recipients = getRecipientEmails().join(',');
+            const allRecipients = getAllScrimEmails();
+            const recipients = allRecipients.join(',');
             const subject = encodeURIComponent(`Pro Scrim Request - ${document.getElementById('req-team').value.trim()}`);
             const body = encodeURIComponent(msg);
             const fb = document.getElementById('scrim-req-feedback');
-            fb.textContent = `Opening email to: ${getRecipientEmails().join(', ')}`;
+            fb.textContent = `Opening email to: ${allRecipients.join(', ')}`;
             fb.classList.remove('hidden');
             window.location.href = `mailto:${recipients}?subject=${subject}&body=${body}`;
         }
@@ -1497,7 +1751,7 @@
                 tAchBox.innerHTML = '';
             }
 
-            const teamPlayers = state.players.filter(p => p.teamId === teamId);
+            const teamPlayers = sortPlayersByRole(state.players.filter(p => p.teamId === teamId));
             const list = document.getElementById('tmodal-players');
             if (!teamPlayers.length) {
                 list.innerHTML = `<p class="text-xs text-slate-400 italic">No players assigned to this team.</p>`;
@@ -1707,10 +1961,11 @@
             const cover = document.getElementById('adm-cover-url').value.trim() || DEFAULT_COVER;
             const bg = document.getElementById('adm-bg-url').value.trim();
             const logo = document.getElementById('adm-logo-url').value.trim() || DEFAULT_LOGO;
-            const email = document.getElementById('adm-contact-email').value.trim() || SCRIM_EMAILS.join(', ');
+            const ownerEmail = document.getElementById('adm-owner-email').value.trim() || OWNER_EMAIL;
+            const adminEmails = document.getElementById('adm-staff-emails').value.trim() || DEFAULT_ADMIN_EMAILS.join(', ');
             const about = document.getElementById('adm-about-text').value.trim();
-            db.ref('guiangHub/settings').set({ cover, bg, logo, email, about })
-                .then(() => setAdminStatus('Site settings (including background photo) saved.'))
+            db.ref('guiangHub/settings').set({ cover, bg, logo, ownerEmail, adminEmails, about })
+                .then(() => setAdminStatus('Site settings & contacts saved.'))
                 .catch(err => setAdminStatus('Error saving settings: ' + err.message, true));
         }
 
@@ -1794,13 +2049,20 @@
             }
         }
 
-        function upsert(path, editId, payload, formType, label) {
+        function upsert(path, editId, payload, formType, label, onSuccessFn) {
+            const finalPayload = editId
+                ? { ...payload }
+                : { ...payload, createdAt: firebase.database.ServerValue.TIMESTAMP };
+
             const action = editId
-                ? db.ref(`guiangHub/${path}/${editId}`).update(payload)
-                : db.ref(`guiangHub/${path}`).push(payload);
+                ? db.ref(`guiangHub/${path}/${editId}`).update(finalPayload)
+                : db.ref(`guiangHub/${path}`).push(finalPayload);
+
             action
-                .then(() => {
+                .then((refObj) => {
+                    const createdKey = editId || (refObj && refObj.key) || null;
                     resetForm(formType);
+                    if (typeof onSuccessFn === 'function') onSuccessFn(createdKey);
                     setAdminStatus(`${label || 'Item'} ${editId ? 'updated' : 'added'} successfully!`);
                 })
                 .catch(err => {
@@ -1889,7 +2151,13 @@
             const achievements = document.getElementById('adm-group-achievements').value.trim();
             const logo = document.getElementById('adm-group-logo').value.trim();
             if (!name) return alert('Please enter group name.');
-            upsert('groups', id, { name, achievements, logo }, 'group', 'Team Group');
+            upsert('groups', id, { name, achievements, logo }, 'group', 'Team Group', (createdKey) => {
+                if (createdKey) {
+                    selectedGroupId = createdKey;
+                    const grpSel = document.getElementById('adm-subteam-group');
+                    if (grpSel) grpSel.value = createdKey;
+                }
+            });
         }
         function editGroup(id) {
             const item = state.groups.find(i => i.id === id); if (!item) return;
@@ -1904,13 +2172,22 @@
 
         function saveSubTeam() {
             const id = document.getElementById('edit-subteam-id').value;
-            const groupId = document.getElementById('adm-subteam-group').value;
+            const groupId = document.getElementById('adm-subteam-group').value || selectedGroupId || (state.groups[0] && state.groups[0].id);
             const name = document.getElementById('adm-subteam-name').value.trim();
             const game = document.getElementById('adm-subteam-game').value.trim();
             const achievements = document.getElementById('adm-subteam-achievements').value.trim();
             const logo = document.getElementById('adm-subteam-logo').value.trim();
-            if (!groupId || !name) return alert('Please select a group and enter Team (Tag).');
-            upsert('teams', id, { groupId, name, game, achievements, logo }, 'subteam', 'Team');
+            if (!groupId) return alert('Please add or select a Team Group first.');
+            if (!name) return alert('Please enter Team (Tag).');
+            upsert('teams', id, { groupId, name, game, achievements, logo }, 'subteam', 'Team inside group', (createdKey) => {
+                selectedGroupId = groupId;
+                const grpSel = document.getElementById('adm-subteam-group');
+                if (grpSel) grpSel.value = groupId;
+                if (createdKey) {
+                    const tmSel = document.getElementById('adm-player-team');
+                    if (tmSel) tmSel.value = createdKey;
+                }
+            });
         }
         function editSubTeam(id) {
             const item = state.teams.find(i => i.id === id); if (!item) return;
@@ -1927,13 +2204,17 @@
 
         function savePlayer() {
             const id = document.getElementById('edit-player-id').value;
-            const teamId = document.getElementById('adm-player-team').value;
+            const teamId = document.getElementById('adm-player-team').value || (state.teams[0] && state.teams[0].id);
             const ign = document.getElementById('adm-player-ign').value.trim();
             const role = document.getElementById('adm-player-role').value.trim();
             const pfp = document.getElementById('adm-player-pfp').value.trim();
             const achievements = document.getElementById('adm-player-achievements').value.trim();
-            if (!teamId || !ign) return alert('Please select a team and enter player IGN.');
-            upsert('players', id, { teamId, ign, role, pfp, achievements }, 'player', 'Player');
+            if (!teamId) return alert('Please add or select a Team first.');
+            if (!ign) return alert('Please enter player IGN.');
+            upsert('players', id, { teamId, ign, role, pfp, achievements }, 'player', 'Player', () => {
+                const tmSel = document.getElementById('adm-player-team');
+                if (tmSel) tmSel.value = teamId;
+            });
         }
         function editPlayerItem(id) {
             const item = state.players.find(i => i.id === id); if (!item) return;
@@ -2010,7 +2291,7 @@
 
         function renderAdminSelects() {
             const grpSel = document.getElementById('adm-subteam-group');
-            const prevGrpVal = grpSel.value;
+            const prevGrpVal = grpSel.value || selectedGroupId;
             grpSel.innerHTML = state.groups.map(g => `<option value="${g.id}">${g.name}</option>`).join('') || `<option value="">No groups yet</option>`;
             if (prevGrpVal && state.groups.some(g => g.id === prevGrpVal)) {
                 grpSel.value = prevGrpVal;
@@ -2025,6 +2306,51 @@
             if (prevTmVal && state.teams.some(t => t.id === prevTmVal)) {
                 tmSel.value = prevTmVal;
             }
+        }
+
+        function renderAdminSubTeamList() {
+            const grpSel = document.getElementById('adm-subteam-group');
+            const filterGrpId = grpSel ? grpSel.value : '';
+            const listEl = document.getElementById('adm-subteam-list');
+            if (!listEl) return;
+
+            const filtered = filterGrpId
+                ? state.teams.filter(t => t.groupId === filterGrpId)
+                : state.teams;
+
+            listEl.innerHTML = filtered.map(i => {
+                const grp = state.groups.find(g => g.id === i.groupId);
+                return `
+                    <div class="flex items-center justify-between bg-[#090a0f] px-2.5 py-1.5 rounded border border-white/10 text-[11px]">
+                        <span class="truncate pr-2">${i.name}${grp ? ` <span class="text-slate-400">(${grp.name})</span>` : ''}</span>
+                        <div class="flex items-center space-x-2 shrink-0">
+                            <button type="button" onclick="editSubTeam('${i.id}')" class="text-blue-400 hover:text-blue-300 font-bold">Edit</button>
+                            <button type="button" onclick="delNode('teams', '${i.id}')" class="text-red-400 hover:text-red-300 font-bold">Delete</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderAdminPlayerList() {
+            const tmSel = document.getElementById('adm-player-team');
+            const filterTeamId = tmSel ? tmSel.value : '';
+            const listEl = document.getElementById('adm-player-list');
+            if (!listEl) return;
+
+            const filtered = sortPlayersByRole(
+                filterTeamId ? state.players.filter(p => p.teamId === filterTeamId) : state.players
+            );
+
+            listEl.innerHTML = filtered.map(i => `
+                <div class="flex items-center justify-between bg-[#090a0f] px-2.5 py-1.5 rounded border border-white/10 text-[11px]">
+                    <span class="truncate pr-2">[${i.role || 'Player'}] ${i.ign}</span>
+                    <div class="flex items-center space-x-2 shrink-0">
+                        <button type="button" onclick="editPlayerItem('${i.id}')" class="text-blue-400 hover:text-blue-300 font-bold">Edit</button>
+                        <button type="button" onclick="delNode('players', '${i.id}')" class="text-red-400 hover:text-red-300 font-bold">Delete</button>
+                    </div>
+                </div>
+            `).join('');
         }
 
         function renderAdminLists() {
@@ -2043,8 +2369,8 @@
             document.getElementById('adm-vid-list').innerHTML = rowHtml(state.videos, 'videos', 'editVid', i => i.title);
             document.getElementById('adm-scrim-list').innerHTML = rowHtml(state.scrims, 'scrims', 'editScrim', i => `[${i.slotType || 'Scrim'}] ${i.time} (${i.status})`);
             document.getElementById('adm-group-list').innerHTML = rowHtml(state.groups, 'groups', 'editGroup', i => i.name);
-            document.getElementById('adm-subteam-list').innerHTML = rowHtml(state.teams, 'teams', 'editSubTeam', i => i.name);
-            document.getElementById('adm-player-list').innerHTML = rowHtml(state.players, 'players', 'editPlayerItem', i => `${i.ign} (${i.role || 'Player'})`);
+            renderAdminSubTeamList();
+            renderAdminPlayerList();
             document.getElementById('adm-part-list').innerHTML = rowHtml(state.partners, 'partners', 'editPart', i => i.name);
 
             const matchEntries = Object.entries(state.matches).map(([id, m]) => ({ id, ...m }));
