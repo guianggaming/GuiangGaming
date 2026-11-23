@@ -21,6 +21,10 @@
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: #090a0f;
+            background-position: center center;
+            background-size: cover;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
             color: #f1f5f9;
         }
 
@@ -43,7 +47,7 @@
 <body class="antialiased pb-20">
 
     <!-- TOP SOCIAL, LIVE TIME & ADMIN BAR -->
-    <div class="bg-[#06070a] border-b border-white/5 text-[11px] text-slate-400">
+    <div class="bg-[#06070a]/95 border-b border-white/5 text-[11px] text-slate-400">
         <div class="max-w-6xl mx-auto px-4 py-2 flex flex-wrap items-center justify-between gap-2">
             <div class="flex items-center space-x-3">
                 <span class="uppercase tracking-wider text-[10px] font-bold text-slate-500">Follow Guiang:</span>
@@ -104,7 +108,7 @@
                     <span>Official Shoutcaster & Gaming Hub</span>
                 </div>
                 <h1 class="display-font text-2xl sm:text-4xl md:text-5xl font-black text-white uppercase leading-tight max-w-3xl">
-                    WELCOME TO <span class="text-red-600">GUIANG GAMING COMMUNITY HUB</span>
+                    WELCOME TO <span class="text-red-600">GUIANG GAMING</span>
                 </h1>
                 <p class="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
                     Wild Rift & League of Legends shoutcaster, pro scrim organizer, and multi-game esports hub. Check out announcements, achievements, videos, scrim schedules, teams, and match stats.
@@ -178,7 +182,7 @@
             </div>
         </section>
 
-        <!-- PRO SCRIMS / TOURNAMENTS SCHEDULE & REQUEST (Supports unlimited slots) -->
+        <!-- PRO SCRIMS / TOURNAMENTS SCHEDULE & REQUEST (Supports unlimited slots + Live Stream Scrim Availability) -->
         <section id="scrims-section" class="space-y-4 scroll-mt-20">
             <div class="flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center space-x-2.5">
@@ -189,6 +193,19 @@
                     <i class="fa-regular fa-clock text-red-400"></i>
                     <span id="scrim-live-time">--:--:--</span>
                 </div>
+            </div>
+
+            <!-- LIVE STREAM SCRIM SCHEDULING STATUS BANNER -->
+            <div id="live-scrim-status-banner" class="glass-card p-4 rounded-2xl border border-emerald-500/30 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0">
+                    <span id="live-scrim-dot" class="w-3 h-3 rounded-full bg-emerald-400 shrink-0"></span>
+                    <div class="min-w-0">
+                        <p class="text-[10px] font-black uppercase tracking-wider text-slate-400">Live Stream Scrim Scheduling</p>
+                        <p id="live-scrim-status-text" class="text-xs sm:text-sm font-extrabold text-emerald-400">ACTIVE — Available to Schedule Scrim for Live Stream</p>
+                        <p id="live-scrim-note-text" class="text-[11px] text-slate-300 mt-0.5 hidden"></p>
+                    </div>
+                </div>
+                <span id="live-scrim-pill" class="text-[10px] font-black uppercase px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shrink-0">ACTIVE</span>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -385,9 +402,9 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- 1. Cover Photo, Logo, About & Contact Email -->
+                <!-- 1. Cover Photo, Background Photo, Logo, About & Contact Email -->
                 <div class="glass-card p-5 rounded-xl space-y-3">
-                    <h4 class="text-xs font-black uppercase text-red-400">1. Cover Photo, Logo, About & Email</h4>
+                    <h4 class="text-xs font-black uppercase text-red-400">1. Cover, Background, Logo, About & Email</h4>
 
                     <div>
                         <label class="text-[10px] font-bold uppercase text-slate-400">Cover Photo</label>
@@ -398,6 +415,18 @@
                                 <i class="fa-solid fa-folder-open mr-1"></i>Add Photo
                             </button>
                             <input type="file" id="file-site-cover" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-cover-url', 'preview-site-cover', 1024)">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] font-bold uppercase text-slate-400">Website Background Photo</label>
+                        <div class="flex items-center gap-2 mt-1">
+                            <img id="preview-site-bg" src="" onerror="handleImgError(this, 'cover')" class="w-12 h-9 rounded object-cover border border-white/10 shrink-0">
+                            <input type="text" id="adm-bg-url" placeholder="Background Photo URL or PNG (optional)" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
+                            <button type="button" onclick="triggerFilePicker('site-bg')" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
+                                <i class="fa-solid fa-folder-open mr-1"></i>Add Photo
+                            </button>
+                            <input type="file" id="file-site-bg" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-bg-url', 'preview-site-bg', 1024)">
                         </div>
                     </div>
 
@@ -419,7 +448,7 @@
                     </div>
                     <div>
                         <label class="text-[10px] font-bold uppercase text-slate-400">About Guiang Gaming</label>
-                        <textarea id="adm-about-text" rows="3" placeholder="About Guiang Gaming..." class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white mt-1"></textarea>
+                        <textarea id="adm-about-text" rows="2" placeholder="About Guiang Gaming..." class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white mt-1"></textarea>
                     </div>
                     <button type="button" onclick="saveSiteSettings()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Save Settings</button>
                 </div>
@@ -505,9 +534,24 @@
                     <div id="adm-vid-list" class="space-y-1.5 max-h-36 overflow-y-auto"></div>
                 </div>
 
-                <!-- 5. Scrims / Tournament Schedule (Unlimited) -->
+                <!-- 5. Scrims / Tournament Schedule (Unlimited + Active/Not Active Live Stream Scrim Booking) -->
                 <div class="glass-card p-5 rounded-xl space-y-3">
-                    <div class="flex justify-between items-center">
+                    <div class="bg-[#090a0f]/90 border border-white/10 p-3 rounded-xl space-y-2">
+                        <div class="flex items-center justify-between">
+                            <label class="text-[10px] font-black uppercase text-amber-300">Live Stream Scrim Scheduling Status</label>
+                            <span id="adm-live-scrim-badge" class="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">ACTIVE</span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <select id="adm-live-scrim-active" class="w-full bg-[#12141e] border border-white/10 rounded px-2.5 py-1.5 text-xs text-white font-bold">
+                                <option value="Active">Active (Available to Sched for Live Stream)</option>
+                                <option value="Not Active">Not Active (Unavailable for Live Stream Scrim)</option>
+                            </select>
+                            <input type="text" id="adm-live-scrim-note" placeholder="Optional note (e.g. 7PM-11PM PHT)" class="w-full bg-[#12141e] border border-white/10 rounded px-2.5 py-1.5 text-xs text-white">
+                        </div>
+                        <button type="button" onclick="saveLiveScrimStatus()" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-1.5 rounded text-[11px] font-extrabold uppercase">Update Live Stream Scrim Status</button>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-1">
                         <h4 class="text-xs font-black uppercase text-red-400">5. Scrims / Tournament Schedule (Add Many)</h4>
                         <button id="cancel-scrim-btn" type="button" onclick="resetForm('scrim')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
                     </div>
@@ -530,7 +574,7 @@
                         </select>
                     </div>
                     <button id="save-scrim-btn" type="button" onclick="saveScrim()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Add / Save Schedule Slot</button>
-                    <div id="adm-scrim-list" class="space-y-1.5 max-h-36 overflow-y-auto"></div>
+                    <div id="adm-scrim-list" class="space-y-1.5 max-h-28 overflow-y-auto"></div>
                 </div>
 
                 <!-- 6. Team Groups & Sub-Teams + Team Achievements -->
@@ -860,6 +904,16 @@
             imgEl.src = src || FALLBACKS[fallbackType] || FALLBACKS.logo;
         }
 
+        function applyWebsiteBackground(bgUrl) {
+            const clean = (bgUrl || '').trim();
+            if (clean) {
+                const escaped = clean.replace(/"/g, '%22');
+                document.body.style.backgroundImage = `linear-gradient(rgba(9, 10, 15, 0.82), rgba(9, 10, 15, 0.88)), url("${escaped}")`;
+            } else {
+                document.body.style.backgroundImage = '';
+            }
+        }
+
         function triggerFilePicker(key) {
             const inp = document.getElementById(`file-${key}`);
             if (inp) inp.click();
@@ -921,7 +975,8 @@
         }
 
         let state = {
-            settings: { cover: DEFAULT_COVER, logo: DEFAULT_LOGO, email: SCRIM_EMAILS.join(', '), about: '' },
+            settings: { cover: DEFAULT_COVER, bg: '', logo: DEFAULT_LOGO, email: SCRIM_EMAILS.join(', '), about: '' },
+            liveScrimStatus: { status: 'Active', note: '' },
             rolePhotos: { baron: '', jungle: '', mid: '', adc: '', support: '' },
             news: [],
             achievements: [],
@@ -983,16 +1038,85 @@
             return Array.from(new Set([...SCRIM_EMAILS, ...custom]));
         }
 
+        function renderLiveScrimStatus() {
+            const isActive = (state.liveScrimStatus.status || 'Active').toLowerCase() === 'active';
+            const note = (state.liveScrimStatus.note || '').trim();
+
+            const banner = document.getElementById('live-scrim-status-banner');
+            const dot = document.getElementById('live-scrim-dot');
+            const txt = document.getElementById('live-scrim-status-text');
+            const noteEl = document.getElementById('live-scrim-note-text');
+            const pill = document.getElementById('live-scrim-pill');
+
+            const admSel = document.getElementById('adm-live-scrim-active');
+            const admNote = document.getElementById('adm-live-scrim-note');
+            const admBadge = document.getElementById('adm-live-scrim-badge');
+
+            if (isActive) {
+                banner.className = 'glass-card p-4 rounded-2xl border border-emerald-500/35 flex flex-wrap items-center justify-between gap-3';
+                dot.className = 'w-3 h-3 rounded-full bg-emerald-400 animate-pulse shrink-0';
+                txt.className = 'text-xs sm:text-sm font-extrabold text-emerald-400';
+                txt.textContent = 'ACTIVE — Available to Schedule Scrim for Live Stream';
+                pill.className = 'text-[10px] font-black uppercase px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shrink-0';
+                pill.textContent = 'ACTIVE';
+                if (admBadge) {
+                    admBadge.className = 'text-[10px] font-black uppercase px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300';
+                    admBadge.textContent = 'ACTIVE';
+                }
+            } else {
+                banner.className = 'glass-card p-4 rounded-2xl border border-red-500/35 flex flex-wrap items-center justify-between gap-3';
+                dot.className = 'w-3 h-3 rounded-full bg-red-500 shrink-0';
+                txt.className = 'text-xs sm:text-sm font-extrabold text-red-400';
+                txt.textContent = 'NOT ACTIVE — Not Available to Schedule Scrim for Live Stream';
+                pill.className = 'text-[10px] font-black uppercase px-3 py-1 rounded-full bg-red-500/20 text-red-300 border border-red-500/40 shrink-0';
+                pill.textContent = 'NOT ACTIVE';
+                if (admBadge) {
+                    admBadge.className = 'text-[10px] font-black uppercase px-2 py-0.5 rounded bg-red-500/20 text-red-300';
+                    admBadge.textContent = 'NOT ACTIVE';
+                }
+            }
+
+            if (note) {
+                noteEl.textContent = note;
+                noteEl.classList.remove('hidden');
+            } else {
+                noteEl.textContent = '';
+                noteEl.classList.add('hidden');
+            }
+
+            if (admSel) admSel.value = isActive ? 'Active' : 'Not Active';
+            if (admNote) admNote.value = note;
+        }
+
+        function saveLiveScrimStatus() {
+            const status = document.getElementById('adm-live-scrim-active').value;
+            const note = document.getElementById('adm-live-scrim-note').value.trim();
+            db.ref('guiangHub/liveScrimStatus').set({ status, note })
+                .then(() => setAdminStatus(`Live stream scrim status set to ${status}.`))
+                .catch(err => setAdminStatus('Error updating live scrim status: ' + err.message, true));
+        }
+
+        db.ref('guiangHub/liveScrimStatus').on('value', s => {
+            const d = s.val() || {};
+            state.liveScrimStatus = {
+                status: d.status || 'Active',
+                note: d.note || ''
+            };
+            renderLiveScrimStatus();
+        });
+
         db.ref('guiangHub/settings').on('value', s => {
             const d = s.val() || {};
             state.settings = {
                 cover: d.cover || DEFAULT_COVER,
+                bg: d.bg || '',
                 logo: d.logo || DEFAULT_LOGO,
                 email: d.email || SCRIM_EMAILS.join(', '),
                 about: d.about || document.getElementById('about-text').textContent.trim()
             };
             setCleanImgSrc(document.getElementById('site-logo'), state.settings.logo, 'logo');
             setCleanImgSrc(document.getElementById('hero-cover-img'), state.settings.cover, 'cover');
+            applyWebsiteBackground(state.settings.bg);
 
             const recipients = getRecipientEmails();
             document.getElementById('about-text').textContent = state.settings.about;
@@ -1000,11 +1124,13 @@
             document.getElementById('contact-email-link').href = `mailto:${recipients.join(',')}`;
 
             document.getElementById('adm-cover-url').value = state.settings.cover;
+            document.getElementById('adm-bg-url').value = state.settings.bg;
             document.getElementById('adm-logo-url').value = state.settings.logo;
             document.getElementById('adm-contact-email').value = state.settings.email;
             document.getElementById('adm-about-text').value = state.settings.about;
 
             setCleanImgSrc(document.getElementById('preview-site-cover'), state.settings.cover, 'cover');
+            setCleanImgSrc(document.getElementById('preview-site-bg'), state.settings.bg, 'cover');
             setCleanImgSrc(document.getElementById('preview-site-logo'), state.settings.logo, 'logo');
         });
 
@@ -1579,11 +1705,12 @@
 
         function saveSiteSettings() {
             const cover = document.getElementById('adm-cover-url').value.trim() || DEFAULT_COVER;
+            const bg = document.getElementById('adm-bg-url').value.trim();
             const logo = document.getElementById('adm-logo-url').value.trim() || DEFAULT_LOGO;
             const email = document.getElementById('adm-contact-email').value.trim() || SCRIM_EMAILS.join(', ');
             const about = document.getElementById('adm-about-text').value.trim();
-            db.ref('guiangHub/settings').set({ cover, logo, email, about })
-                .then(() => setAdminStatus('Site settings saved.'))
+            db.ref('guiangHub/settings').set({ cover, bg, logo, email, about })
+                .then(() => setAdminStatus('Site settings (including background photo) saved.'))
                 .catch(err => setAdminStatus('Error saving settings: ' + err.message, true));
         }
 
