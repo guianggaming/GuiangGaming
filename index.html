@@ -124,7 +124,7 @@
 
     <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
 
-        <!-- NEWS & ANNOUNCEMENTS (Supports unlimited announcements) -->
+        <!-- NEWS & ANNOUNCEMENTS -->
         <section id="news-section" class="space-y-4 hidden">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2.5">
@@ -168,7 +168,7 @@
             </section>
         </div>
 
-        <!-- VIDEOS / HIGHLIGHTS SECTION (Supports unlimited videos) -->
+        <!-- VIDEOS / HIGHLIGHTS SECTION -->
         <section id="videos-section" class="space-y-4 scroll-mt-20">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2.5">
@@ -195,7 +195,6 @@
                 </div>
             </div>
 
-            <!-- LIVE STREAM SCRIM SCHEDULING STATUS BANNER -->
             <div id="live-scrim-status-banner" class="glass-card p-4 rounded-2xl border border-emerald-500/30 flex flex-wrap items-center justify-between gap-3">
                 <div class="flex items-center gap-3 min-w-0">
                     <span id="live-scrim-dot" class="w-3 h-3 rounded-full bg-emerald-400 shrink-0"></span>
@@ -419,10 +418,10 @@
                         <div class="flex items-center gap-2 mt-1">
                             <img id="preview-site-cover" src="" onerror="handleImgError(this, 'cover')" class="w-12 h-9 rounded object-cover border border-white/10 shrink-0">
                             <input type="text" id="adm-cover-url" placeholder="Cover Photo URL or PNG" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
-                            <button type="button" onclick="triggerFilePicker('site-cover', 1024, false)" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
+                            <button type="button" onclick="triggerFilePicker('site-cover', 960, false)" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
                                 <i class="fa-solid fa-folder-open mr-1"></i>Add Photo
                             </button>
-                            <input type="file" id="file-site-cover" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-cover-url', 'preview-site-cover', 1024)">
+                            <input type="file" id="file-site-cover" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-cover-url', 'preview-site-cover', 960)">
                         </div>
                     </div>
 
@@ -430,11 +429,11 @@
                         <label class="text-[10px] font-bold uppercase text-slate-400">Website Background Photo</label>
                         <div class="flex items-center gap-2 mt-1">
                             <img id="preview-site-bg" src="" onerror="handleImgError(this, 'cover')" class="w-12 h-9 rounded object-cover border border-white/10 shrink-0">
-                            <input type="text" id="adm-bg-url" placeholder="Background Photo URL or PNG (optional)" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
-                            <button type="button" onclick="triggerFilePicker('site-bg', 1024, false)" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
+                            <input type="text" id="adm-bg-url" placeholder="Background Photo URL or Image (optional)" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
+                            <button type="button" onclick="triggerFilePicker('site-bg', 960, false)" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
                                 <i class="fa-solid fa-folder-open mr-1"></i>Add Photo
                             </button>
-                            <input type="file" id="file-site-bg" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-bg-url', 'preview-site-bg', 1024)">
+                            <input type="file" id="file-site-bg" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-bg-url', 'preview-site-bg', 960)">
                         </div>
                     </div>
 
@@ -442,11 +441,11 @@
                         <label class="text-[10px] font-bold uppercase text-slate-400">Logo Photo</label>
                         <div class="flex items-center gap-2 mt-1">
                             <img id="preview-site-logo" src="" onerror="handleImgError(this, 'logo')" class="w-9 h-9 rounded object-cover border border-white/10 shrink-0">
-                            <input type="text" id="adm-logo-url" placeholder="Logo URL or PNG" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
-                            <button type="button" onclick="triggerFilePicker('site-logo', 320, true)" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
+                            <input type="text" id="adm-logo-url" placeholder="Logo URL or Cropped Image" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
+                            <button type="button" onclick="triggerFilePicker('site-logo', 200, true)" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
                                 <i class="fa-solid fa-crop-simple mr-1"></i>Crop Photo
                             </button>
-                            <input type="file" id="file-site-logo" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-logo-url', 'preview-site-logo', 320)">
+                            <input type="file" id="file-site-logo" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-logo-url', 'preview-site-logo', 200)">
                         </div>
                     </div>
 
@@ -467,47 +466,47 @@
                     <button type="button" onclick="saveSiteSettings()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Save Settings</button>
                 </div>
 
-                <!-- 1B. Wild Rift Role Photos (Baron -> Jungle -> Mid -> ADC -> Support) -->
+                <!-- 1B. Wild Rift Role Photos -->
                 <div class="glass-card p-5 rounded-xl space-y-3">
                     <h4 class="text-xs font-black uppercase text-red-400">1B. Wild Rift Role Photos (Baron to Support)</h4>
 
                     <div class="space-y-2">
                         <div class="bg-[#090a0f]/80 p-2 rounded-lg border border-white/10 flex items-center gap-2">
                             <img id="preview-role-baron" src="" onerror="handleImgError(this, 'role-baron')" class="w-8 h-8 rounded object-cover border border-white/10 shrink-0">
-                            <input type="text" id="role-url-baron" placeholder="Baron PNG / URL" class="flex-1 bg-[#12141e] border border-white/10 rounded px-2 py-1.5 text-[11px] text-white min-w-0">
-                            <button type="button" onclick="triggerFilePicker('role-baron', 256, true)" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded text-[10px] font-bold shrink-0">Baron Photo</button>
-                            <input type="file" id="file-role-baron" accept="image/*" class="hidden" onchange="handleImageFile(this, 'role-url-baron', 'preview-role-baron', 256)">
+                            <input type="text" id="role-url-baron" placeholder="Baron Image / URL" class="flex-1 bg-[#12141e] border border-white/10 rounded px-2 py-1.5 text-[11px] text-white min-w-0">
+                            <button type="button" onclick="triggerFilePicker('role-baron', 160, true)" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded text-[10px] font-bold shrink-0">Baron Photo</button>
+                            <input type="file" id="file-role-baron" accept="image/*" class="hidden" onchange="handleImageFile(this, 'role-url-baron', 'preview-role-baron', 160)">
                         </div>
                         <div class="bg-[#090a0f]/80 p-2 rounded-lg border border-white/10 flex items-center gap-2">
                             <img id="preview-role-jungle" src="" onerror="handleImgError(this, 'role-jungle')" class="w-8 h-8 rounded object-cover border border-white/10 shrink-0">
-                            <input type="text" id="role-url-jungle" placeholder="Jungle PNG / URL" class="flex-1 bg-[#12141e] border border-white/10 rounded px-2 py-1.5 text-[11px] text-white min-w-0">
-                            <button type="button" onclick="triggerFilePicker('role-jungle', 256, true)" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded text-[10px] font-bold shrink-0">Jungle Photo</button>
-                            <input type="file" id="file-role-jungle" accept="image/*" class="hidden" onchange="handleImageFile(this, 'role-url-jungle', 'preview-role-jungle', 256)">
+                            <input type="text" id="role-url-jungle" placeholder="Jungle Image / URL" class="flex-1 bg-[#12141e] border border-white/10 rounded px-2 py-1.5 text-[11px] text-white min-w-0">
+                            <button type="button" onclick="triggerFilePicker('role-jungle', 160, true)" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded text-[10px] font-bold shrink-0">Jungle Photo</button>
+                            <input type="file" id="file-role-jungle" accept="image/*" class="hidden" onchange="handleImageFile(this, 'role-url-jungle', 'preview-role-jungle', 160)">
                         </div>
                         <div class="bg-[#090a0f]/80 p-2 rounded-lg border border-white/10 flex items-center gap-2">
                             <img id="preview-role-mid" src="" onerror="handleImgError(this, 'role-mid')" class="w-8 h-8 rounded object-cover border border-white/10 shrink-0">
-                            <input type="text" id="role-url-mid" placeholder="Mid PNG / URL" class="flex-1 bg-[#12141e] border border-white/10 rounded px-2 py-1.5 text-[11px] text-white min-w-0">
-                            <button type="button" onclick="triggerFilePicker('role-mid', 256, true)" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded text-[10px] font-bold shrink-0">Mid Photo</button>
-                            <input type="file" id="file-role-mid" accept="image/*" class="hidden" onchange="handleImageFile(this, 'role-url-mid', 'preview-role-mid', 256)">
+                            <input type="text" id="role-url-mid" placeholder="Mid Image / URL" class="flex-1 bg-[#12141e] border border-white/10 rounded px-2 py-1.5 text-[11px] text-white min-w-0">
+                            <button type="button" onclick="triggerFilePicker('role-mid', 160, true)" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded text-[10px] font-bold shrink-0">Mid Photo</button>
+                            <input type="file" id="file-role-mid" accept="image/*" class="hidden" onchange="handleImageFile(this, 'role-url-mid', 'preview-role-mid', 160)">
                         </div>
                         <div class="bg-[#090a0f]/80 p-2 rounded-lg border border-white/10 flex items-center gap-2">
                             <img id="preview-role-adc" src="" onerror="handleImgError(this, 'role-adc')" class="w-8 h-8 rounded object-cover border border-white/10 shrink-0">
-                            <input type="text" id="role-url-adc" placeholder="ADC PNG / URL" class="flex-1 bg-[#12141e] border border-white/10 rounded px-2 py-1.5 text-[11px] text-white min-w-0">
-                            <button type="button" onclick="triggerFilePicker('role-adc', 256, true)" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded text-[10px] font-bold shrink-0">ADC Photo</button>
-                            <input type="file" id="file-role-adc" accept="image/*" class="hidden" onchange="handleImageFile(this, 'role-url-adc', 'preview-role-adc', 256)">
+                            <input type="text" id="role-url-adc" placeholder="ADC Image / URL" class="flex-1 bg-[#12141e] border border-white/10 rounded px-2 py-1.5 text-[11px] text-white min-w-0">
+                            <button type="button" onclick="triggerFilePicker('role-adc', 160, true)" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded text-[10px] font-bold shrink-0">ADC Photo</button>
+                            <input type="file" id="file-role-adc" accept="image/*" class="hidden" onchange="handleImageFile(this, 'role-url-adc', 'preview-role-adc', 160)">
                         </div>
                         <div class="bg-[#090a0f]/80 p-2 rounded-lg border border-white/10 flex items-center gap-2">
                             <img id="preview-role-support" src="" onerror="handleImgError(this, 'role-support')" class="w-8 h-8 rounded object-cover border border-white/10 shrink-0">
-                            <input type="text" id="role-url-support" placeholder="Support PNG / URL" class="flex-1 bg-[#12141e] border border-white/10 rounded px-2 py-1.5 text-[11px] text-white min-w-0">
-                            <button type="button" onclick="triggerFilePicker('role-support', 256, true)" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded text-[10px] font-bold shrink-0">Support Photo</button>
-                            <input type="file" id="file-role-support" accept="image/*" class="hidden" onchange="handleImageFile(this, 'role-url-support', 'preview-role-support', 256)">
+                            <input type="text" id="role-url-support" placeholder="Support Image / URL" class="flex-1 bg-[#12141e] border border-white/10 rounded px-2 py-1.5 text-[11px] text-white min-w-0">
+                            <button type="button" onclick="triggerFilePicker('role-support', 160, true)" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded text-[10px] font-bold shrink-0">Support Photo</button>
+                            <input type="file" id="file-role-support" accept="image/*" class="hidden" onchange="handleImageFile(this, 'role-url-support', 'preview-role-support', 160)">
                         </div>
                     </div>
 
                     <button type="button" onclick="saveRolePhotos()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Save Role Photos</button>
                 </div>
 
-                <!-- 2. News / Announcements (Unlimited) -->
+                <!-- 2. News / Announcements -->
                 <div class="glass-card p-5 rounded-xl space-y-3">
                     <div class="flex justify-between items-center">
                         <h4 class="text-xs font-black uppercase text-red-400">2. News & Announcements (Add Many)</h4>
@@ -535,7 +534,7 @@
                     <div id="adm-ach-list" class="space-y-1.5 max-h-32 overflow-y-auto"></div>
                 </div>
 
-                <!-- 4. Videos / Highlights (Unlimited) -->
+                <!-- 4. Videos / Highlights -->
                 <div class="glass-card p-5 rounded-xl space-y-3">
                     <div class="flex justify-between items-center">
                         <h4 class="text-xs font-black uppercase text-red-400">4. Videos & Highlights (Add Many)</h4>
@@ -548,7 +547,7 @@
                     <div id="adm-vid-list" class="space-y-1.5 max-h-36 overflow-y-auto"></div>
                 </div>
 
-                <!-- 5. Scrims / Tournament Schedule (Unlimited + Active/Not Active Live Stream Scrim Booking) -->
+                <!-- 5. Scrims / Tournament Schedule -->
                 <div class="glass-card p-5 rounded-xl space-y-3">
                     <div class="bg-[#090a0f]/90 border border-white/10 p-3 rounded-xl space-y-2">
                         <div class="flex items-center justify-between">
@@ -591,7 +590,7 @@
                     <div id="adm-scrim-list" class="space-y-1.5 max-h-28 overflow-y-auto"></div>
                 </div>
 
-                <!-- 6. Team Groups & Sub-Teams + Team Achievements + Photo Cropper -->
+                <!-- 6. Team Groups & Sub-Teams -->
                 <div class="glass-card p-5 rounded-xl space-y-3">
                     <div class="flex justify-between items-center">
                         <h4 class="text-xs font-black uppercase text-red-400">6A. Team Group (Add Many)</h4>
@@ -602,11 +601,11 @@
                     <input type="text" id="adm-group-achievements" placeholder="Group Achievements (e.g. Top Group 2025, Champion 2026)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
                     <div class="flex items-center gap-2">
                         <img id="preview-group-logo" src="" onerror="handleImgError(this, 'logo')" class="w-9 h-9 rounded-lg object-cover border border-white/10 shrink-0">
-                        <input type="text" id="adm-group-logo" placeholder="Group Logo URL or Cropped PNG" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
-                        <button type="button" onclick="triggerFilePicker('group-logo', 256, true)" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
+                        <input type="text" id="adm-group-logo" placeholder="Group Logo URL or Cropped Image" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
+                        <button type="button" onclick="triggerFilePicker('group-logo', 180, true)" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
                             <i class="fa-solid fa-crop-simple mr-1"></i>Crop Photo
                         </button>
-                        <input type="file" id="file-group-logo" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-group-logo', 'preview-group-logo', 256)">
+                        <input type="file" id="file-group-logo" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-group-logo', 'preview-group-logo', 180)">
                     </div>
                     <button id="save-group-btn" type="button" onclick="saveTeamGroup()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Add / Save Team Group</button>
                     <div id="adm-group-list" class="space-y-1.5 max-h-28 overflow-y-auto"></div>
@@ -625,18 +624,18 @@
                         <input type="text" id="adm-subteam-achievements" placeholder="Team Achievements (e.g. Top Team Wildrounds Smash Last Year, Champion This Year)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
                         <div class="flex items-center gap-2">
                             <img id="preview-subteam-logo" src="" onerror="handleImgError(this, 'logo')" class="w-9 h-9 rounded-lg object-cover border border-white/10 shrink-0">
-                            <input type="text" id="adm-subteam-logo" placeholder="Team Logo URL or Cropped PNG" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
-                            <button type="button" onclick="triggerFilePicker('subteam-logo', 256, true)" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
+                            <input type="text" id="adm-subteam-logo" placeholder="Team Logo URL or Cropped Image" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
+                            <button type="button" onclick="triggerFilePicker('subteam-logo', 180, true)" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
                                 <i class="fa-solid fa-crop-simple mr-1"></i>Crop Photo
                             </button>
-                            <input type="file" id="file-subteam-logo" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-subteam-logo', 'preview-subteam-logo', 256)">
+                            <input type="file" id="file-subteam-logo" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-subteam-logo', 'preview-subteam-logo', 180)">
                         </div>
                         <button id="save-subteam-btn" type="button" onclick="saveSubTeam()" class="w-full bg-slate-700 hover:bg-slate-600 py-2 rounded text-xs font-bold uppercase">Add / Save Team</button>
                         <div id="adm-subteam-list" class="space-y-1.5 max-h-32 overflow-y-auto"></div>
                     </div>
                 </div>
 
-                <!-- 7. Players Inside Teams + Photo Cropper + Auto Lane Order -->
+                <!-- 7. Players Inside Teams -->
                 <div class="glass-card p-5 rounded-xl space-y-3">
                     <div class="flex justify-between items-center">
                         <h4 class="text-xs font-black uppercase text-red-400">7. Players Info Inside Teams (Auto Baron→Supp Order)</h4>
@@ -656,11 +655,11 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <img id="preview-player-pfp" src="" onerror="handleImgError(this, 'player')" class="w-10 h-10 rounded-lg object-cover border border-white/10 shrink-0">
-                        <input type="text" id="adm-player-pfp" placeholder="Player Profile Photo URL or Cropped PNG" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
-                        <button type="button" onclick="triggerFilePicker('player-pfp', 256, true)" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
+                        <input type="text" id="adm-player-pfp" placeholder="Player Profile Photo URL or Cropped Image" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
+                        <button type="button" onclick="triggerFilePicker('player-pfp', 180, true)" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
                             <i class="fa-solid fa-crop-simple mr-1"></i>Crop Photo
                         </button>
-                        <input type="file" id="file-player-pfp" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-player-pfp', 'preview-player-pfp', 256)">
+                        <input type="file" id="file-player-pfp" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-player-pfp', 'preview-player-pfp', 180)">
                     </div>
                     <div>
                         <label class="text-[10px] font-bold uppercase text-slate-400">Player Achievements (comma or new line separated)</label>
@@ -686,15 +685,15 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         <div class="bg-[#090a0f]/80 p-2 rounded-lg border border-white/10 flex items-center gap-1.5">
                             <img id="preview-m-team-logo" src="" onerror="handleImgError(this, 'logo')" class="w-7 h-7 rounded object-cover border border-white/10 shrink-0">
-                            <input type="text" id="adm-m-team-logo" placeholder="Team A Logo URL/PNG" class="flex-1 bg-[#12141e] border border-white/10 rounded px-2 py-1 text-[11px] text-white min-w-0">
-                            <button type="button" onclick="triggerFilePicker('m-team-logo', 200, true)" class="bg-slate-700 hover:bg-slate-600 text-white px-2 py-1 rounded text-[10px] font-bold shrink-0">Crop Photo</button>
-                            <input type="file" id="file-m-team-logo" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-m-team-logo', 'preview-m-team-logo', 200)">
+                            <input type="text" id="adm-m-team-logo" placeholder="Team A Logo URL/Image" class="flex-1 bg-[#12141e] border border-white/10 rounded px-2 py-1 text-[11px] text-white min-w-0">
+                            <button type="button" onclick="triggerFilePicker('m-team-logo', 160, true)" class="bg-slate-700 hover:bg-slate-600 text-white px-2 py-1 rounded text-[10px] font-bold shrink-0">Crop Photo</button>
+                            <input type="file" id="file-m-team-logo" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-m-team-logo', 'preview-m-team-logo', 160)">
                         </div>
                         <div class="bg-[#090a0f]/80 p-2 rounded-lg border border-white/10 flex items-center gap-1.5">
                             <img id="preview-m-opp-logo" src="" onerror="handleImgError(this, 'logo')" class="w-7 h-7 rounded object-cover border border-white/10 shrink-0">
-                            <input type="text" id="adm-m-opp-logo" placeholder="Team B Logo URL/PNG" class="flex-1 bg-[#12141e] border border-white/10 rounded px-2 py-1 text-[11px] text-white min-w-0">
-                            <button type="button" onclick="triggerFilePicker('m-opp-logo', 200, true)" class="bg-slate-700 hover:bg-slate-600 text-white px-2 py-1 rounded text-[10px] font-bold shrink-0">Crop Photo</button>
-                            <input type="file" id="file-m-opp-logo" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-m-opp-logo', 'preview-m-opp-logo', 200)">
+                            <input type="text" id="adm-m-opp-logo" placeholder="Team B Logo URL/Image" class="flex-1 bg-[#12141e] border border-white/10 rounded px-2 py-1 text-[11px] text-white min-w-0">
+                            <button type="button" onclick="triggerFilePicker('m-opp-logo', 160, true)" class="bg-slate-700 hover:bg-slate-600 text-white px-2 py-1 rounded text-[10px] font-bold shrink-0">Crop Photo</button>
+                            <input type="file" id="file-m-opp-logo" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-m-opp-logo', 'preview-m-opp-logo', 160)">
                         </div>
                     </div>
 
@@ -761,7 +760,7 @@
         </div>
     </div>
 
-    <!-- ADMIN PASSWORD MODAL (Password: GuiangGaming) -->
+    <!-- ADMIN PASSWORD MODAL -->
     <div id="admin-modal" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="glass-card border border-white/15 rounded-2xl p-6 w-full max-w-xs text-center relative shadow-2xl">
             <button onclick="closeAdminModal()" class="absolute top-3 right-3 text-slate-400 hover:text-white text-sm">✕</button>
@@ -955,11 +954,11 @@
             }
         }
 
-        /* PHOTO CROPPER STATE & LOGIC */
+        /* PHOTO CROPPER STATE & LOGIC (Lightweight JPEG output for fast DB sync) */
         let cropState = {
             targetInputId: '',
             previewImgId: '',
-            maxDim: 256,
+            maxDim: 180,
             img: null,
             zoom: 1,
             offsetX: 0,
@@ -969,7 +968,7 @@
             lastY: 0
         };
 
-        function triggerFilePicker(key, maxDim = 256, useCropper = true) {
+        function triggerFilePicker(key, maxDim = 180, useCropper = true) {
             const inp = document.getElementById(`file-${key}`);
             if (!inp) return;
             inp.dataset.maxDim = String(maxDim);
@@ -978,7 +977,7 @@
             inp.click();
         }
 
-        function openCropModal(dataUrl, targetInputId, previewImgId, maxDim = 256) {
+        function openCropModal(dataUrl, targetInputId, previewImgId, maxDim = 180) {
             const img = new Image();
             img.onload = function () {
                 cropState = {
@@ -1047,11 +1046,13 @@
 
         function applyCroppedImage() {
             if (!cropState.img) return;
-            const outSize = cropState.maxDim || 256;
+            const outSize = cropState.maxDim || 180;
             const outCanvas = document.createElement('canvas');
             outCanvas.width = outSize;
             outCanvas.height = outSize;
             const ctx = outCanvas.getContext('2d');
+            ctx.fillStyle = '#090a0f';
+            ctx.fillRect(0, 0, outSize, outSize);
 
             const iw = cropState.img.width;
             const ih = cropState.img.height;
@@ -1064,7 +1065,7 @@
             const dy = (outSize - drawH) / 2 + (cropState.offsetY * ratio);
 
             ctx.drawImage(cropState.img, dx, dy, drawW, drawH);
-            const croppedDataUrl = outCanvas.toDataURL('image/png');
+            const croppedDataUrl = outCanvas.toDataURL('image/jpeg', 0.85);
 
             const urlInput = document.getElementById(cropState.targetInputId);
             if (urlInput) urlInput.value = croppedDataUrl;
@@ -1076,7 +1077,7 @@
             }
 
             closeCropModal();
-            setAdminStatus('Cropped photo applied! Click Save/Add to store.');
+            setAdminStatus('Cropped photo ready! Click Add / Save.');
         }
 
         (function initCropPointerEvents() {
@@ -1113,7 +1114,7 @@
             window.addEventListener('touchend', onEnd);
         })();
 
-        function handleImageFile(fileInput, targetInputId, previewImgId, fallbackMaxDim = 256) {
+        function handleImageFile(fileInput, targetInputId, previewImgId, fallbackMaxDim = 180) {
             const file = fileInput.files && fileInput.files[0];
             if (!file) return;
             const maxDim = parseInt(fileInput.dataset.maxDim || String(fallbackMaxDim), 10) || fallbackMaxDim;
@@ -1141,15 +1142,15 @@
                     canvas.height = h;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, w, h);
-                    const pngDataUrl = canvas.toDataURL('image/png');
+                    const lightDataUrl = canvas.toDataURL('image/jpeg', 0.85);
 
                     const urlInput = document.getElementById(targetInputId);
-                    if (urlInput) urlInput.value = pngDataUrl;
+                    if (urlInput) urlInput.value = lightDataUrl;
 
                     const prevImg = document.getElementById(previewImgId);
                     if (prevImg) {
                         delete prevImg.dataset.fb;
-                        prevImg.src = pngDataUrl;
+                        prevImg.src = lightDataUrl;
                     }
                 };
                 img.src = e.target.result;
@@ -1421,12 +1422,24 @@
         function bindList(path, key, onUpdateFn) {
             db.ref(`guiangHub/${path}`).on('value', snap => {
                 const arr = [];
-                if (snap.exists()) snap.forEach(c => arr.push({ id: c.key, ...c.val() }));
-                arr.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+                if (snap.exists()) {
+                    snap.forEach(c => {
+                        const val = c.val() || {};
+                        arr.push({ id: c.key, ...val });
+                    });
+                }
+                arr.sort((a, b) => {
+                    const ta = typeof a.createdAt === 'number' ? a.createdAt : 0;
+                    const tb = typeof b.createdAt === 'number' ? b.createdAt : 0;
+                    return ta - tb;
+                });
                 state[key] = arr;
                 onUpdateFn();
                 renderAdminSelects();
                 renderAdminLists();
+            }, err => {
+                console.error(`Firebase read error on ${path}:`, err);
+                setAdminStatus(`Database read error (${path}): ${err.message}`, true);
             });
         }
 
@@ -2052,20 +2065,25 @@
         function upsert(path, editId, payload, formType, label, onSuccessFn) {
             const finalPayload = editId
                 ? { ...payload }
-                : { ...payload, createdAt: firebase.database.ServerValue.TIMESTAMP };
+                : { ...payload, createdAt: Date.now() };
+
+            const targetRef = editId
+                ? db.ref(`guiangHub/${path}/${editId}`)
+                : db.ref(`guiangHub/${path}`).push();
 
             const action = editId
-                ? db.ref(`guiangHub/${path}/${editId}`).update(finalPayload)
-                : db.ref(`guiangHub/${path}`).push(finalPayload);
+                ? targetRef.update(finalPayload)
+                : targetRef.set(finalPayload);
 
             action
-                .then((refObj) => {
-                    const createdKey = editId || (refObj && refObj.key) || null;
+                .then(() => {
+                    const createdKey = editId || targetRef.key || null;
                     resetForm(formType);
                     if (typeof onSuccessFn === 'function') onSuccessFn(createdKey);
                     setAdminStatus(`${label || 'Item'} ${editId ? 'updated' : 'added'} successfully!`);
                 })
                 .catch(err => {
+                    console.error(`Firebase save error on ${path}:`, err);
                     setAdminStatus(`Failed to save ${label || 'item'}: ${err.message}`, true);
                     alert(`Failed to save: ${err.message}`);
                 });
@@ -2179,10 +2197,12 @@
             const logo = document.getElementById('adm-subteam-logo').value.trim();
             if (!groupId) return alert('Please add or select a Team Group first.');
             if (!name) return alert('Please enter Team (Tag).');
-            upsert('teams', id, { groupId, name, game, achievements, logo }, 'subteam', 'Team inside group', (createdKey) => {
+            upsert('teams', id, { groupId, name, game, achievements, logo }, 'subteam', `Team "${name}"`, (createdKey) => {
                 selectedGroupId = groupId;
                 const grpSel = document.getElementById('adm-subteam-group');
                 if (grpSel) grpSel.value = groupId;
+                renderAdminSubTeamList();
+                renderTeamGroupsAndSubTeams();
                 if (createdKey) {
                     const tmSel = document.getElementById('adm-player-team');
                     if (tmSel) tmSel.value = createdKey;
