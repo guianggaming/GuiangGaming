@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guiang Gaming — Official website </title>
+    <title>Guiang Gaming — Official Hub & Esports Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://ddragon.leagueoflegends.com" crossorigin>
@@ -55,7 +55,6 @@
                 <a href="https://discord.com/invite/DWHRWaYsGv" target="_blank" class="hover:text-indigo-400 transition" title="Discord"><i class="fa-brands fa-discord"></i></a>
             </div>
             <div class="flex items-center space-x-3">
-                <span class="hidden sm:inline text-[10px] text-slate-500">Wild Rift • League of Legends • Shoutcaster & Creator</span>
                 <button onclick="openAdminModal()" class="bg-[#161822] hover:bg-red-600 text-slate-300 hover:text-white px-2.5 py-1 rounded font-bold text-[10px] flex items-center space-x-1 border border-white/10 transition">
                     <i class="fa-solid fa-lock text-red-500"></i>
                     <span>ADMIN</span>
@@ -68,7 +67,7 @@
     <header class="bg-[#090a0f]/95 backdrop-blur-md sticky top-0 z-40 border-b border-white/10 shadow-lg">
         <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
             <a href="#" class="flex items-center space-x-3 shrink-0">
-                <img id="site-logo" src="https://res.cloudinary.com/dtz0urit6/image/upload/q_auto:best,f_jpg/cloudinary-tools-uploads/l371z1jomyqupzsgstex" onerror="handleImgError(this, 'logo')" alt="Guiang Gaming Logo" class="h-10 w-10 rounded-lg object-cover border border-red-500/40">
+                <img id="site-logo" src="https://ibb.co/pBmpWcQC" onerror="handleImgError(this, 'logo')" alt="Guiang Gaming Logo" class="h-10 w-10 rounded-lg object-cover border border-red-500/40">
                 <div class="leading-tight">
                     <span class="display-font font-black text-white text-sm sm:text-base uppercase block">GUIANG <span class="text-red-600">GAMING</span></span>
                     <span class="text-[9px] font-bold uppercase tracking-widest text-slate-400">Shoutcaster • Scrims • Roster Hub</span>
@@ -93,7 +92,7 @@
 
     <!-- COVER PHOTO HERO SECTION -->
     <section class="relative w-full h-[360px] sm:h-[460px] md:h-[520px] overflow-hidden border-b border-white/10">
-        <img id="hero-cover-img" src="https://res.cloudinary.com/dtz0urit6/image/upload/q_auto:best,f_jpg/cloudinary-tools-uploads/l371z1jomyqupzsgstex" alt="Guiang Gaming Cover Photo" class="w-full h-full object-cover object-center">
+        <img id="hero-cover-img" src="https://ibb.co/LDVJJLsR" onerror="handleImgError(this, 'cover')" alt="Guiang Gaming Cover Photo" class="w-full h-full object-cover object-center">
         <div class="hero-overlay absolute inset-0 flex flex-col justify-end">
             <div class="max-w-6xl mx-auto w-full px-4 pb-8 sm:pb-12 space-y-4">
                 <div class="inline-flex items-center space-x-2 bg-red-600/20 border border-red-500/40 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest text-red-400">
@@ -366,19 +365,32 @@
             <div class="flex flex-wrap justify-between items-center gap-3 glass-card p-4 rounded-xl border border-red-500/40">
                 <div>
                     <h3 class="display-font text-white font-black text-xs sm:text-sm uppercase">Guiang Gaming Admin Portal (Full Control)</h3>
-                    <p class="text-[11px] text-slate-400">Pwede mong i-Add, i-Edit, at i-Delete lahat: Settings, News, Achievements, Videos, Scrim Sched, Team Groups, Teams, Players, Matches, at Sponsors.</p>
+                    <p class="text-[11px] text-slate-400">Pwede mong i-Add, i-Edit, at i-Delete lahat: Cover & Logo, About/Email, News, Achievements, Videos, Scrim Sched, Team Groups, Teams, Players, Matches, at Sponsors.</p>
                 </div>
                 <button onclick="lockAdmin()" class="bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-500/40 px-3 py-1.5 rounded-lg text-xs font-bold">Lock Portal</button>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- 1. Site Settings & About -->
+                <!-- 1. Cover Photo, Logo, About & Contact Email -->
                 <div class="glass-card p-5 rounded-xl space-y-3">
-                    <h4 class="text-xs font-black uppercase text-red-400">1. Edit Site Cover/Logo, About & Contact Email</h4>
-                    <input type="text" id="adm-logo-url" placeholder="Logo / Cover Image URL" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
-                    <input type="text" id="adm-contact-email" placeholder="Business / Scrim Email" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
-                    <textarea id="adm-about-text" rows="3" placeholder="About Guiang Gaming..." class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white"></textarea>
-                    <button onclick="saveSiteSettings()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Save Settings</button>
+                    <h4 class="text-xs font-black uppercase text-red-400">1. Edit Cover Photo, Logo, About & Contact Email</h4>
+                    <div>
+                        <label class="text-[10px] font-bold uppercase text-slate-400">Cover Photo URL</label>
+                        <input type="text" id="adm-cover-url" placeholder="Cover Photo URL" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white mt-1">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold uppercase text-slate-400">Logo Image URL</label>
+                        <input type="text" id="adm-logo-url" placeholder="Logo Image URL" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white mt-1">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold uppercase text-slate-400">Business / Scrim Email</label>
+                        <input type="text" id="adm-contact-email" placeholder="Business / Scrim Email" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white mt-1">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold uppercase text-slate-400">About Guiang Gaming</label>
+                        <textarea id="adm-about-text" rows="3" placeholder="About Guiang Gaming..." class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white mt-1"></textarea>
+                    </div>
+                    <button onclick="saveSiteSettings()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Save Cover, Logo & Settings</button>
                 </div>
 
                 <!-- 2. News / Announcements -->
@@ -641,8 +653,10 @@
         }
         const db = firebase.database();
 
-        const DEFAULT_IMG = "https://res.cloudinary.com/dtz0urit6/image/upload/q_auto:best,f_jpg/cloudinary-tools-uploads/l371z1jomyqupzsgstex";
+        const DEFAULT_COVER = "https://ibb.co/LDVJJLsR";
+        const DEFAULT_LOGO = "https://ibb.co/pBmpWcQC";
         const FALLBACKS = {
+            cover: "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500"><rect width="1200" height="500" fill="#12141e"/><rect x="0" y="0" width="1200" height="500" fill="#ef4444" opacity="0.08"/><text x="600" y="260" font-family="Arial,sans-serif" font-size="48" font-weight="900" fill="#ffffff" text-anchor="middle">GUIANG GAMING</text></svg>`),
             logo: "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><rect width="80" height="80" rx="14" fill="#161822" stroke="#ef4444" stroke-width="3"/><text x="40" y="48" font-family="Arial,sans-serif" font-size="24" font-weight="900" fill="#ffffff" text-anchor="middle">GG</text></svg>`),
             player: "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#161822"/><circle cx="50" cy="38" r="18" fill="#2b3042"/><path d="M20 92c0-16 14-28 30-28s30 12 30 28" fill="#2b3042"/></svg>`),
             champ: "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60"><rect width="60" height="60" rx="8" fill="#1f2937"/><text x="30" y="36" font-family="Arial,sans-serif" font-size="16" font-weight="bold" fill="#ef4444" text-anchor="middle">GG</text></svg>`)
@@ -672,7 +686,7 @@
         }
 
         let state = {
-            settings: { logo: DEFAULT_IMG, email: 'guianggaming.business@gmail.com', about: '' },
+            settings: { cover: DEFAULT_COVER, logo: DEFAULT_LOGO, email: 'guianggaming.business@gmail.com', about: '' },
             news: [],
             achievements: [],
             videos: [],
@@ -705,16 +719,23 @@
         db.ref('guiangHub/settings').on('value', s => {
             const d = s.val() || {};
             state.settings = {
-                logo: d.logo || DEFAULT_IMG,
+                cover: d.cover || DEFAULT_COVER,
+                logo: d.logo || DEFAULT_LOGO,
                 email: d.email || 'guianggaming.business@gmail.com',
                 about: d.about || document.getElementById('about-text').textContent.trim()
             };
-            document.getElementById('site-logo').src = state.settings.logo;
-            document.getElementById('hero-cover-img').src = state.settings.logo;
+            const logoEl = document.getElementById('site-logo');
+            const coverEl = document.getElementById('hero-cover-img');
+            delete logoEl.dataset.fb;
+            delete coverEl.dataset.fb;
+            logoEl.src = state.settings.logo;
+            coverEl.src = state.settings.cover;
+
             document.getElementById('about-text').textContent = state.settings.about;
             document.getElementById('contact-email-text').textContent = state.settings.email;
             document.getElementById('contact-email-link').href = `mailto:${state.settings.email}`;
 
+            document.getElementById('adm-cover-url').value = state.settings.cover;
             document.getElementById('adm-logo-url').value = state.settings.logo;
             document.getElementById('adm-contact-email').value = state.settings.email;
             document.getElementById('adm-about-text').value = state.settings.about;
@@ -975,7 +996,7 @@
                 const active = g.id === selectedGroupId;
                 return `
                     <button onclick="selectTeamGroup('${g.id}')" type="button" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 transition border ${active ? 'bg-red-600/20 border-red-500 text-white' : 'bg-[#090a0f]/75 border-white/10 text-slate-300 hover:border-white/25'}">
-                        <img src="${g.logo || DEFAULT_IMG}" onerror="handleImgError(this, 'logo')" class="w-10 h-10 rounded-lg object-cover border border-white/10 shrink-0">
+                        <img src="${g.logo || DEFAULT_LOGO}" onerror="handleImgError(this, 'logo')" class="w-10 h-10 rounded-lg object-cover border border-white/10 shrink-0">
                         <div class="min-w-0 flex-1">
                             <p class="text-xs font-extrabold uppercase truncate">${g.name}</p>
                             <p class="text-[10px] text-slate-400">${state.teams.filter(t => t.groupId === g.id).length} teams inside</p>
@@ -1001,7 +1022,7 @@
                 return `
                     <div onclick="openTeamPopout('${t.id}')" class="bg-[#090a0f]/85 hover:border-red-500/50 border border-white/10 p-4 rounded-xl cursor-pointer transition flex items-center justify-between gap-3">
                         <div class="flex items-center space-x-3 min-w-0">
-                            <img src="${t.logo || activeGroup?.logo || DEFAULT_IMG}" onerror="handleImgError(this, 'logo')" class="w-11 h-11 rounded-xl object-cover border border-white/10 shrink-0">
+                            <img src="${t.logo || activeGroup?.logo || DEFAULT_LOGO}" onerror="handleImgError(this, 'logo')" class="w-11 h-11 rounded-xl object-cover border border-white/10 shrink-0">
                             <div class="min-w-0">
                                 <h4 class="text-sm font-black text-white uppercase truncate">${t.name}</h4>
                                 <p class="text-[11px] text-slate-400">${t.game || 'Esports'} • ${pCount} Players</p>
@@ -1025,7 +1046,7 @@
             const team = state.teams.find(t => t.id === teamId);
             if (!team) return;
             const group = state.groups.find(g => g.id === team.groupId);
-            document.getElementById('tmodal-logo').src = team.logo || group?.logo || DEFAULT_IMG;
+            document.getElementById('tmodal-logo').src = team.logo || group?.logo || DEFAULT_LOGO;
             document.getElementById('tmodal-name').textContent = team.name;
             document.getElementById('tmodal-meta').innerHTML = `${team.game || 'Esports'} • Team Winrate: <span class="text-emerald-400 font-bold">${computeTeamWinrate(team.name)}</span>`;
 
@@ -1187,12 +1208,12 @@
             `).join('');
         }
 
-        // FULL CRUD (ADD, EDIT, DELETE) IN ADMIN PORTAL
         function saveSiteSettings() {
-            const logo = document.getElementById('adm-logo-url').value.trim() || DEFAULT_IMG;
+            const cover = document.getElementById('adm-cover-url').value.trim() || DEFAULT_COVER;
+            const logo = document.getElementById('adm-logo-url').value.trim() || DEFAULT_LOGO;
             const email = document.getElementById('adm-contact-email').value.trim() || 'guianggaming.business@gmail.com';
             const about = document.getElementById('adm-about-text').value.trim();
-            db.ref('guiangHub/settings').set({ logo, email, about }).then(() => alert('Na-save ang settings.'));
+            db.ref('guiangHub/settings').set({ cover, logo, email, about }).then(() => alert('Na-save ang Cover Photo, Logo, at Settings.'));
         }
 
         function resetForm(type) {
