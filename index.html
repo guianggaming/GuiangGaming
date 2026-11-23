@@ -104,7 +104,7 @@
                     <span>Official Shoutcaster & Gaming Hub</span>
                 </div>
                 <h1 class="display-font text-2xl sm:text-4xl md:text-5xl font-black text-white uppercase leading-tight max-w-3xl">
-                    WELCOME TO <span class="text-red-600">GUIANG GAMING</span>
+                    WELCOME TO <span class="text-red-600">GUIANG GAMING COMMUNITY HUB</span>
                 </h1>
                 <p class="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
                     Wild Rift & League of Legends shoutcaster, pro scrim organizer, and multi-game esports hub. Check out announcements, achievements, videos, scrim schedules, teams, and match stats.
@@ -120,7 +120,7 @@
 
     <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
 
-        <!-- NEWS & ANNOUNCEMENTS -->
+        <!-- NEWS & ANNOUNCEMENTS (Supports unlimited announcements) -->
         <section id="news-section" class="space-y-4 hidden">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2.5">
@@ -133,6 +133,7 @@
                 </div>
             </div>
             <div id="news-carousel-container" class="glass-card rounded-2xl overflow-hidden shadow-xl"></div>
+            <div id="news-all-list" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
         </section>
 
         <!-- ABOUT & ACHIEVEMENTS -->
@@ -163,7 +164,7 @@
             </section>
         </div>
 
-        <!-- VIDEOS / HIGHLIGHTS SECTION -->
+        <!-- VIDEOS / HIGHLIGHTS SECTION (Supports unlimited videos) -->
         <section id="videos-section" class="space-y-4 scroll-mt-20">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2.5">
@@ -177,12 +178,12 @@
             </div>
         </section>
 
-        <!-- PRO SCRIM SCHEDULE & REQUEST -->
+        <!-- PRO SCRIMS / TOURNAMENTS SCHEDULE & REQUEST (Supports unlimited slots) -->
         <section id="scrims-section" class="space-y-4 scroll-mt-20">
             <div class="flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center space-x-2.5">
                     <div class="w-1 h-5 bg-red-600 rounded"></div>
-                    <h2 class="display-font font-black text-sm sm:text-base text-white uppercase">Pro Scrim Schedule & Booking</h2>
+                    <h2 class="display-font font-black text-sm sm:text-base text-white uppercase">Scrims / Tournament Schedule & Booking</h2>
                 </div>
                 <div class="inline-flex items-center gap-1.5 glass-card px-3 py-1.5 rounded-lg text-[11px] font-bold text-slate-200">
                     <i class="fa-regular fa-clock text-red-400"></i>
@@ -192,9 +193,9 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-2 glass-card p-5 rounded-2xl space-y-3">
-                    <h3 class="text-xs font-black uppercase tracking-wider text-red-400">Upcoming / Active Scrim Slots</h3>
-                    <div id="scrim-schedule-list" class="space-y-2.5">
-                        <p class="text-xs text-slate-400 italic">Loading scrim schedule...</p>
+                    <h3 class="text-xs font-black uppercase tracking-wider text-red-400">Upcoming / Active Scrim & Tournament Slots</h3>
+                    <div id="scrim-schedule-list" class="space-y-2.5 max-h-[420px] overflow-y-auto pr-1">
+                        <p class="text-xs text-slate-400 italic">Loading scrim & tournament schedule...</p>
                     </div>
                 </div>
 
@@ -262,10 +263,11 @@
                 </div>
 
                 <div class="lg:col-span-2 glass-card p-5 rounded-2xl space-y-4">
-                    <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                    <div class="flex flex-wrap items-start justify-between gap-2 border-b border-white/10 pb-3">
                         <div>
                             <span class="text-[10px] font-bold uppercase text-red-400">Selected Group</span>
                             <h3 id="selected-group-title" class="display-font font-black text-base text-white uppercase">Select a Team Group</h3>
+                            <p id="selected-group-achievements" class="text-[11px] text-amber-300 mt-1"></p>
                         </div>
                         <span id="selected-group-count" class="text-xs font-bold text-slate-400">0 Teams</span>
                     </div>
@@ -377,6 +379,7 @@
             <div class="flex flex-wrap justify-between items-center gap-3 glass-card p-4 rounded-xl border border-red-500/40">
                 <div>
                     <h3 class="display-font text-white font-black text-xs sm:text-sm uppercase">Guiang Gaming Admin Portal</h3>
+                    <p id="admin-status-banner" class="text-[11px] text-emerald-400 mt-0.5">Ready to add or edit items.</p>
                 </div>
                 <button onclick="lockAdmin()" class="bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-500/40 px-3 py-1.5 rounded-lg text-xs font-bold">Lock Portal</button>
             </div>
@@ -418,7 +421,7 @@
                         <label class="text-[10px] font-bold uppercase text-slate-400">About Guiang Gaming</label>
                         <textarea id="adm-about-text" rows="3" placeholder="About Guiang Gaming..." class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white mt-1"></textarea>
                     </div>
-                    <button onclick="saveSiteSettings()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Save Settings</button>
+                    <button type="button" onclick="saveSiteSettings()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Save Settings</button>
                 </div>
 
                 <!-- 1B. Wild Rift Role Photos (Baron -> Jungle -> Mid -> ADC -> Support) -->
@@ -458,81 +461,87 @@
                         </div>
                     </div>
 
-                    <button onclick="saveRolePhotos()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Save Role Photos</button>
+                    <button type="button" onclick="saveRolePhotos()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Save Role Photos</button>
                 </div>
 
-                <!-- 2. News / Announcements -->
+                <!-- 2. News / Announcements (Unlimited) -->
                 <div class="glass-card p-5 rounded-xl space-y-3">
                     <div class="flex justify-between items-center">
-                        <h4 class="text-xs font-black uppercase text-red-400">2. News & Announcements</h4>
-                        <button id="cancel-news-btn" onclick="resetForm('news')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
+                        <h4 class="text-xs font-black uppercase text-red-400">2. News & Announcements (Add Many)</h4>
+                        <button id="cancel-news-btn" type="button" onclick="resetForm('news')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
                     </div>
                     <input type="hidden" id="edit-news-id">
                     <input type="text" id="adm-news-title" placeholder="Announcement Title" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
                     <input type="text" id="adm-news-link" placeholder="Optional Link (https://...)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
                     <textarea id="adm-news-desc" rows="2" placeholder="Details..." class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white"></textarea>
-                    <button id="save-news-btn" onclick="saveNews()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Publish News</button>
-                    <div id="adm-news-list" class="space-y-1.5 max-h-32 overflow-y-auto"></div>
+                    <button id="save-news-btn" type="button" onclick="saveNews()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Add / Publish News</button>
+                    <div id="adm-news-list" class="space-y-1.5 max-h-36 overflow-y-auto"></div>
                 </div>
 
                 <!-- 3. Achievements -->
                 <div class="glass-card p-5 rounded-xl space-y-3">
                     <div class="flex justify-between items-center">
                         <h4 class="text-xs font-black uppercase text-red-400">3. Achievements</h4>
-                        <button id="cancel-ach-btn" onclick="resetForm('ach')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
+                        <button id="cancel-ach-btn" type="button" onclick="resetForm('ach')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
                     </div>
                     <input type="hidden" id="edit-ach-id">
                     <input type="text" id="adm-ach-title" placeholder="Achievement Title" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
                     <input type="text" id="adm-ach-date" placeholder="Date / Tag" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
                     <textarea id="adm-ach-desc" rows="2" placeholder="Description..." class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white"></textarea>
-                    <button id="save-ach-btn" onclick="saveAchievement()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Save Achievement</button>
+                    <button id="save-ach-btn" type="button" onclick="saveAchievement()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Save Achievement</button>
                     <div id="adm-ach-list" class="space-y-1.5 max-h-32 overflow-y-auto"></div>
                 </div>
 
-                <!-- 4. Videos / Highlights -->
+                <!-- 4. Videos / Highlights (Unlimited) -->
                 <div class="glass-card p-5 rounded-xl space-y-3">
                     <div class="flex justify-between items-center">
-                        <h4 class="text-xs font-black uppercase text-red-400">4. Videos & Highlights</h4>
-                        <button id="cancel-vid-btn" onclick="resetForm('vid')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
+                        <h4 class="text-xs font-black uppercase text-red-400">4. Videos & Highlights (Add Many)</h4>
+                        <button id="cancel-vid-btn" type="button" onclick="resetForm('vid')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
                     </div>
                     <input type="hidden" id="edit-vid-id">
                     <input type="text" id="adm-vid-title" placeholder="Video Title" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
                     <input type="text" id="adm-vid-url" placeholder="YouTube URL" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
-                    <button id="save-vid-btn" onclick="saveVideo()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Save Video</button>
-                    <div id="adm-vid-list" class="space-y-1.5 max-h-32 overflow-y-auto"></div>
+                    <button id="save-vid-btn" type="button" onclick="saveVideo()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Add / Save Video</button>
+                    <div id="adm-vid-list" class="space-y-1.5 max-h-36 overflow-y-auto"></div>
                 </div>
 
-                <!-- 5. Pro Scrim Schedule -->
+                <!-- 5. Scrims / Tournament Schedule (Unlimited) -->
                 <div class="glass-card p-5 rounded-xl space-y-3">
                     <div class="flex justify-between items-center">
-                        <h4 class="text-xs font-black uppercase text-red-400">5. Pro Scrim Schedule</h4>
-                        <button id="cancel-scrim-btn" onclick="resetForm('scrim')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
+                        <h4 class="text-xs font-black uppercase text-red-400">5. Scrims / Tournament Schedule (Add Many)</h4>
+                        <button id="cancel-scrim-btn" type="button" onclick="resetForm('scrim')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
                     </div>
                     <input type="hidden" id="edit-scrim-id">
-                    <div class="grid grid-cols-2 gap-2">
-                        <input type="text" id="adm-scrim-game" placeholder="Game" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
-                        <input type="text" id="adm-scrim-time" placeholder="Day & Time" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
+                    <div class="grid grid-cols-3 gap-2">
+                        <select id="adm-scrim-type" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white">
+                            <option value="Scrim">Scrim</option>
+                            <option value="Tournament">Tournament</option>
+                        </select>
+                        <input type="text" id="adm-scrim-game" placeholder="Game (e.g. Wild Rift)" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white">
+                        <input type="text" id="adm-scrim-time" placeholder="Day & Time" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white">
                     </div>
                     <div class="grid grid-cols-2 gap-2">
-                        <input type="text" id="adm-scrim-teams" placeholder="Teams / Slot Info" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
+                        <input type="text" id="adm-scrim-teams" placeholder="Teams / Slot / Bracket Info" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
                         <select id="adm-scrim-status" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
                             <option value="Open Slot">Open Slot</option>
                             <option value="Confirmed">Confirmed</option>
+                            <option value="Ongoing">Ongoing</option>
                             <option value="Full">Full</option>
                         </select>
                     </div>
-                    <button id="save-scrim-btn" onclick="saveScrim()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Save Scrim Slot</button>
-                    <div id="adm-scrim-list" class="space-y-1.5 max-h-32 overflow-y-auto"></div>
+                    <button id="save-scrim-btn" type="button" onclick="saveScrim()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Add / Save Schedule Slot</button>
+                    <div id="adm-scrim-list" class="space-y-1.5 max-h-36 overflow-y-auto"></div>
                 </div>
 
-                <!-- 6. Team Groups & Sub-Teams -->
+                <!-- 6. Team Groups & Sub-Teams + Team Achievements -->
                 <div class="glass-card p-5 rounded-xl space-y-3">
                     <div class="flex justify-between items-center">
                         <h4 class="text-xs font-black uppercase text-red-400">6A. Team Group</h4>
-                        <button id="cancel-group-btn" onclick="resetForm('group')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
+                        <button id="cancel-group-btn" type="button" onclick="resetForm('group')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
                     </div>
                     <input type="hidden" id="edit-group-id">
                     <input type="text" id="adm-group-name" placeholder="Group Name" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
+                    <input type="text" id="adm-group-achievements" placeholder="Group Achievements (e.g. Top Group 2025, Champion 2026)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
                     <div class="flex items-center gap-2">
                         <img id="preview-group-logo" src="" onerror="handleImgError(this, 'logo')" class="w-9 h-9 rounded-lg object-cover border border-white/10 shrink-0">
                         <input type="text" id="adm-group-logo" placeholder="Group Logo URL or PNG" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
@@ -541,13 +550,13 @@
                         </button>
                         <input type="file" id="file-group-logo" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-group-logo', 'preview-group-logo', 256)">
                     </div>
-                    <button id="save-group-btn" onclick="saveTeamGroup()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Save Team Group</button>
+                    <button id="save-group-btn" type="button" onclick="saveTeamGroup()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Add / Save Team Group</button>
                     <div id="adm-group-list" class="space-y-1.5 max-h-24 overflow-y-auto"></div>
 
                     <div class="pt-2 border-t border-white/10 space-y-2">
                         <div class="flex justify-between items-center">
                             <h4 class="text-xs font-black uppercase text-red-400">6B. Team Inside Group</h4>
-                            <button id="cancel-subteam-btn" onclick="resetForm('subteam')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
+                            <button id="cancel-subteam-btn" type="button" onclick="resetForm('subteam')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
                         </div>
                         <input type="hidden" id="edit-subteam-id">
                         <select id="adm-subteam-group" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white"></select>
@@ -555,6 +564,7 @@
                             <input type="text" id="adm-subteam-name" placeholder="Team (Tag)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
                             <input type="text" id="adm-subteam-game" placeholder="Game" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
                         </div>
+                        <input type="text" id="adm-subteam-achievements" placeholder="Team Achievements (e.g. Top Team Wildrounds Smash Last Year, Champion This Year)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
                         <div class="flex items-center gap-2">
                             <img id="preview-subteam-logo" src="" onerror="handleImgError(this, 'logo')" class="w-9 h-9 rounded-lg object-cover border border-white/10 shrink-0">
                             <input type="text" id="adm-subteam-logo" placeholder="Team Logo URL or PNG" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
@@ -563,7 +573,7 @@
                             </button>
                             <input type="file" id="file-subteam-logo" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-subteam-logo', 'preview-subteam-logo', 256)">
                         </div>
-                        <button id="save-subteam-btn" onclick="saveSubTeam()" class="w-full bg-slate-700 hover:bg-slate-600 py-2 rounded text-xs font-bold uppercase">Save Team</button>
+                        <button id="save-subteam-btn" type="button" onclick="saveSubTeam()" class="w-full bg-slate-700 hover:bg-slate-600 py-2 rounded text-xs font-bold uppercase">Add / Save Team</button>
                         <div id="adm-subteam-list" class="space-y-1.5 max-h-24 overflow-y-auto"></div>
                     </div>
                 </div>
@@ -571,8 +581,8 @@
                 <!-- 7. Players Inside Teams -->
                 <div class="glass-card p-5 rounded-xl space-y-3">
                     <div class="flex justify-between items-center">
-                        <h4 class="text-xs font-black uppercase text-red-400">7. Players Inside Teams</h4>
-                        <button id="cancel-player-btn" onclick="resetForm('player')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
+                        <h4 class="text-xs font-black uppercase text-red-400">7. Players Info Inside Teams</h4>
+                        <button id="cancel-player-btn" type="button" onclick="resetForm('player')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
                     </div>
                     <input type="hidden" id="edit-player-id">
                     <select id="adm-player-team" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white"></select>
@@ -596,9 +606,9 @@
                     </div>
                     <div>
                         <label class="text-[10px] font-bold uppercase text-slate-400">Player Achievements (comma or new line separated)</label>
-                        <textarea id="adm-player-achievements" rows="2" placeholder="e.g. Top Team - Wildrounds Smash (2025)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white mt-1"></textarea>
+                        <textarea id="adm-player-achievements" rows="2" placeholder="e.g. Top Team - Wildrounds Smash Last Year, Champion This Year" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white mt-1"></textarea>
                     </div>
-                    <button id="save-player-btn" onclick="savePlayer()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Save Player</button>
+                    <button id="save-player-btn" type="button" onclick="savePlayer()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Add / Save Player</button>
                     <div id="adm-player-list" class="space-y-1.5 max-h-32 overflow-y-auto"></div>
                 </div>
 
@@ -606,7 +616,7 @@
                 <div class="glass-card p-5 rounded-xl space-y-3">
                     <div class="flex justify-between items-center">
                         <h4 class="text-xs font-black uppercase text-red-400">8. Match History</h4>
-                        <button id="cancel-match-btn" onclick="resetForm('match')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
+                        <button id="cancel-match-btn" type="button" onclick="resetForm('match')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
                     </div>
                     <input type="hidden" id="edit-match-id">
                     <div class="grid grid-cols-3 gap-2">
@@ -644,7 +654,7 @@
                     <p class="text-[10px] text-slate-400">Line format: <code class="text-red-300">IGN | Champion | KDA | MVP</code></p>
                     <textarea id="adm-m-blue" rows="4" placeholder="IGN | Champion | KDA | MVP" class="w-full bg-[#090a0f] border border-blue-500/30 rounded px-3 py-2 text-xs text-white font-mono"></textarea>
                     <textarea id="adm-m-red" rows="3" placeholder="IGN | Champion | KDA | MVP" class="w-full bg-[#090a0f] border border-red-500/30 rounded px-3 py-2 text-xs text-white font-mono"></textarea>
-                    <button id="save-match-btn" onclick="saveMatch()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Save Match</button>
+                    <button id="save-match-btn" type="button" onclick="saveMatch()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Save Match</button>
                     <div id="adm-match-list" class="space-y-1.5 max-h-32 overflow-y-auto"></div>
                 </div>
             </div>
@@ -653,7 +663,7 @@
             <div class="glass-card p-5 rounded-xl space-y-3">
                 <div class="flex justify-between items-center">
                     <h4 class="text-xs font-black uppercase text-red-400">9. Sponsors & Partnerships</h4>
-                    <button id="cancel-part-btn" onclick="resetForm('part')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
+                    <button id="cancel-part-btn" type="button" onclick="resetForm('part')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
                 </div>
                 <input type="hidden" id="edit-part-id">
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
@@ -661,7 +671,7 @@
                     <input type="text" id="adm-part-logo" placeholder="Logo URL (Optional)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
                     <input type="text" id="adm-part-link" placeholder="Website / Social Link" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
                 </div>
-                <button id="save-part-btn" onclick="savePartner()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Save Partner / Sponsor</button>
+                <button id="save-part-btn" type="button" onclick="savePartner()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Save Partner / Sponsor</button>
                 <div id="adm-part-list" class="space-y-1.5 max-h-28 overflow-y-auto"></div>
             </div>
         </section>
@@ -684,11 +694,12 @@
             <button onclick="closeTeamModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white bg-white/5 w-7 h-7 rounded-full flex items-center justify-center">✕</button>
             <div class="flex items-center space-x-3 border-b border-white/10 pb-3">
                 <img id="tmodal-logo" src="" onerror="handleImgError(this, 'logo')" class="w-12 h-12 rounded-xl object-cover border border-white/15">
-                <div>
-                    <h3 id="tmodal-name" class="display-font font-black text-base text-white uppercase">TEAM NAME</h3>
+                <div class="min-w-0">
+                    <h3 id="tmodal-name" class="display-font font-black text-base text-white uppercase truncate">TEAM NAME</h3>
                     <p id="tmodal-meta" class="text-xs text-slate-400">Game • Team Winrate: <span id="tmodal-wr" class="text-emerald-400 font-bold">0%</span></p>
                 </div>
             </div>
+            <div id="tmodal-achievements" class="space-y-1.5"></div>
             <div id="tmodal-players" class="space-y-2.5"></div>
         </div>
     </div>
@@ -794,6 +805,13 @@
         const DEFAULT_LOGO = "https://cdn.corenexis.com/f/TQWKyUMU.jpg";
         const SCRIM_EMAILS = ["brian.guiang@gmail.com", "kushimetakeku2004@gmail.com"];
 
+        function setAdminStatus(msg, isError = false) {
+            const el = document.getElementById("admin-status-banner");
+            if (!el) return;
+            el.textContent = msg;
+            el.className = isError ? "text-[11px] text-red-400 mt-0.5" : "text-[11px] text-emerald-400 mt-0.5";
+        }
+
         function updatePublicClock() {
             const now = new Date();
             const formatted = now.toLocaleTimeString([], {
@@ -809,14 +827,7 @@
         updatePublicClock();
         setInterval(updatePublicClock, 1000);
 
-        const DEFAULT_ROLE_PHOTOS = {
-            baron: "",
-            jungle: "",
-            mid: "",
-            adc: "",
-            support: ""
-        };
-
+        const DEFAULT_ROLE_PHOTOS = { baron: "", jungle: "", mid: "", adc: "", support: "" };
         const ROLE_SVG_FALLBACKS = {
             baron: "data:image/png;base64," + btoa(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" fill="#000000"/><path d="M24 68c0-22 16-38 40-44-6 12-6 24 0 34 8-12 20-18 40-20-6 16-16 28-32 34 12 4 22 10 28 20-16-2-28 2-36 12-6-10-16-14-28-12 6-10 8-18-12-24z" fill="#c8a86b"/></svg>`),
             jungle: "data:image/png;base64," + btoa(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" fill="#000000"/><path d="M22 86c0-26 12-48 28-64 4 18 12 34 22 46 4-24 16-42 34-54-6 24-6 46 2 68-14-4-26-2-36 8-6-12-16-18-28-18-10 0-18 4-22 10z" fill="#c8a86b"/></svg>`),
@@ -962,19 +973,13 @@
             return t ? (t.logo || '') : '';
         }
 
-        function parsePlayerAchievements(raw) {
+        function parseAchievementsList(raw) {
             if (!raw) return [];
-            return raw
-                .split(/[\n,]+/)
-                .map(s => s.trim())
-                .filter(Boolean);
+            return raw.split(/[\n,]+/).map(s => s.trim()).filter(Boolean);
         }
 
         function getRecipientEmails() {
-            const custom = (state.settings.email || '')
-                .split(',')
-                .map(e => e.trim())
-                .filter(Boolean);
+            const custom = (state.settings.email || '').split(',').map(e => e.trim()).filter(Boolean);
             return Array.from(new Set([...SCRIM_EMAILS, ...custom]));
         }
 
@@ -1030,46 +1035,42 @@
                 adc: document.getElementById('role-url-adc').value.trim(),
                 support: document.getElementById('role-url-support').value.trim()
             };
-            db.ref('guiangHub/rolePhotos').set(payload).then(() => alert('Role photos saved.'));
+            db.ref('guiangHub/rolePhotos').set(payload)
+                .then(() => setAdminStatus('Role photos saved.'))
+                .catch(err => setAdminStatus('Error saving role photos: ' + err.message, true));
         }
 
-        function bindList(path, key) {
+        function bindList(path, key, onUpdateFn) {
             db.ref(`guiangHub/${path}`).on('value', snap => {
                 const arr = [];
                 if (snap.exists()) snap.forEach(c => arr.push({ id: c.key, ...c.val() }));
                 state[key] = arr;
-                renderAll();
+                onUpdateFn();
+                renderAdminSelects();
+                renderAdminLists();
             });
         }
 
-        bindList('news', 'news');
-        bindList('achievements', 'achievements');
-        bindList('videos', 'videos');
-        bindList('scrims', 'scrims');
-        bindList('groups', 'groups');
-        bindList('teams', 'teams');
-        bindList('players', 'players');
-        bindList('partners', 'partners');
+        bindList('news', 'news', renderNews);
+        bindList('achievements', 'achievements', renderAchievements);
+        bindList('videos', 'videos', renderVideos);
+        bindList('scrims', 'scrims', renderScrims);
+        bindList('groups', 'groups', renderTeamGroupsAndSubTeams);
+        bindList('teams', 'teams', renderTeamGroupsAndSubTeams);
+        bindList('players', 'players', renderTeamGroupsAndSubTeams);
+        bindList('partners', 'partners', renderPartners);
 
         db.ref('guiangHub/matches').on('value', snap => {
             state.matches = snap.val() || {};
-            renderAll();
-        });
-
-        function renderAll() {
-            renderNews();
-            renderAchievements();
-            renderVideos();
-            renderScrims();
             renderTeamGroupsAndSubTeams();
             renderMatches();
-            renderPartners();
             renderAdminLists();
-        }
+        });
 
         function renderNews() {
             const sec = document.getElementById('news-section');
             const box = document.getElementById('news-carousel-container');
+            const allBox = document.getElementById('news-all-list');
             const nav = document.getElementById('news-nav-controls');
             if (!state.news.length) { sec.classList.add('hidden'); return; }
             sec.classList.remove('hidden');
@@ -1079,13 +1080,23 @@
             box.innerHTML = `
                 <div class="p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div class="space-y-1.5">
-                        <span class="text-[10px] font-black uppercase px-2.5 py-0.5 rounded bg-red-600/20 text-red-400 border border-red-500/30">Announcement ${currentNewsIdx + 1}/${state.news.length}</span>
+                        <span class="text-[10px] font-black uppercase px-2.5 py-0.5 rounded bg-red-600/20 text-red-400 border border-red-500/30">Featured ${currentNewsIdx + 1}/${state.news.length}</span>
                         <h3 class="text-base sm:text-lg font-extrabold text-white">${n.title}</h3>
                         <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">${n.desc}</p>
                     </div>
                     ${n.link ? `<a href="${n.link}" target="_blank" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-xs font-bold uppercase shrink-0 text-center">Open Link</a>` : ''}
                 </div>
             `;
+
+            allBox.innerHTML = state.news.map((item, idx) => `
+                <div onclick="currentNewsIdx=${idx};renderNews();" class="glass-card hover:border-red-500/40 p-4 rounded-xl cursor-pointer transition space-y-1">
+                    <div class="flex items-center justify-between gap-2">
+                        <h4 class="text-xs font-extrabold text-white truncate">${item.title}</h4>
+                        <span class="text-[10px] font-bold text-red-400 shrink-0">#${idx + 1}</span>
+                    </div>
+                    <p class="text-[11px] text-slate-300 line-clamp-2">${item.desc || ''}</p>
+                </div>
+            `).join('');
         }
         function nextNewsSlide() { if (state.news.length) { currentNewsIdx = (currentNewsIdx + 1) % state.news.length; renderNews(); } }
         function prevNewsSlide() { if (state.news.length) { currentNewsIdx = (currentNewsIdx - 1 + state.news.length) % state.news.length; renderNews(); } }
@@ -1139,7 +1150,7 @@
         function renderScrims() {
             const box = document.getElementById('scrim-schedule-list');
             if (!state.scrims.length) {
-                box.innerHTML = `<p class="text-xs text-slate-400 italic">No scrim slots scheduled.</p>`;
+                box.innerHTML = `<p class="text-xs text-slate-400 italic">No scrim or tournament slots scheduled.</p>`;
                 return;
             }
             box.innerHTML = state.scrims.map(s => {
@@ -1147,15 +1158,18 @@
                     ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
                     : s.status === 'Confirmed'
                         ? 'bg-blue-500/15 text-blue-400 border-blue-500/30'
-                        : 'bg-slate-700/40 text-slate-400 border-white/10';
+                        : s.status === 'Ongoing'
+                            ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
+                            : 'bg-slate-700/40 text-slate-400 border-white/10';
                 return `
                     <div class="bg-[#090a0f]/80 border border-white/10 p-3.5 rounded-xl flex flex-wrap items-center justify-between gap-2">
                         <div>
                             <div class="flex items-center space-x-2">
-                                <span class="text-[10px] font-black uppercase text-red-400">${s.game || 'Scrim'}</span>
+                                <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-red-600/20 text-red-400 border border-red-500/30">${s.slotType || 'Scrim'}</span>
+                                <span class="text-[10px] font-black uppercase text-slate-400">${s.game || 'Esports'}</span>
                                 <span class="text-xs font-extrabold text-white">${s.time || ''}</span>
                             </div>
-                            <p class="text-[11px] text-slate-300 mt-0.5">${s.teams || 'Open for booking'}</p>
+                            <p class="text-[11px] text-slate-300 mt-1">${s.teams || 'Open for booking'}</p>
                         </div>
                         <span class="text-[10px] font-black uppercase px-2.5 py-1 rounded border ${badgeClass}">${s.status || 'Open Slot'}</span>
                     </div>
@@ -1264,11 +1278,13 @@
             const groupsBox = document.getElementById('team-groups-list');
             const subGrid = document.getElementById('sub-teams-grid');
             const titleEl = document.getElementById('selected-group-title');
+            const groupAchEl = document.getElementById('selected-group-achievements');
             const countEl = document.getElementById('selected-group-count');
 
             if (!state.groups.length) {
                 groupsBox.innerHTML = `<p class="text-xs text-slate-400 italic px-1">No team groups yet.</p>`;
                 titleEl.textContent = 'No Team Groups Yet';
+                groupAchEl.textContent = '';
                 countEl.textContent = '0 Teams';
                 subGrid.innerHTML = `<p class="text-xs text-slate-400 italic">No teams available.</p>`;
                 return;
@@ -1295,6 +1311,8 @@
             const activeGroup = state.groups.find(g => g.id === selectedGroupId);
             const subTeams = state.teams.filter(t => t.groupId === selectedGroupId);
             titleEl.textContent = activeGroup ? activeGroup.name : 'Teams';
+            const grpAch = parseAchievementsList(activeGroup?.achievements);
+            groupAchEl.textContent = grpAch.length ? `🏆 ${grpAch.join(' • ')}` : '';
             countEl.textContent = `${subTeams.length} ${subTeams.length === 1 ? 'Team' : 'Teams'}`;
 
             if (!subTeams.length) {
@@ -1305,19 +1323,23 @@
             subGrid.innerHTML = subTeams.map(t => {
                 const wr = computeTeamWinrate(t.name);
                 const pCount = state.players.filter(p => p.teamId === t.id).length;
+                const tAch = parseAchievementsList(t.achievements);
                 return `
-                    <div onclick="openTeamPopout('${t.id}')" class="bg-[#090a0f]/85 hover:border-red-500/50 border border-white/10 p-4 rounded-xl cursor-pointer transition flex items-center justify-between gap-3">
-                        <div class="flex items-center space-x-3 min-w-0">
-                            <img src="${t.logo || activeGroup?.logo || DEFAULT_LOGO}" onerror="handleImgError(this, 'logo')" class="w-11 h-11 rounded-xl object-cover border border-white/10 shrink-0">
-                            <div class="min-w-0">
-                                <h4 class="text-sm font-black text-white uppercase truncate">${t.name}</h4>
-                                <p class="text-[11px] text-slate-400">${t.game || 'Esports'} • ${pCount} Players</p>
+                    <div onclick="openTeamPopout('${t.id}')" class="bg-[#090a0f]/85 hover:border-red-500/50 border border-white/10 p-4 rounded-xl cursor-pointer transition space-y-2">
+                        <div class="flex items-center justify-between gap-3">
+                            <div class="flex items-center space-x-3 min-w-0">
+                                <img src="${t.logo || activeGroup?.logo || DEFAULT_LOGO}" onerror="handleImgError(this, 'logo')" class="w-11 h-11 rounded-xl object-cover border border-white/10 shrink-0">
+                                <div class="min-w-0">
+                                    <h4 class="text-sm font-black text-white uppercase truncate">${t.name}</h4>
+                                    <p class="text-[11px] text-slate-400">${t.game || 'Esports'} • ${pCount} Players</p>
+                                </div>
+                            </div>
+                            <div class="text-right shrink-0">
+                                <span class="text-[10px] uppercase font-bold text-slate-400 block">Team WR</span>
+                                <span class="text-xs font-black text-emerald-400">${wr}</span>
                             </div>
                         </div>
-                        <div class="text-right shrink-0">
-                            <span class="text-[10px] uppercase font-bold text-slate-400 block">Team WR</span>
-                            <span class="text-xs font-black text-emerald-400">${wr}</span>
-                        </div>
+                        ${tAch.length ? `<p class="text-[10px] text-amber-300 truncate"><i class="fa-solid fa-trophy mr-1 text-amber-400"></i>${tAch.join(' • ')}</p>` : ''}
                     </div>
                 `;
             }).join('');
@@ -1336,6 +1358,19 @@
             document.getElementById('tmodal-name').textContent = team.name;
             document.getElementById('tmodal-meta').innerHTML = `${team.game || 'Esports'} • Team Winrate: <span class="text-emerald-400 font-bold">${computeTeamWinrate(team.name)}</span>`;
 
+            const tAch = parseAchievementsList(team.achievements);
+            const tAchBox = document.getElementById('tmodal-achievements');
+            if (tAch.length) {
+                tAchBox.innerHTML = tAch.map(a => `
+                    <div class="bg-[#090a0f] border border-amber-500/25 px-3 py-1.5 rounded-lg flex items-center gap-2 text-[11px] text-amber-200 font-semibold">
+                        <i class="fa-solid fa-trophy text-amber-400 shrink-0"></i>
+                        <span>${a}</span>
+                    </div>
+                `).join('');
+            } else {
+                tAchBox.innerHTML = '';
+            }
+
             const teamPlayers = state.players.filter(p => p.teamId === teamId);
             const list = document.getElementById('tmodal-players');
             if (!teamPlayers.length) {
@@ -1345,7 +1380,7 @@
                     const st = computePlayerStats(p.ign);
                     const rKey = getRoleKey(p.role);
                     const roleImg = getRolePhoto(p.role);
-                    const pAch = parsePlayerAchievements(p.achievements);
+                    const pAch = parseAchievementsList(p.achievements);
                     return `
                         <div onclick="openPlayerModal('${p.id}')" class="bg-[#090a0f] hover:border-red-500/40 border border-white/10 p-3 rounded-xl flex items-center justify-between gap-3 cursor-pointer transition">
                             <div class="flex items-center space-x-3 min-w-0">
@@ -1391,7 +1426,7 @@
             document.getElementById('pmodal-wr').textContent = `${st.winrate}%`;
             document.getElementById('pmodal-total').textContent = st.total;
 
-            const achList = parsePlayerAchievements(p.achievements);
+            const achList = parseAchievementsList(p.achievements);
             const achBox = document.getElementById('pmodal-achievements');
             if (!achList.length) {
                 achBox.innerHTML = `<p class="text-xs text-slate-400 italic">No player achievements listed yet.</p>`;
@@ -1547,7 +1582,9 @@
             const logo = document.getElementById('adm-logo-url').value.trim() || DEFAULT_LOGO;
             const email = document.getElementById('adm-contact-email').value.trim() || SCRIM_EMAILS.join(', ');
             const about = document.getElementById('adm-about-text').value.trim();
-            db.ref('guiangHub/settings').set({ cover, logo, email, about }).then(() => alert('Settings saved.'));
+            db.ref('guiangHub/settings').set({ cover, logo, email, about })
+                .then(() => setAdminStatus('Site settings saved.'))
+                .catch(err => setAdminStatus('Error saving settings: ' + err.message, true));
         }
 
         function resetForm(type) {
@@ -1556,7 +1593,7 @@
                 document.getElementById('adm-news-title').value = '';
                 document.getElementById('adm-news-link').value = '';
                 document.getElementById('adm-news-desc').value = '';
-                document.getElementById('save-news-btn').textContent = 'Publish News';
+                document.getElementById('save-news-btn').textContent = 'Add / Publish News';
                 document.getElementById('cancel-news-btn').classList.add('hidden');
             } else if (type === 'ach') {
                 document.getElementById('edit-ach-id').value = '';
@@ -1569,29 +1606,33 @@
                 document.getElementById('edit-vid-id').value = '';
                 document.getElementById('adm-vid-title').value = '';
                 document.getElementById('adm-vid-url').value = '';
-                document.getElementById('save-vid-btn').textContent = 'Save Video';
+                document.getElementById('save-vid-btn').textContent = 'Add / Save Video';
                 document.getElementById('cancel-vid-btn').classList.add('hidden');
             } else if (type === 'scrim') {
                 document.getElementById('edit-scrim-id').value = '';
+                document.getElementById('adm-scrim-type').value = 'Scrim';
                 document.getElementById('adm-scrim-game').value = '';
                 document.getElementById('adm-scrim-time').value = '';
                 document.getElementById('adm-scrim-teams').value = '';
-                document.getElementById('save-scrim-btn').textContent = 'Save Scrim Slot';
+                document.getElementById('adm-scrim-status').value = 'Open Slot';
+                document.getElementById('save-scrim-btn').textContent = 'Add / Save Schedule Slot';
                 document.getElementById('cancel-scrim-btn').classList.add('hidden');
             } else if (type === 'group') {
                 document.getElementById('edit-group-id').value = '';
                 document.getElementById('adm-group-name').value = '';
+                document.getElementById('adm-group-achievements').value = '';
                 document.getElementById('adm-group-logo').value = '';
                 setCleanImgSrc(document.getElementById('preview-group-logo'), '', 'logo');
-                document.getElementById('save-group-btn').textContent = 'Save Team Group';
+                document.getElementById('save-group-btn').textContent = 'Add / Save Team Group';
                 document.getElementById('cancel-group-btn').classList.add('hidden');
             } else if (type === 'subteam') {
                 document.getElementById('edit-subteam-id').value = '';
                 document.getElementById('adm-subteam-name').value = '';
                 document.getElementById('adm-subteam-game').value = '';
+                document.getElementById('adm-subteam-achievements').value = '';
                 document.getElementById('adm-subteam-logo').value = '';
                 setCleanImgSrc(document.getElementById('preview-subteam-logo'), '', 'logo');
-                document.getElementById('save-subteam-btn').textContent = 'Save Team';
+                document.getElementById('save-subteam-btn').textContent = 'Add / Save Team';
                 document.getElementById('cancel-subteam-btn').classList.add('hidden');
             } else if (type === 'player') {
                 document.getElementById('edit-player-id').value = '';
@@ -1600,7 +1641,7 @@
                 document.getElementById('adm-player-pfp').value = '';
                 document.getElementById('adm-player-achievements').value = '';
                 setCleanImgSrc(document.getElementById('preview-player-pfp'), '', 'player');
-                document.getElementById('save-player-btn').textContent = 'Save Player';
+                document.getElementById('save-player-btn').textContent = 'Add / Save Player';
                 document.getElementById('cancel-player-btn').classList.add('hidden');
             } else if (type === 'match') {
                 document.getElementById('edit-match-id').value = '';
@@ -1626,9 +1667,19 @@
             }
         }
 
-        function upsert(path, editId, payload, formType) {
-            const ref = editId ? db.ref(`guiangHub/${path}/${editId}`).update(payload) : db.ref(`guiangHub/${path}`).push(payload);
-            ref.then(() => resetForm(formType));
+        function upsert(path, editId, payload, formType, label) {
+            const action = editId
+                ? db.ref(`guiangHub/${path}/${editId}`).update(payload)
+                : db.ref(`guiangHub/${path}`).push(payload);
+            action
+                .then(() => {
+                    resetForm(formType);
+                    setAdminStatus(`${label || 'Item'} ${editId ? 'updated' : 'added'} successfully!`);
+                })
+                .catch(err => {
+                    setAdminStatus(`Failed to save ${label || 'item'}: ${err.message}`, true);
+                    alert(`Failed to save: ${err.message}`);
+                });
         }
 
         function saveNews() {
@@ -1636,8 +1687,8 @@
             const title = document.getElementById('adm-news-title').value.trim();
             const link = document.getElementById('adm-news-link').value.trim();
             const desc = document.getElementById('adm-news-desc').value.trim();
-            if (!title || !desc) return alert('Please enter title and details.');
-            upsert('news', id, { title, link, desc }, 'news');
+            if (!title || !desc) return alert('Please enter announcement title and details.');
+            upsert('news', id, { title, link, desc }, 'news', 'News');
         }
         function editNews(id) {
             const item = state.news.find(i => i.id === id); if (!item) return;
@@ -1655,7 +1706,7 @@
             const date = document.getElementById('adm-ach-date').value.trim();
             const desc = document.getElementById('adm-ach-desc').value.trim();
             if (!title) return alert('Please enter achievement title.');
-            upsert('achievements', id, { title, date, desc }, 'ach');
+            upsert('achievements', id, { title, date, desc }, 'ach', 'Achievement');
         }
         function editAch(id) {
             const item = state.achievements.find(i => i.id === id); if (!item) return;
@@ -1672,7 +1723,7 @@
             const title = document.getElementById('adm-vid-title').value.trim();
             const url = document.getElementById('adm-vid-url').value.trim();
             if (!title || !url) return alert('Please enter video title and URL.');
-            upsert('videos', id, { title, url }, 'vid');
+            upsert('videos', id, { title, url }, 'vid', 'Video');
         }
         function editVid(id) {
             const item = state.videos.find(i => i.id === id); if (!item) return;
@@ -1685,35 +1736,39 @@
 
         function saveScrim() {
             const id = document.getElementById('edit-scrim-id').value;
+            const slotType = document.getElementById('adm-scrim-type').value;
             const game = document.getElementById('adm-scrim-game').value.trim();
             const time = document.getElementById('adm-scrim-time').value.trim();
             const teams = document.getElementById('adm-scrim-teams').value.trim();
             const status = document.getElementById('adm-scrim-status').value;
-            if (!time) return alert('Please enter scrim schedule time.');
-            upsert('scrims', id, { game, time, teams, status }, 'scrim');
+            if (!time) return alert('Please enter day & time.');
+            upsert('scrims', id, { slotType, game, time, teams, status }, 'scrim', `${slotType} slot`);
         }
         function editScrim(id) {
             const item = state.scrims.find(i => i.id === id); if (!item) return;
             document.getElementById('edit-scrim-id').value = id;
+            document.getElementById('adm-scrim-type').value = item.slotType || 'Scrim';
             document.getElementById('adm-scrim-game').value = item.game || '';
             document.getElementById('adm-scrim-time').value = item.time || '';
             document.getElementById('adm-scrim-teams').value = item.teams || '';
             document.getElementById('adm-scrim-status').value = item.status || 'Open Slot';
-            document.getElementById('save-scrim-btn').textContent = 'Update Scrim Slot';
+            document.getElementById('save-scrim-btn').textContent = 'Update Schedule Slot';
             document.getElementById('cancel-scrim-btn').classList.remove('hidden');
         }
 
         function saveTeamGroup() {
             const id = document.getElementById('edit-group-id').value;
             const name = document.getElementById('adm-group-name').value.trim();
+            const achievements = document.getElementById('adm-group-achievements').value.trim();
             const logo = document.getElementById('adm-group-logo').value.trim();
             if (!name) return alert('Please enter group name.');
-            upsert('groups', id, { name, logo }, 'group');
+            upsert('groups', id, { name, achievements, logo }, 'group', 'Team Group');
         }
         function editGroup(id) {
             const item = state.groups.find(i => i.id === id); if (!item) return;
             document.getElementById('edit-group-id').value = id;
             document.getElementById('adm-group-name').value = item.name || '';
+            document.getElementById('adm-group-achievements').value = item.achievements || '';
             document.getElementById('adm-group-logo').value = item.logo || '';
             setCleanImgSrc(document.getElementById('preview-group-logo'), item.logo || '', 'logo');
             document.getElementById('save-group-btn').textContent = 'Update Team Group';
@@ -1725,9 +1780,10 @@
             const groupId = document.getElementById('adm-subteam-group').value;
             const name = document.getElementById('adm-subteam-name').value.trim();
             const game = document.getElementById('adm-subteam-game').value.trim();
+            const achievements = document.getElementById('adm-subteam-achievements').value.trim();
             const logo = document.getElementById('adm-subteam-logo').value.trim();
             if (!groupId || !name) return alert('Please select a group and enter Team (Tag).');
-            upsert('teams', id, { groupId, name, game, logo }, 'subteam');
+            upsert('teams', id, { groupId, name, game, achievements, logo }, 'subteam', 'Team');
         }
         function editSubTeam(id) {
             const item = state.teams.find(i => i.id === id); if (!item) return;
@@ -1735,6 +1791,7 @@
             document.getElementById('adm-subteam-group').value = item.groupId || '';
             document.getElementById('adm-subteam-name').value = item.name || '';
             document.getElementById('adm-subteam-game').value = item.game || '';
+            document.getElementById('adm-subteam-achievements').value = item.achievements || '';
             document.getElementById('adm-subteam-logo').value = item.logo || '';
             setCleanImgSrc(document.getElementById('preview-subteam-logo'), item.logo || '', 'logo');
             document.getElementById('save-subteam-btn').textContent = 'Update Team';
@@ -1749,7 +1806,7 @@
             const pfp = document.getElementById('adm-player-pfp').value.trim();
             const achievements = document.getElementById('adm-player-achievements').value.trim();
             if (!teamId || !ign) return alert('Please select a team and enter player IGN.');
-            upsert('players', id, { teamId, ign, role, pfp, achievements }, 'player');
+            upsert('players', id, { teamId, ign, role, pfp, achievements }, 'player', 'Player');
         }
         function editPlayerItem(id) {
             const item = state.players.find(i => i.id === id); if (!item) return;
@@ -1777,7 +1834,7 @@
             const blueData = document.getElementById('adm-m-blue').value.trim();
             const redData = document.getElementById('adm-m-red').value.trim();
             if (!team || !opponent) return alert('Please enter both Team (Tag) A and Team (Tag) B.');
-            upsert('matches', id, { team, opponent, score, teamLogo, oppLogo, type, result, date, blueData, redData }, 'match');
+            upsert('matches', id, { team, opponent, score, teamLogo, oppLogo, type, result, date, blueData, redData }, 'match', 'Match');
         }
         function editMatchItem(id) {
             const item = state.matches[id]; if (!item) return;
@@ -1804,7 +1861,7 @@
             const logo = document.getElementById('adm-part-logo').value.trim();
             const link = document.getElementById('adm-part-link').value.trim();
             if (!name) return alert('Please enter partner name.');
-            upsert('partners', id, { name, logo, link }, 'part');
+            upsert('partners', id, { name, logo, link }, 'part', 'Partner / Sponsor');
         }
         function editPart(id) {
             const item = state.partners.find(i => i.id === id); if (!item) return;
@@ -1817,22 +1874,39 @@
         }
 
         function delNode(path, id) {
-            if (confirm('Delete this item?')) db.ref(`guiangHub/${path}/${id}`).remove();
+            if (confirm('Delete this item?')) {
+                db.ref(`guiangHub/${path}/${id}`).remove()
+                    .then(() => setAdminStatus('Item deleted.'))
+                    .catch(err => setAdminStatus('Failed to delete: ' + err.message, true));
+            }
+        }
+
+        function renderAdminSelects() {
+            const grpSel = document.getElementById('adm-subteam-group');
+            const prevGrpVal = grpSel.value;
+            grpSel.innerHTML = state.groups.map(g => `<option value="${g.id}">${g.name}</option>`).join('') || `<option value="">No groups yet</option>`;
+            if (prevGrpVal && state.groups.some(g => g.id === prevGrpVal)) {
+                grpSel.value = prevGrpVal;
+            }
+
+            const tmSel = document.getElementById('adm-player-team');
+            const prevTmVal = tmSel.value;
+            tmSel.innerHTML = state.teams.map(t => {
+                const grp = state.groups.find(g => g.id === t.groupId);
+                return `<option value="${t.id}">${t.name}${grp ? ` (${grp.name})` : ''}</option>`;
+            }).join('') || `<option value="">No teams yet</option>`;
+            if (prevTmVal && state.teams.some(t => t.id === prevTmVal)) {
+                tmSel.value = prevTmVal;
+            }
         }
 
         function renderAdminLists() {
-            const grpSel = document.getElementById('adm-subteam-group');
-            grpSel.innerHTML = state.groups.map(g => `<option value="${g.id}">${g.name}</option>`).join('') || `<option value="">No groups yet</option>`;
-
-            const tmSel = document.getElementById('adm-player-team');
-            tmSel.innerHTML = state.teams.map(t => `<option value="${t.id}">${t.name}</option>`).join('') || `<option value="">No teams yet</option>`;
-
             const rowHtml = (items, subPath, editFnName, labelFn) => items.map(i => `
                 <div class="flex items-center justify-between bg-[#090a0f] px-2.5 py-1.5 rounded border border-white/10 text-[11px]">
                     <span class="truncate pr-2">${labelFn(i)}</span>
                     <div class="flex items-center space-x-2 shrink-0">
-                        <button onclick="${editFnName}('${i.id}')" class="text-blue-400 hover:text-blue-300 font-bold">Edit</button>
-                        <button onclick="delNode('${subPath}', '${i.id}')" class="text-red-400 hover:text-red-300 font-bold">Delete</button>
+                        <button type="button" onclick="${editFnName}('${i.id}')" class="text-blue-400 hover:text-blue-300 font-bold">Edit</button>
+                        <button type="button" onclick="delNode('${subPath}', '${i.id}')" class="text-red-400 hover:text-red-300 font-bold">Delete</button>
                     </div>
                 </div>
             `).join('');
@@ -1840,7 +1914,7 @@
             document.getElementById('adm-news-list').innerHTML = rowHtml(state.news, 'news', 'editNews', i => i.title);
             document.getElementById('adm-ach-list').innerHTML = rowHtml(state.achievements, 'achievements', 'editAch', i => i.title);
             document.getElementById('adm-vid-list').innerHTML = rowHtml(state.videos, 'videos', 'editVid', i => i.title);
-            document.getElementById('adm-scrim-list').innerHTML = rowHtml(state.scrims, 'scrims', 'editScrim', i => `${i.time} (${i.status})`);
+            document.getElementById('adm-scrim-list').innerHTML = rowHtml(state.scrims, 'scrims', 'editScrim', i => `[${i.slotType || 'Scrim'}] ${i.time} (${i.status})`);
             document.getElementById('adm-group-list').innerHTML = rowHtml(state.groups, 'groups', 'editGroup', i => i.name);
             document.getElementById('adm-subteam-list').innerHTML = rowHtml(state.teams, 'teams', 'editSubTeam', i => i.name);
             document.getElementById('adm-player-list').innerHTML = rowHtml(state.players, 'players', 'editPlayerItem', i => `${i.ign} (${i.role || 'Player'})`);
