@@ -468,7 +468,7 @@
 
                 <!-- 1B. Wild Rift Role Photos -->
                 <div class="glass-card p-5 rounded-xl space-y-3">
-                    <h4 class="text-xs font-black uppercase text-red-400">1B. Wild Rift Role Photos (Baron to Support)</h4>
+                    <h4 class="text-xs font-black uppercase text-red-400">1B. Wild Rift Role Photos (Baron to Flex)</h4>
 
                     <div class="space-y-2">
                         <div class="bg-[#090a0f]/80 p-2 rounded-lg border border-white/10 flex items-center gap-2">
@@ -500,6 +500,12 @@
                             <input type="text" id="role-url-support" placeholder="Support Image / URL" class="flex-1 bg-[#12141e] border border-white/10 rounded px-2 py-1.5 text-[11px] text-white min-w-0">
                             <button type="button" onclick="triggerFilePicker('role-support', 160, true)" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded text-[10px] font-bold shrink-0">Support Photo</button>
                             <input type="file" id="file-role-support" accept="image/*" class="hidden" onchange="handleImageFile(this, 'role-url-support', 'preview-role-support', 160)">
+                        </div>
+                        <div class="bg-[#090a0f]/80 p-2 rounded-lg border border-white/10 flex items-center gap-2">
+                            <img id="preview-role-flex" src="" onerror="handleImgError(this, 'role-flex')" class="w-8 h-8 rounded object-cover border border-white/10 shrink-0">
+                            <input type="text" id="role-url-flex" placeholder="Flex Image / URL" class="flex-1 bg-[#12141e] border border-white/10 rounded px-2 py-1.5 text-[11px] text-white min-w-0">
+                            <button type="button" onclick="triggerFilePicker('role-flex', 160, true)" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded text-[10px] font-bold shrink-0">Flex Photo</button>
+                            <input type="file" id="file-role-flex" accept="image/*" class="hidden" onchange="handleImageFile(this, 'role-url-flex', 'preview-role-flex', 160)">
                         </div>
                     </div>
 
@@ -638,7 +644,7 @@
                 <!-- 7. Players Inside Teams -->
                 <div class="glass-card p-5 rounded-xl space-y-3">
                     <div class="flex justify-between items-center">
-                        <h4 class="text-xs font-black uppercase text-red-400">7. Players Info Inside Teams (Auto Baron→Supp Order)</h4>
+                        <h4 class="text-xs font-black uppercase text-red-400">7. Players Info Inside Teams (Auto Owner/Coach/Role Order)</h4>
                         <button id="cancel-player-btn" type="button" onclick="resetForm('player')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
                     </div>
                     <input type="hidden" id="edit-player-id">
@@ -646,11 +652,14 @@
                     <div class="grid grid-cols-2 gap-2">
                         <input type="text" id="adm-player-ign" placeholder="Player IGN" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
                         <select id="adm-player-role" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
+                            <option value="Owner">Owner</option>
+                            <option value="Coach">Coach</option>
                             <option value="Baron">Baron</option>
                             <option value="Jungle">Jungle</option>
                             <option value="Mid">Mid</option>
                             <option value="ADC">ADC</option>
                             <option value="Support">Support</option>
+                            <option value="Flex">Flex</option>
                         </select>
                     </div>
                     <div class="flex items-center gap-2">
@@ -723,10 +732,17 @@
                     <button id="cancel-part-btn" type="button" onclick="resetForm('part')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
                 </div>
                 <input type="hidden" id="edit-part-id">
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <input type="text" id="adm-part-name" placeholder="Partner / Sponsor Name" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
-                    <input type="text" id="adm-part-logo" placeholder="Logo URL (Optional)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
                     <input type="text" id="adm-part-link" placeholder="Website / Social Link" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
+                </div>
+                <div class="flex items-center gap-2">
+                    <img id="preview-part-logo" src="" onerror="handleImgError(this, 'logo')" class="w-9 h-9 rounded-lg object-cover border border-white/10 shrink-0">
+                    <input type="text" id="adm-part-logo" placeholder="Sponsor / Partner Photo or URL" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
+                    <button type="button" onclick="triggerFilePicker('part-logo', 180, true)" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
+                        <i class="fa-solid fa-folder-open mr-1"></i>Add Photo
+                    </button>
+                    <input type="file" id="file-part-logo" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-part-logo', 'preview-part-logo', 180)">
                 </div>
                 <button id="save-part-btn" type="button" onclick="savePartner()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Save Partner / Sponsor</button>
                 <div id="adm-part-list" class="space-y-1.5 max-h-28 overflow-y-auto"></div>
@@ -911,13 +927,14 @@
         updatePublicClock();
         setInterval(updatePublicClock, 1000);
 
-        const DEFAULT_ROLE_PHOTOS = { baron: "", jungle: "", mid: "", adc: "", support: "" };
+        const DEFAULT_ROLE_PHOTOS = { baron: "", jungle: "", mid: "", adc: "", support: "", flex: "" };
         const ROLE_SVG_FALLBACKS = {
             baron: "data:image/png;base64," + btoa(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" fill="#000000"/><path d="M24 68c0-22 16-38 40-44-6 12-6 24 0 34 8-12 20-18 40-20-6 16-16 28-32 34 12 4 22 10 28 20-16-2-28 2-36 12-6-10-16-14-28-12 6-10 8-18-12-24z" fill="#c8a86b"/></svg>`),
             jungle: "data:image/png;base64," + btoa(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" fill="#000000"/><path d="M22 86c0-26 12-48 28-64 4 18 12 34 22 46 4-24 16-42 34-54-6 24-6 46 2 68-14-4-26-2-36 8-6-12-16-18-28-18-10 0-18 4-22 10z" fill="#c8a86b"/></svg>`),
             mid: "data:image/png;base64," + btoa(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" fill="#ffffff"/><polygon points="64,16 78,86 64,112 50,86" fill="#c8a86b"/><path d="M44 36c-6 20-4 38 6 52l-18-8c-4-16-2-32 12-44z" fill="#c8a86b"/><path d="M84 36c6 20 4 38-6 52l18-8c4-16 2-32-12-44z" fill="#c8a86b"/></svg>`),
             adc: "data:image/png;base64," + btoa(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" fill="#ffffff"/><path d="M56 18L24 54l16 14 14-16v58h6V52l14 16 16-14L72 18H56z" fill="#c8a86b"/></svg>`),
-            support: "data:image/png;base64," + btoa(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" fill="#000000"/><polygon points="52,22 76,22 84,36 64,62 44,36" fill="#d8b878"/><polygon points="22,48 52,48 60,64 42,84 22,64" fill="#d8b878"/><polygon points="106,48 76,48 68,64 86,84 106,64" fill="#d8b878"/><polygon points="56,66 72,66 78,108 64,122 50,108" fill="#d8b878"/></svg>`)
+            support: "data:image/png;base64," + btoa(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" fill="#000000"/><polygon points="52,22 76,22 84,36 64,62 44,36" fill="#d8b878"/><polygon points="22,48 52,48 60,64 42,84 22,64" fill="#d8b878"/><polygon points="106,48 76,48 68,64 86,84 106,64" fill="#d8b878"/><polygon points="56,66 72,66 78,108 64,122 50,108" fill="#d8b878"/></svg>`),
+            flex: "data:image/png;base64," + btoa(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" rx="20" fill="#161822"/><circle cx="64" cy="64" r="34" fill="none" stroke="#c8a86b" stroke-width="8"/><text x="64" y="72" font-family="Arial,sans-serif" font-size="26" font-weight="900" fill="#ffffff" text-anchor="middle">FX</text></svg>`)
         };
 
         const FALLBACKS = {
@@ -929,6 +946,7 @@
             'role-mid': ROLE_SVG_FALLBACKS.mid,
             'role-adc': ROLE_SVG_FALLBACKS.adc,
             'role-support': ROLE_SVG_FALLBACKS.support,
+            'role-flex': ROLE_SVG_FALLBACKS.flex,
             champ: "data:image/png;base64," + btoa(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60"><rect width="60" height="60" rx="8" fill="#1f2937"/><text x="30" y="36" font-family="Arial,sans-serif" font-size="16" font-weight="bold" fill="#ef4444" text-anchor="middle">GG</text></svg>`)
         };
 
@@ -1185,7 +1203,7 @@
                 about: ''
             },
             liveScrimStatus: { status: 'Active', note: '' },
-            rolePhotos: { baron: '', jungle: '', mid: '', adc: '', support: '' },
+            rolePhotos: { baron: '', jungle: '', mid: '', adc: '', support: '', flex: '' },
             news: [],
             achievements: [],
             videos: [],
@@ -1217,17 +1235,29 @@
 
         function getRoleKey(roleName) {
             const key = (roleName || '').trim().toLowerCase();
+            if (key.includes('owner')) return 'owner';
+            if (key.includes('coach')) return 'coach';
+            if (key.includes('flex')) return 'flex';
             if (key.includes('baron') || key.includes('top')) return 'baron';
             if (key.includes('jung')) return 'jungle';
             if (key.includes('mid')) return 'mid';
             if (key.includes('adc') || key.includes('bot') || key.includes('dragon')) return 'adc';
             if (key.includes('supp')) return 'support';
-            return 'baron';
+            return 'flex';
         }
 
         function getRoleRank(roleName) {
             const k = getRoleKey(roleName);
-            const order = { baron: 1, jungle: 2, mid: 3, adc: 4, support: 5 };
+            const order = {
+                owner: 1,
+                coach: 2,
+                baron: 3,
+                jungle: 4,
+                mid: 5,
+                adc: 6,
+                support: 7,
+                flex: 8
+            };
             return order[k] || 99;
         }
 
@@ -1241,7 +1271,10 @@
 
         function getRolePhoto(roleName) {
             const k = getRoleKey(roleName);
-            return state.rolePhotos[k] || DEFAULT_ROLE_PHOTOS[k] || ROLE_SVG_FALLBACKS[k];
+            if (k === 'owner' || k === 'coach') {
+                return FALLBACKS.player;
+            }
+            return state.rolePhotos[k] || DEFAULT_ROLE_PHOTOS[k] || ROLE_SVG_FALLBACKS[k] || FALLBACKS.player;
         }
 
         function findTeamLogoByName(teamName) {
@@ -1394,9 +1427,10 @@
                 jungle: d.jungle || '',
                 mid: d.mid || '',
                 adc: d.adc || '',
-                support: d.support || ''
+                support: d.support || '',
+                flex: d.flex || ''
             };
-            ['baron', 'jungle', 'mid', 'adc', 'support'].forEach(r => {
+            ['baron', 'jungle', 'mid', 'adc', 'support', 'flex'].forEach(r => {
                 const inp = document.getElementById(`role-url-${r}`);
                 const prev = document.getElementById(`preview-role-${r}`);
                 const resolved = state.rolePhotos[r] || DEFAULT_ROLE_PHOTOS[r] || ROLE_SVG_FALLBACKS[r];
@@ -1412,7 +1446,8 @@
                 jungle: document.getElementById('role-url-jungle').value.trim(),
                 mid: document.getElementById('role-url-mid').value.trim(),
                 adc: document.getElementById('role-url-adc').value.trim(),
-                support: document.getElementById('role-url-support').value.trim()
+                support: document.getElementById('role-url-support').value.trim(),
+                flex: document.getElementById('role-url-flex').value.trim()
             };
             db.ref('guiangHub/rolePhotos').set(payload)
                 .then(() => setAdminStatus('Role photos saved.'))
@@ -2032,7 +2067,7 @@
             } else if (type === 'player') {
                 document.getElementById('edit-player-id').value = '';
                 document.getElementById('adm-player-ign').value = '';
-                document.getElementById('adm-player-role').value = 'Baron';
+                document.getElementById('adm-player-role').value = 'Owner';
                 document.getElementById('adm-player-pfp').value = '';
                 document.getElementById('adm-player-achievements').value = '';
                 setCleanImgSrc(document.getElementById('preview-player-pfp'), '', 'player');
@@ -2057,6 +2092,7 @@
                 document.getElementById('adm-part-name').value = '';
                 document.getElementById('adm-part-logo').value = '';
                 document.getElementById('adm-part-link').value = '';
+                setCleanImgSrc(document.getElementById('preview-part-logo'), '', 'logo');
                 document.getElementById('save-part-btn').textContent = 'Save Partner / Sponsor';
                 document.getElementById('cancel-part-btn').classList.add('hidden');
             }
@@ -2241,7 +2277,7 @@
             document.getElementById('edit-player-id').value = id;
             document.getElementById('adm-player-team').value = item.teamId || '';
             document.getElementById('adm-player-ign').value = item.ign || '';
-            document.getElementById('adm-player-role').value = item.role || 'Baron';
+            document.getElementById('adm-player-role').value = item.role || 'Owner';
             document.getElementById('adm-player-pfp').value = item.pfp || '';
             document.getElementById('adm-player-achievements').value = item.achievements || '';
             setCleanImgSrc(document.getElementById('preview-player-pfp'), item.pfp || '', 'player');
@@ -2297,6 +2333,7 @@
             document.getElementById('adm-part-name').value = item.name || '';
             document.getElementById('adm-part-logo').value = item.logo || '';
             document.getElementById('adm-part-link').value = item.link || '';
+            setCleanImgSrc(document.getElementById('preview-part-logo'), item.logo || '', 'logo');
             document.getElementById('save-part-btn').textContent = 'Update Partner / Sponsor';
             document.getElementById('cancel-part-btn').classList.remove('hidden');
         }
