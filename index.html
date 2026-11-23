@@ -67,7 +67,7 @@
     <header class="bg-[#090a0f]/95 backdrop-blur-md sticky top-0 z-40 border-b border-white/10 shadow-lg">
         <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
             <a href="#" class="flex items-center space-x-3 shrink-0">
-                <img id="site-logo" src="https://ibb.co/pBmpWcQC" onerror="handleImgError(this, 'logo')" alt="Guiang Gaming Logo" class="h-10 w-10 rounded-lg object-cover border border-red-500/40">
+                <img id="site-logo" src="https://cdn.corenexis.com/f/TQWKyUMU.jpg" onerror="handleImgError(this, 'logo')" alt="Guiang Gaming Logo" class="h-10 w-10 rounded-lg object-cover border border-red-500/40">
                 <div class="leading-tight">
                     <span class="display-font font-black text-white text-sm sm:text-base uppercase block">GUIANG <span class="text-red-600">GAMING</span></span>
                     <span class="text-[9px] font-bold uppercase tracking-widest text-slate-400">Shoutcaster • Scrims • Roster Hub</span>
@@ -92,7 +92,7 @@
 
     <!-- COVER PHOTO HERO SECTION -->
     <section class="relative w-full h-[360px] sm:h-[460px] md:h-[520px] overflow-hidden border-b border-white/10">
-        <img id="hero-cover-img" src="https://ibb.co/LDVJJLsR" onerror="handleImgError(this, 'cover')" alt="Guiang Gaming Cover Photo" class="w-full h-full object-cover object-center">
+        <img id="hero-cover-img" src="https://cdn.corenexis.com/f/BsdCzsDL.jpg" onerror="handleImgError(this, 'cover')" alt="Guiang Gaming Cover Photo" class="w-full h-full object-cover object-center">
         <div class="hero-overlay absolute inset-0 flex flex-col justify-end">
             <div class="max-w-6xl mx-auto w-full px-4 pb-8 sm:pb-12 space-y-4">
                 <div class="inline-flex items-center space-x-2 bg-red-600/20 border border-red-500/40 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest text-red-400">
@@ -190,12 +190,11 @@
 
                 <div id="scrim-request-box" class="glass-card p-5 rounded-2xl space-y-3 border border-red-500/20">
                     <h3 class="text-xs font-black uppercase tracking-wider text-white">Request Pro Scrim Schedule</h3>
-                    <p class="text-[11px] text-slate-400">Ipadala ang details ng team mo para makapag-book ng scrim slot kay Guiang Gaming.</p>
 
                     <div class="space-y-2.5 pt-1">
                         <div>
-                            <label class="text-[10px] font-bold uppercase text-slate-400">Team Name / Tag</label>
-                            <input type="text" id="req-team" placeholder="e.g. Rift Raiders / Sentinel" class="w-full bg-[#090a0f] border border-white/10 rounded-lg px-3 py-2 text-xs text-white mt-1 focus:outline-none focus:border-red-500">
+                            <label class="text-[10px] font-bold uppercase text-slate-400">Team (Tag)</label>
+                            <input type="text" id="req-team" placeholder="Team (Tag)" class="w-full bg-[#090a0f] border border-white/10 rounded-lg px-3 py-2 text-xs text-white mt-1 focus:outline-none focus:border-red-500">
                         </div>
                         <div class="grid grid-cols-2 gap-2">
                             <div>
@@ -208,12 +207,12 @@
                             </div>
                             <div>
                                 <label class="text-[10px] font-bold uppercase text-slate-400">Preferred Date / Time</label>
-                                <input type="text" id="req-slot" placeholder="e.g. Nov 25, 8PM" class="w-full bg-[#090a0f] border border-white/10 rounded-lg px-2.5 py-2 text-xs text-white mt-1 focus:outline-none focus:border-red-500">
+                                <input type="text" id="req-slot" placeholder="Date / Time" class="w-full bg-[#090a0f] border border-white/10 rounded-lg px-2.5 py-2 text-xs text-white mt-1 focus:outline-none focus:border-red-500">
                             </div>
                         </div>
                         <div>
                             <label class="text-[10px] font-bold uppercase text-slate-400">Captain Discord / Contact Note</label>
-                            <input type="text" id="req-note" placeholder="e.g. @captain_ign • BO3 / Scrim block" class="w-full bg-[#090a0f] border border-white/10 rounded-lg px-3 py-2 text-xs text-white mt-1 focus:outline-none focus:border-red-500">
+                            <input type="text" id="req-note" placeholder="Discord / Note" class="w-full bg-[#090a0f] border border-white/10 rounded-lg px-3 py-2 text-xs text-white mt-1 focus:outline-none focus:border-red-500">
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
@@ -238,11 +237,10 @@
                 <div class="w-1 h-5 bg-red-600 rounded"></div>
                 <h2 class="display-font font-black text-sm sm:text-base text-white uppercase">Teams & Rosters Directory</h2>
             </div>
-            <p class="text-xs text-slate-400">Pindutin ang team group sa kaliwa para makita ang mga teams sa loob (hal. Rift Raiders, Sentinel), tapos pindutin ang team card para lumabas ang pop-out box ng mga players at winrate nila.</p>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="glass-card p-4 rounded-2xl space-y-2.5">
-                    <h3 class="text-[11px] font-black uppercase tracking-wider text-slate-400 px-1">Team Groups (Click Group)</h3>
+                    <h3 class="text-[11px] font-black uppercase tracking-wider text-slate-400 px-1">Team Groups</h3>
                     <div id="team-groups-list" class="space-y-2">
                         <p class="text-xs text-slate-400 italic px-1">Loading team groups...</p>
                     </div>
@@ -258,13 +256,13 @@
                     </div>
 
                     <div id="sub-teams-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <p class="text-xs text-slate-400 italic">Pumili ng team group sa kaliwa.</p>
+                        <p class="text-xs text-slate-400 italic">No team group selected.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- MATCH HISTORY (CHAMP ICON, IGN, KDA, MVP - NO ITEMS BUG) -->
+        <!-- MATCH HISTORY -->
         <section id="matches-section" class="space-y-4 scroll-mt-20">
             <div class="flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center space-x-2.5">
@@ -277,7 +275,6 @@
                     <button onclick="filterMatches('Scrim')" id="mfilter-Scrim" class="mfilter-btn glass-card text-slate-300 px-3 py-1.5 rounded-lg">SCRIM</button>
                 </div>
             </div>
-            <p class="text-xs text-slate-400">Ipinapakita dito ang Champion Icon, IGN, KDA, at MVP badge. Awtomatikong naa-update ang Most Picked Champions at Win/Lose/Winrate ng bawat player base sa <strong>Tournament</strong> at <strong>Scrim</strong> matches.</p>
 
             <div id="match-history-list" class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <p class="text-xs text-slate-400 italic">Loading matches...</p>
@@ -360,12 +357,11 @@
             </div>
         </section>
 
-        <!-- ADMIN PORTAL DASHBOARD (Password: GuiangGaming) - FULL ADD, EDIT & DELETE -->
+        <!-- ADMIN PORTAL DASHBOARD (Password: GuiangGaming) -->
         <section id="admin-dashboard-section" class="hidden space-y-6 pt-8 border-t border-red-500/40">
             <div class="flex flex-wrap justify-between items-center gap-3 glass-card p-4 rounded-xl border border-red-500/40">
                 <div>
-                    <h3 class="display-font text-white font-black text-xs sm:text-sm uppercase">Guiang Gaming Admin Portal (Full Control)</h3>
-                    <p class="text-[11px] text-slate-400">Pwede mong i-Add, i-Edit, at i-Delete lahat: Cover & Logo, About/Email, News, Achievements, Videos, Scrim Sched, Team Groups, Teams, Players, Matches, at Sponsors.</p>
+                    <h3 class="display-font text-white font-black text-xs sm:text-sm uppercase">Guiang Gaming Admin Portal</h3>
                 </div>
                 <button onclick="lockAdmin()" class="bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-500/40 px-3 py-1.5 rounded-lg text-xs font-bold">Lock Portal</button>
             </div>
@@ -373,15 +369,32 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- 1. Cover Photo, Logo, About & Contact Email -->
                 <div class="glass-card p-5 rounded-xl space-y-3">
-                    <h4 class="text-xs font-black uppercase text-red-400">1. Edit Cover Photo, Logo, About & Contact Email</h4>
+                    <h4 class="text-xs font-black uppercase text-red-400">1. Cover Photo, Logo, About & Email</h4>
+
                     <div>
-                        <label class="text-[10px] font-bold uppercase text-slate-400">Cover Photo URL</label>
-                        <input type="text" id="adm-cover-url" placeholder="Cover Photo URL" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white mt-1">
+                        <label class="text-[10px] font-bold uppercase text-slate-400">Cover Photo</label>
+                        <div class="flex items-center gap-2 mt-1">
+                            <img id="preview-site-cover" src="" onerror="handleImgError(this, 'cover')" class="w-12 h-9 rounded object-cover border border-white/10 shrink-0">
+                            <input type="text" id="adm-cover-url" placeholder="Cover Photo URL or PNG" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
+                            <button type="button" onclick="triggerFilePicker('site-cover')" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
+                                <i class="fa-solid fa-folder-open mr-1"></i>Add Photo
+                            </button>
+                            <input type="file" id="file-site-cover" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-cover-url', 'preview-site-cover', 1024)">
+                        </div>
                     </div>
+
                     <div>
-                        <label class="text-[10px] font-bold uppercase text-slate-400">Logo Image URL</label>
-                        <input type="text" id="adm-logo-url" placeholder="Logo Image URL" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white mt-1">
+                        <label class="text-[10px] font-bold uppercase text-slate-400">Logo Photo</label>
+                        <div class="flex items-center gap-2 mt-1">
+                            <img id="preview-site-logo" src="" onerror="handleImgError(this, 'logo')" class="w-9 h-9 rounded object-cover border border-white/10 shrink-0">
+                            <input type="text" id="adm-logo-url" placeholder="Logo URL or PNG" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
+                            <button type="button" onclick="triggerFilePicker('site-logo')" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
+                                <i class="fa-solid fa-folder-open mr-1"></i>Add Photo
+                            </button>
+                            <input type="file" id="file-site-logo" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-logo-url', 'preview-site-logo', 320)">
+                        </div>
                     </div>
+
                     <div>
                         <label class="text-[10px] font-bold uppercase text-slate-400">Business / Scrim Email</label>
                         <input type="text" id="adm-contact-email" placeholder="Business / Scrim Email" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white mt-1">
@@ -390,7 +403,52 @@
                         <label class="text-[10px] font-bold uppercase text-slate-400">About Guiang Gaming</label>
                         <textarea id="adm-about-text" rows="3" placeholder="About Guiang Gaming..." class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white mt-1"></textarea>
                     </div>
-                    <button onclick="saveSiteSettings()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Save Cover, Logo & Settings</button>
+                    <button onclick="saveSiteSettings()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Save Settings</button>
+                </div>
+
+                <!-- 1B. Wild Rift Role Photos (Baron -> Jungle -> Mid -> ADC -> Support) -->
+                <div class="glass-card p-5 rounded-xl space-y-3">
+                    <h4 class="text-xs font-black uppercase text-red-400">1B. Wild Rift Role Photos (Baron to Support)</h4>
+
+                    <div class="space-y-2">
+                        <!-- 1. Baron -->
+                        <div class="bg-[#090a0f]/80 p-2 rounded-lg border border-white/10 flex items-center gap-2">
+                            <img id="preview-role-baron" src="" onerror="handleImgError(this, 'role-baron')" class="w-8 h-8 rounded object-cover border border-white/10 shrink-0">
+                            <input type="text" id="role-url-baron" placeholder="Baron PNG / URL" class="flex-1 bg-[#12141e] border border-white/10 rounded px-2 py-1.5 text-[11px] text-white min-w-0">
+                            <button type="button" onclick="triggerFilePicker('role-baron')" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded text-[10px] font-bold shrink-0">Baron Photo</button>
+                            <input type="file" id="file-role-baron" accept="image/*" class="hidden" onchange="handleImageFile(this, 'role-url-baron', 'preview-role-baron', 256)">
+                        </div>
+                        <!-- 2. Jungle -->
+                        <div class="bg-[#090a0f]/80 p-2 rounded-lg border border-white/10 flex items-center gap-2">
+                            <img id="preview-role-jungle" src="" onerror="handleImgError(this, 'role-jungle')" class="w-8 h-8 rounded object-cover border border-white/10 shrink-0">
+                            <input type="text" id="role-url-jungle" placeholder="Jungle PNG / URL" class="flex-1 bg-[#12141e] border border-white/10 rounded px-2 py-1.5 text-[11px] text-white min-w-0">
+                            <button type="button" onclick="triggerFilePicker('role-jungle')" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded text-[10px] font-bold shrink-0">Jungle Photo</button>
+                            <input type="file" id="file-role-jungle" accept="image/*" class="hidden" onchange="handleImageFile(this, 'role-url-jungle', 'preview-role-jungle', 256)">
+                        </div>
+                        <!-- 3. Mid -->
+                        <div class="bg-[#090a0f]/80 p-2 rounded-lg border border-white/10 flex items-center gap-2">
+                            <img id="preview-role-mid" src="" onerror="handleImgError(this, 'role-mid')" class="w-8 h-8 rounded object-cover border border-white/10 shrink-0">
+                            <input type="text" id="role-url-mid" placeholder="Mid PNG / URL" class="flex-1 bg-[#12141e] border border-white/10 rounded px-2 py-1.5 text-[11px] text-white min-w-0">
+                            <button type="button" onclick="triggerFilePicker('role-mid')" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded text-[10px] font-bold shrink-0">Mid Photo</button>
+                            <input type="file" id="file-role-mid" accept="image/*" class="hidden" onchange="handleImageFile(this, 'role-url-mid', 'preview-role-mid', 256)">
+                        </div>
+                        <!-- 4. ADC -->
+                        <div class="bg-[#090a0f]/80 p-2 rounded-lg border border-white/10 flex items-center gap-2">
+                            <img id="preview-role-adc" src="" onerror="handleImgError(this, 'role-adc')" class="w-8 h-8 rounded object-cover border border-white/10 shrink-0">
+                            <input type="text" id="role-url-adc" placeholder="ADC PNG / URL" class="flex-1 bg-[#12141e] border border-white/10 rounded px-2 py-1.5 text-[11px] text-white min-w-0">
+                            <button type="button" onclick="triggerFilePicker('role-adc')" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded text-[10px] font-bold shrink-0">ADC Photo</button>
+                            <input type="file" id="file-role-adc" accept="image/*" class="hidden" onchange="handleImageFile(this, 'role-url-adc', 'preview-role-adc', 256)">
+                        </div>
+                        <!-- 5. Support -->
+                        <div class="bg-[#090a0f]/80 p-2 rounded-lg border border-white/10 flex items-center gap-2">
+                            <img id="preview-role-support" src="" onerror="handleImgError(this, 'role-support')" class="w-8 h-8 rounded object-cover border border-white/10 shrink-0">
+                            <input type="text" id="role-url-support" placeholder="Support PNG / URL" class="flex-1 bg-[#12141e] border border-white/10 rounded px-2 py-1.5 text-[11px] text-white min-w-0">
+                            <button type="button" onclick="triggerFilePicker('role-support')" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded text-[10px] font-bold shrink-0">Support Photo</button>
+                            <input type="file" id="file-role-support" accept="image/*" class="hidden" onchange="handleImageFile(this, 'role-url-support', 'preview-role-support', 256)">
+                        </div>
+                    </div>
+
+                    <button onclick="saveRolePhotos()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Save Role Photos</button>
                 </div>
 
                 <!-- 2. News / Announcements -->
@@ -415,8 +473,8 @@
                     </div>
                     <input type="hidden" id="edit-ach-id">
                     <input type="text" id="adm-ach-title" placeholder="Achievement Title" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
-                    <input type="text" id="adm-ach-date" placeholder="Date / Tag (e.g. 2026 / Wild Rift)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
-                    <textarea id="adm-ach-desc" rows="2" placeholder="Short description..." class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white"></textarea>
+                    <input type="text" id="adm-ach-date" placeholder="Date / Tag" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
+                    <textarea id="adm-ach-desc" rows="2" placeholder="Description..." class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white"></textarea>
                     <button id="save-ach-btn" onclick="saveAchievement()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Save Achievement</button>
                     <div id="adm-ach-list" class="space-y-1.5 max-h-32 overflow-y-auto"></div>
                 </div>
@@ -424,12 +482,12 @@
                 <!-- 4. Videos / Highlights -->
                 <div class="glass-card p-5 rounded-xl space-y-3">
                     <div class="flex justify-between items-center">
-                        <h4 class="text-xs font-black uppercase text-red-400">4. Videos & Highlights (YouTube Link)</h4>
+                        <h4 class="text-xs font-black uppercase text-red-400">4. Videos & Highlights</h4>
                         <button id="cancel-vid-btn" onclick="resetForm('vid')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
                     </div>
                     <input type="hidden" id="edit-vid-id">
                     <input type="text" id="adm-vid-title" placeholder="Video Title" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
-                    <input type="text" id="adm-vid-url" placeholder="YouTube URL (watch?v=... or youtu.be/...)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
+                    <input type="text" id="adm-vid-url" placeholder="YouTube URL" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
                     <button id="save-vid-btn" onclick="saveVideo()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Save Video</button>
                     <div id="adm-vid-list" class="space-y-1.5 max-h-32 overflow-y-auto"></div>
                 </div>
@@ -442,8 +500,8 @@
                     </div>
                     <input type="hidden" id="edit-scrim-id">
                     <div class="grid grid-cols-2 gap-2">
-                        <input type="text" id="adm-scrim-game" placeholder="Game (Wild Rift / LoL)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
-                        <input type="text" id="adm-scrim-time" placeholder="Day & Time (e.g. Thu • 8:00 PM)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
+                        <input type="text" id="adm-scrim-game" placeholder="Game" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
+                        <input type="text" id="adm-scrim-time" placeholder="Day & Time" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
                     </div>
                     <div class="grid grid-cols-2 gap-2">
                         <input type="text" id="adm-scrim-teams" placeholder="Teams / Slot Info" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
@@ -457,30 +515,44 @@
                     <div id="adm-scrim-list" class="space-y-1.5 max-h-32 overflow-y-auto"></div>
                 </div>
 
-                <!-- 6. Team Groups (Logo on Left) & Sub-Teams -->
+                <!-- 6. Team Groups & Sub-Teams -->
                 <div class="glass-card p-5 rounded-xl space-y-3">
                     <div class="flex justify-between items-center">
-                        <h4 class="text-xs font-black uppercase text-red-400">6A. Team Group (Logo sa Kaliwa)</h4>
+                        <h4 class="text-xs font-black uppercase text-red-400">6A. Team Group</h4>
                         <button id="cancel-group-btn" onclick="resetForm('group')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
                     </div>
                     <input type="hidden" id="edit-group-id">
-                    <input type="text" id="adm-group-name" placeholder="Group Name (e.g. Guiang Roster / Partner Guilds)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
-                    <input type="text" id="adm-group-logo" placeholder="Group Logo URL (https://...)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
+                    <input type="text" id="adm-group-name" placeholder="Group Name" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
+                    <div class="flex items-center gap-2">
+                        <img id="preview-group-logo" src="" onerror="handleImgError(this, 'logo')" class="w-9 h-9 rounded-lg object-cover border border-white/10 shrink-0">
+                        <input type="text" id="adm-group-logo" placeholder="Group Logo URL or PNG" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
+                        <button type="button" onclick="triggerFilePicker('group-logo')" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
+                            <i class="fa-solid fa-folder-open mr-1"></i>Add Photo
+                        </button>
+                        <input type="file" id="file-group-logo" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-group-logo', 'preview-group-logo', 256)">
+                    </div>
                     <button id="save-group-btn" onclick="saveTeamGroup()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Save Team Group</button>
                     <div id="adm-group-list" class="space-y-1.5 max-h-24 overflow-y-auto"></div>
 
                     <div class="pt-2 border-t border-white/10 space-y-2">
                         <div class="flex justify-between items-center">
-                            <h4 class="text-xs font-black uppercase text-red-400">6B. Sub-Team Inside Group (e.g. Rift Raiders, Sentinel)</h4>
+                            <h4 class="text-xs font-black uppercase text-red-400">6B. Team Inside Group</h4>
                             <button id="cancel-subteam-btn" onclick="resetForm('subteam')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
                         </div>
                         <input type="hidden" id="edit-subteam-id">
                         <select id="adm-subteam-group" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white"></select>
                         <div class="grid grid-cols-2 gap-2">
-                            <input type="text" id="adm-subteam-name" placeholder="Team Name (e.g. Rift Raiders)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
-                            <input type="text" id="adm-subteam-game" placeholder="Game (e.g. Wild Rift)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
+                            <input type="text" id="adm-subteam-name" placeholder="Team (Tag)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
+                            <input type="text" id="adm-subteam-game" placeholder="Game" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
                         </div>
-                        <input type="text" id="adm-subteam-logo" placeholder="Team Logo URL (Optional)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
+                        <div class="flex items-center gap-2">
+                            <img id="preview-subteam-logo" src="" onerror="handleImgError(this, 'logo')" class="w-9 h-9 rounded-lg object-cover border border-white/10 shrink-0">
+                            <input type="text" id="adm-subteam-logo" placeholder="Team Logo URL or PNG" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
+                            <button type="button" onclick="triggerFilePicker('subteam-logo')" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
+                                <i class="fa-solid fa-folder-open mr-1"></i>Add Photo
+                            </button>
+                            <input type="file" id="file-subteam-logo" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-subteam-logo', 'preview-subteam-logo', 256)">
+                        </div>
                         <button id="save-subteam-btn" onclick="saveSubTeam()" class="w-full bg-slate-700 hover:bg-slate-600 py-2 rounded text-xs font-bold uppercase">Save Team</button>
                         <div id="adm-subteam-list" class="space-y-1.5 max-h-24 overflow-y-auto"></div>
                     </div>
@@ -495,10 +567,23 @@
                     <input type="hidden" id="edit-player-id">
                     <select id="adm-player-team" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white"></select>
                     <div class="grid grid-cols-2 gap-2">
-                        <input type="text" id="adm-player-ign" placeholder="Player IGN (exact match sa Match History)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
-                        <input type="text" id="adm-player-role" placeholder="Role (Baron / Jungle / Mid / ADC / Supp)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
+                        <input type="text" id="adm-player-ign" placeholder="Player IGN" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
+                        <select id="adm-player-role" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
+                            <option value="Baron">Baron</option>
+                            <option value="Jungle">Jungle</option>
+                            <option value="Mid">Mid</option>
+                            <option value="ADC">ADC</option>
+                            <option value="Support">Support</option>
+                        </select>
                     </div>
-                    <input type="text" id="adm-player-pfp" placeholder="Player Photo URL (Optional)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
+                    <div class="flex items-center gap-2">
+                        <img id="preview-player-pfp" src="" onerror="handleImgError(this, 'player')" class="w-10 h-10 rounded-lg object-cover border border-white/10 shrink-0">
+                        <input type="text" id="adm-player-pfp" placeholder="Player Profile Photo URL or PNG" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
+                        <button type="button" onclick="triggerFilePicker('player-pfp')" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
+                            <i class="fa-solid fa-folder-open mr-1"></i>Add Photo
+                        </button>
+                        <input type="file" id="file-player-pfp" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-player-pfp', 'preview-player-pfp', 256)">
+                    </div>
                     <button id="save-player-btn" onclick="savePlayer()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Save Player</button>
                     <div id="adm-player-list" class="space-y-1.5 max-h-32 overflow-y-auto"></div>
                 </div>
@@ -506,13 +591,13 @@
                 <!-- 8. Match History -->
                 <div class="glass-card p-5 rounded-xl space-y-3">
                     <div class="flex justify-between items-center">
-                        <h4 class="text-xs font-black uppercase text-red-400">8. Match History (Champ Icon, IGN, KDA, MVP)</h4>
+                        <h4 class="text-xs font-black uppercase text-red-400">8. Match History</h4>
                         <button id="cancel-match-btn" onclick="resetForm('match')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
                     </div>
                     <input type="hidden" id="edit-match-id">
                     <div class="grid grid-cols-3 gap-2">
-                        <input type="text" id="adm-m-team" placeholder="Team A (e.g. Rift Raiders)" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white">
-                        <input type="text" id="adm-m-opp" placeholder="Team B (e.g. Sentinel)" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white">
+                        <input type="text" id="adm-m-team" placeholder="Team (Tag) A" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white">
+                        <input type="text" id="adm-m-opp" placeholder="Team (Tag) B" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white">
                         <input type="text" id="adm-m-score" placeholder="Score (e.g. 2 - 0)" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white">
                     </div>
                     <div class="grid grid-cols-3 gap-2">
@@ -526,9 +611,9 @@
                         </select>
                         <input type="text" id="adm-m-date" placeholder="Date / Game" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white">
                     </div>
-                    <p class="text-[10px] text-slate-400">Format bawat linya: <code class="text-red-300">IGN | Champion | KDA | MVP</code> (lagyan ng <code class="text-amber-300">MVP</code> sa dulo kung MVP).</p>
-                    <textarea id="adm-m-blue" rows="4" placeholder="PlayerOne | Akali | 12/2/6 | MVP&#10;PlayerTwo | LeeSin | 8/4/9" class="w-full bg-[#090a0f] border border-blue-500/30 rounded px-3 py-2 text-xs text-white font-mono"></textarea>
-                    <textarea id="adm-m-red" rows="3" placeholder="OppOne | Yasuo | 5/7/4&#10;OppTwo | Lux | 3/6/8 | MVP" class="w-full bg-[#090a0f] border border-red-500/30 rounded px-3 py-2 text-xs text-white font-mono"></textarea>
+                    <p class="text-[10px] text-slate-400">Line format: <code class="text-red-300">IGN | Champion | KDA | MVP</code></p>
+                    <textarea id="adm-m-blue" rows="4" placeholder="IGN | Champion | KDA | MVP" class="w-full bg-[#090a0f] border border-blue-500/30 rounded px-3 py-2 text-xs text-white font-mono"></textarea>
+                    <textarea id="adm-m-red" rows="3" placeholder="IGN | Champion | KDA | MVP" class="w-full bg-[#090a0f] border border-red-500/30 rounded px-3 py-2 text-xs text-white font-mono"></textarea>
                     <button id="save-match-btn" onclick="saveMatch()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Save Match</button>
                     <div id="adm-match-list" class="space-y-1.5 max-h-32 overflow-y-auto"></div>
                 </div>
@@ -582,12 +667,15 @@
     <div id="player-modal" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="glass-card border border-red-500/30 rounded-2xl p-5 w-full max-w-md max-h-[90vh] overflow-y-auto relative space-y-4 shadow-2xl">
             <button onclick="closePlayerModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white bg-white/5 w-7 h-7 rounded-full flex items-center justify-center">✕</button>
-            <div class="flex items-center space-x-3.5">
-                <img id="pmodal-pfp" src="" onerror="handleImgError(this, 'player')" class="w-14 h-14 rounded-xl object-cover border-2 border-red-500">
-                <div>
-                    <h3 id="pmodal-ign" class="display-font font-black text-lg text-white uppercase">IGN</h3>
-                    <p id="pmodal-sub" class="text-xs text-slate-400">Role • Team</p>
+            <div class="flex items-center justify-between gap-3">
+                <div class="flex items-center space-x-3.5 min-w-0">
+                    <img id="pmodal-pfp" src="" onerror="handleImgError(this, 'player')" class="w-14 h-14 rounded-xl object-cover border-2 border-red-500 shrink-0">
+                    <div class="min-w-0">
+                        <h3 id="pmodal-ign" class="display-font font-black text-lg text-white uppercase truncate">IGN</h3>
+                        <p id="pmodal-sub" class="text-xs text-slate-400 truncate">Role • Team</p>
+                    </div>
                 </div>
+                <img id="pmodal-role-img" src="" onerror="handleImgError(this, 'role-baron')" alt="Role Icon" class="w-10 h-10 rounded-lg object-cover border border-white/15 shrink-0">
             </div>
             <div class="grid grid-cols-3 gap-2 text-center bg-[#090a0f] p-3 rounded-xl border border-white/10">
                 <div>
@@ -604,7 +692,7 @@
                 </div>
             </div>
             <div class="space-y-2">
-                <p class="text-[10px] font-black uppercase tracking-wider text-slate-400">Most Picked Champions (Tournament + Scrim)</p>
+                <p class="text-[10px] font-black uppercase tracking-wider text-slate-400">Most Picked Champions</p>
                 <div id="pmodal-champs" class="space-y-2"></div>
             </div>
         </div>
@@ -653,19 +741,85 @@
         }
         const db = firebase.database();
 
-        const DEFAULT_COVER = "https://ibb.co/LDVJJLsR";
-        const DEFAULT_LOGO = "https://ibb.co/pBmpWcQC";
+        const DEFAULT_COVER = "https://cdn.corenexis.com/f/BsdCzsDL.jpg";
+        const DEFAULT_LOGO = "https://cdn.corenexis.com/f/TQWKyUMU.jpg";
+
+        // Wild Rift Role Icons in exact order: Baron, Jungle, Mid, ADC, Support
+        const DEFAULT_ROLE_PHOTOS = {
+            baron: "data:image/png;base64," + "",
+            jungle: "data:image/png;base64," + "",
+            mid: "data:image/png;base64," + "",
+            adc: "data:image/png;base64," + "",
+            support: "data:image/png;base64," + ""
+        };
+
+        const ROLE_SVG_FALLBACKS = {
+            baron: "data:image/png;base64," + btoa(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" fill="#000000"/><path d="M24 68c0-22 16-38 40-44-6 12-6 24 0 34 8-12 20-18 40-20-6 16-16 28-32 34 12 4 22 10 28 20-16-2-28 2-36 12-6-10-16-14-28-12 6-10 8-18-12-24z" fill="#c8a86b"/></svg>`),
+            jungle: "data:image/png;base64," + btoa(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" fill="#000000"/><path d="M22 86c0-26 12-48 28-64 4 18 12 34 22 46 4-24 16-42 34-54-6 24-6 46 2 68-14-4-26-2-36 8-6-12-16-18-28-18-10 0-18 4-22 10z" fill="#c8a86b"/></svg>`),
+            mid: "data:image/png;base64," + btoa(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" fill="#ffffff"/><polygon points="64,16 78,86 64,112 50,86" fill="#c8a86b"/><path d="M44 36c-6 20-4 38 6 52l-18-8c-4-16-2-32 12-44z" fill="#c8a86b"/><path d="M84 36c6 20 4 38-6 52l18-8c4-16 2-32-12-44z" fill="#c8a86b"/></svg>`),
+            adc: "data:image/png;base64," + btoa(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" fill="#ffffff"/><path d="M56 18L24 54l16 14 14-16v58h6V52l14 16 16-14L72 18H56z" fill="#c8a86b"/></svg>`),
+            support: "data:image/png;base64," + btoa(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" fill="#000000"/><polygon points="52,22 76,22 84,36 64,62 44,36" fill="#d8b878"/><polygon points="22,48 52,48 60,64 42,84 22,64" fill="#d8b878"/><polygon points="106,48 76,48 68,64 86,84 106,64" fill="#d8b878"/><polygon points="56,66 72,66 78,108 64,122 50,108" fill="#d8b878"/></svg>`)
+        };
+
         const FALLBACKS = {
-            cover: "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500"><rect width="1200" height="500" fill="#12141e"/><rect x="0" y="0" width="1200" height="500" fill="#ef4444" opacity="0.08"/><text x="600" y="260" font-family="Arial,sans-serif" font-size="48" font-weight="900" fill="#ffffff" text-anchor="middle">GUIANG GAMING</text></svg>`),
-            logo: "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><rect width="80" height="80" rx="14" fill="#161822" stroke="#ef4444" stroke-width="3"/><text x="40" y="48" font-family="Arial,sans-serif" font-size="24" font-weight="900" fill="#ffffff" text-anchor="middle">GG</text></svg>`),
-            player: "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#161822"/><circle cx="50" cy="38" r="18" fill="#2b3042"/><path d="M20 92c0-16 14-28 30-28s30 12 30 28" fill="#2b3042"/></svg>`),
-            champ: "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60"><rect width="60" height="60" rx="8" fill="#1f2937"/><text x="30" y="36" font-family="Arial,sans-serif" font-size="16" font-weight="bold" fill="#ef4444" text-anchor="middle">GG</text></svg>`)
+            cover: "data:image/png;base64," + btoa(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500"><rect width="1200" height="500" fill="#12141e"/><text x="600" y="260" font-family="Arial,sans-serif" font-size="48" font-weight="900" fill="#ffffff" text-anchor="middle">GUIANG GAMING</text></svg>`),
+            logo: "data:image/png;base64," + btoa(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><rect width="80" height="80" rx="14" fill="#161822" stroke="#ef4444" stroke-width="3"/><text x="40" y="48" font-family="Arial,sans-serif" font-size="24" font-weight="900" fill="#ffffff" text-anchor="middle">GG</text></svg>`),
+            player: "data:image/png;base64," + btoa(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#161822"/><circle cx="50" cy="38" r="18" fill="#2b3042"/><path d="M20 92c0-16 14-28 30-28s30 12 30 28" fill="#2b3042"/></svg>`),
+            'role-baron': ROLE_SVG_FALLBACKS.baron,
+            'role-jungle': ROLE_SVG_FALLBACKS.jungle,
+            'role-mid': ROLE_SVG_FALLBACKS.mid,
+            'role-adc': ROLE_SVG_FALLBACKS.adc,
+            'role-support': ROLE_SVG_FALLBACKS.support,
+            champ: "data:image/png;base64," + btoa(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60"><rect width="60" height="60" rx="8" fill="#1f2937"/><text x="30" y="36" font-family="Arial,sans-serif" font-size="16" font-weight="bold" fill="#ef4444" text-anchor="middle">GG</text></svg>`)
         };
 
         function handleImgError(el, type) {
             if (!el || el.dataset.fb) return;
             el.dataset.fb = "1";
             el.src = FALLBACKS[type] || FALLBACKS.logo;
+        }
+
+        function triggerFilePicker(key) {
+            const inp = document.getElementById(`file-${key}`);
+            if (inp) inp.click();
+        }
+
+        function handleImageFile(fileInput, targetInputId, previewImgId, maxDim = 256) {
+            const file = fileInput.files && fileInput.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = new Image();
+                img.onload = function () {
+                    let w = img.width;
+                    let h = img.height;
+                    if (w > h && w > maxDim) {
+                        h = Math.round((h * maxDim) / w);
+                        w = maxDim;
+                    } else if (h >= w && h > maxDim) {
+                        w = Math.round((w * maxDim) / h);
+                        h = maxDim;
+                    }
+                    const canvas = document.createElement('canvas');
+                    canvas.width = w;
+                    canvas.height = h;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, w, h);
+                    const pngDataUrl = canvas.toDataURL('image/png');
+
+                    const urlInput = document.getElementById(targetInputId);
+                    if (urlInput) urlInput.value = pngDataUrl;
+
+                    const prevImg = document.getElementById(previewImgId);
+                    if (prevImg) {
+                        delete prevImg.dataset.fb;
+                        prevImg.src = pngDataUrl;
+                    }
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
         }
 
         const DDRAGON_VER = "14.24.1";
@@ -687,6 +841,7 @@
 
         let state = {
             settings: { cover: DEFAULT_COVER, logo: DEFAULT_LOGO, email: 'guianggaming.business@gmail.com', about: '' },
+            rolePhotos: { baron: '', jungle: '', mid: '', adc: '', support: '' },
             news: [],
             achievements: [],
             videos: [],
@@ -711,10 +866,25 @@
                 document.getElementById('admin-pass-input').value = '';
                 document.getElementById('admin-dashboard-section').scrollIntoView({ behavior: 'smooth' });
             } else {
-                alert('Maling password.');
+                alert('Incorrect password.');
             }
         }
         function lockAdmin() { document.getElementById('admin-dashboard-section').classList.add('hidden'); }
+
+        function getRoleKey(roleName) {
+            const key = (roleName || '').trim().toLowerCase();
+            if (key.includes('baron') || key.includes('top')) return 'baron';
+            if (key.includes('jung')) return 'jungle';
+            if (key.includes('mid')) return 'mid';
+            if (key.includes('adc') || key.includes('bot') || key.includes('dragon')) return 'adc';
+            if (key.includes('supp')) return 'support';
+            return 'baron';
+        }
+
+        function getRolePhoto(roleName) {
+            const k = getRoleKey(roleName);
+            return state.rolePhotos[k] || DEFAULT_ROLE_PHOTOS[k] || ROLE_SVG_FALLBACKS[k];
+        }
 
         db.ref('guiangHub/settings').on('value', s => {
             const d = s.val() || {};
@@ -739,7 +909,45 @@
             document.getElementById('adm-logo-url').value = state.settings.logo;
             document.getElementById('adm-contact-email').value = state.settings.email;
             document.getElementById('adm-about-text').value = state.settings.about;
+
+            const prevCover = document.getElementById('preview-site-cover');
+            const prevLogo = document.getElementById('preview-site-logo');
+            if (prevCover) { delete prevCover.dataset.fb; prevCover.src = state.settings.cover; }
+            if (prevLogo) { delete prevLogo.dataset.fb; prevLogo.src = state.settings.logo; }
         });
+
+        db.ref('guiangHub/rolePhotos').on('value', s => {
+            const d = s.val() || {};
+            state.rolePhotos = {
+                baron: d.baron || '',
+                jungle: d.jungle || '',
+                mid: d.mid || '',
+                adc: d.adc || '',
+                support: d.support || ''
+            };
+            ['baron', 'jungle', 'mid', 'adc', 'support'].forEach(r => {
+                const inp = document.getElementById(`role-url-${r}`);
+                const prev = document.getElementById(`preview-role-${r}`);
+                const resolved = state.rolePhotos[r] || DEFAULT_ROLE_PHOTOS[r] || ROLE_SVG_FALLBACKS[r];
+                if (inp) inp.value = state.rolePhotos[r] || '';
+                if (prev) {
+                    delete prev.dataset.fb;
+                    prev.src = resolved;
+                }
+            });
+            renderTeamGroupsAndSubTeams();
+        });
+
+        function saveRolePhotos() {
+            const payload = {
+                baron: document.getElementById('role-url-baron').value.trim(),
+                jungle: document.getElementById('role-url-jungle').value.trim(),
+                mid: document.getElementById('role-url-mid').value.trim(),
+                adc: document.getElementById('role-url-adc').value.trim(),
+                support: document.getElementById('role-url-support').value.trim()
+            };
+            db.ref('guiangHub/rolePhotos').set(payload).then(() => alert('Role photos saved.'));
+        }
 
         function bindList(path, key) {
             db.ref(`guiangHub/${path}`).on('value', snap => {
@@ -801,7 +1009,7 @@
         function renderAchievements() {
             const grid = document.getElementById('achievements-grid');
             if (!state.achievements.length) {
-                grid.innerHTML = `<div class="bg-[#090a0f]/70 border border-white/10 p-4 rounded-xl"><p class="text-xs font-bold text-white">Wild Rift & League of Legends Shoutcasting</p><p class="text-[11px] text-slate-400 mt-1">Active shoutcaster, creator, at scrim host para sa community at competitive teams.</p></div>`;
+                grid.innerHTML = `<div class="bg-[#090a0f]/70 border border-white/10 p-4 rounded-xl"><p class="text-xs font-bold text-white">Wild Rift & League of Legends Shoutcasting</p><p class="text-[11px] text-slate-400 mt-1">Active shoutcaster, creator, and scrim organizer.</p></div>`;
                 return;
             }
             grid.innerHTML = state.achievements.map(a => `
@@ -824,7 +1032,7 @@
         function renderVideos() {
             const grid = document.getElementById('videos-grid');
             if (!state.videos.length) {
-                grid.innerHTML = `<p class="text-xs text-slate-400 italic col-span-full">Wala pang naka-post na video. Mag-add sa Admin Portal (#4).</p>`;
+                grid.innerHTML = `<p class="text-xs text-slate-400 italic col-span-full">No videos added yet.</p>`;
                 return;
             }
             grid.innerHTML = state.videos.map(v => {
@@ -847,7 +1055,7 @@
         function renderScrims() {
             const box = document.getElementById('scrim-schedule-list');
             if (!state.scrims.length) {
-                box.innerHTML = `<p class="text-xs text-slate-400 italic">Walang naka-post na scrim schedule sa ngayon.</p>`;
+                box.innerHTML = `<p class="text-xs text-slate-400 italic">No scrim slots scheduled.</p>`;
                 return;
             }
             box.innerHTML = state.scrims.map(s => {
@@ -877,10 +1085,10 @@
             const slot = document.getElementById('req-slot').value.trim();
             const note = document.getElementById('req-note').value.trim();
             if (!team || !slot) {
-                alert('Pakilagay ang Team Name at Preferred Date / Time.');
+                alert('Please enter Team (Tag) and Preferred Date / Time.');
                 return null;
             }
-            return `PRO SCRIM REQUEST — GUIANG GAMING\nTeam: ${team}\nGame: ${game}\nPreferred Schedule: ${slot}\nDetails/Discord: ${note || 'N/A'}`;
+            return `PRO SCRIM REQUEST — GUIANG GAMING\nTeam (Tag): ${team}\nGame: ${game}\nPreferred Schedule: ${slot}\nDetails/Discord: ${note || 'N/A'}`;
         }
 
         function sendScrimToDiscord() {
@@ -888,7 +1096,7 @@
             if (!msg) return;
             navigator.clipboard?.writeText(msg);
             const fb = document.getElementById('scrim-req-feedback');
-            fb.textContent = 'Na-copy na ang scrim request details! I-paste lang sa Discord channel ni Guiang Gaming.';
+            fb.textContent = 'Scrim request copied to clipboard. Paste it in Guiang Gaming Discord.';
             fb.classList.remove('hidden');
             window.open('https://discord.com/invite/DWHRWaYsGv', '_blank');
         }
@@ -981,10 +1189,10 @@
             const countEl = document.getElementById('selected-group-count');
 
             if (!state.groups.length) {
-                groupsBox.innerHTML = `<p class="text-xs text-slate-400 italic px-1">Walang team groups pa. Mag-add sa Admin Portal (#6A).</p>`;
+                groupsBox.innerHTML = `<p class="text-xs text-slate-400 italic px-1">No team groups yet.</p>`;
                 titleEl.textContent = 'No Team Groups Yet';
                 countEl.textContent = '0 Teams';
-                subGrid.innerHTML = `<p class="text-xs text-slate-400 italic">Mag-add muna ng Team Group at Sub-Teams (hal. Rift Raiders, Sentinel) sa Admin Portal.</p>`;
+                subGrid.innerHTML = `<p class="text-xs text-slate-400 italic">No teams available.</p>`;
                 return;
             }
 
@@ -999,7 +1207,7 @@
                         <img src="${g.logo || DEFAULT_LOGO}" onerror="handleImgError(this, 'logo')" class="w-10 h-10 rounded-lg object-cover border border-white/10 shrink-0">
                         <div class="min-w-0 flex-1">
                             <p class="text-xs font-extrabold uppercase truncate">${g.name}</p>
-                            <p class="text-[10px] text-slate-400">${state.teams.filter(t => t.groupId === g.id).length} teams inside</p>
+                            <p class="text-[10px] text-slate-400">${state.teams.filter(t => t.groupId === g.id).length} teams</p>
                         </div>
                         <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
                     </button>
@@ -1012,7 +1220,7 @@
             countEl.textContent = `${subTeams.length} ${subTeams.length === 1 ? 'Team' : 'Teams'}`;
 
             if (!subTeams.length) {
-                subGrid.innerHTML = `<p class="text-xs text-slate-400 italic col-span-full">Walang teams sa group na ito. Mag-add sa Admin Portal (#6B).</p>`;
+                subGrid.innerHTML = `<p class="text-xs text-slate-400 italic col-span-full">No teams in this group.</p>`;
                 return;
             }
 
@@ -1053,22 +1261,28 @@
             const teamPlayers = state.players.filter(p => p.teamId === teamId);
             const list = document.getElementById('tmodal-players');
             if (!teamPlayers.length) {
-                list.innerHTML = `<p class="text-xs text-slate-400 italic">Walang naka-assign na players sa team na ito.</p>`;
+                list.innerHTML = `<p class="text-xs text-slate-400 italic">No players assigned to this team.</p>`;
             } else {
                 list.innerHTML = teamPlayers.map(p => {
                     const st = computePlayerStats(p.ign);
+                    const rKey = getRoleKey(p.role);
+                    const roleImg = getRolePhoto(p.role);
                     return `
                         <div onclick="openPlayerModal('${p.id}')" class="bg-[#090a0f] hover:border-red-500/40 border border-white/10 p-3 rounded-xl flex items-center justify-between gap-3 cursor-pointer transition">
                             <div class="flex items-center space-x-3 min-w-0">
-                                <img src="${p.pfp || FALLBACKS.player}" onerror="handleImgError(this, 'player')" class="w-10 h-10 rounded-lg object-cover border border-white/10 shrink-0">
+                                <img src="${p.pfp || FALLBACKS.player}" onerror="handleImgError(this, 'player')" class="w-11 h-11 rounded-lg object-cover border border-white/10 shrink-0">
                                 <div class="min-w-0">
                                     <p class="text-xs font-black text-white uppercase truncate">${p.ign}</p>
-                                    <p class="text-[10px] text-slate-400">${p.role || 'Player'} • ${team.name}</p>
+                                    <div class="flex items-center space-x-1.5 mt-0.5">
+                                        <img src="${roleImg}" onerror="handleImgError(this, 'role-${rKey}')" class="w-4 h-4 rounded object-cover border border-white/10 shrink-0">
+                                        <span class="text-[10px] font-bold text-slate-300">${p.role || 'Player'}</span>
+                                        <span class="text-[10px] text-slate-500">• ${team.name}</span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="text-right shrink-0">
                                 <p class="text-xs font-black text-emerald-400">${st.winrate}% WR</p>
-                                <p class="text-[10px] text-slate-400">${st.wins}W - ${st.losses}L</p>
+                                <p class="text-[10px] text-slate-300 font-bold">${st.wins}W - ${st.losses}L</p>
                             </div>
                         </div>
                     `;
@@ -1083,17 +1297,23 @@
             if (!p) return;
             const team = state.teams.find(t => t.id === p.teamId);
             const st = computePlayerStats(p.ign);
+            const rKey = getRoleKey(p.role);
 
             document.getElementById('pmodal-pfp').src = p.pfp || FALLBACKS.player;
             document.getElementById('pmodal-ign').textContent = p.ign;
             document.getElementById('pmodal-sub').textContent = `${p.role || 'Player'} • ${team?.name || 'Roster'}`;
+            const roleEl = document.getElementById('pmodal-role-img');
+            delete roleEl.dataset.fb;
+            roleEl.dataset.fbType = `role-${rKey}`;
+            roleEl.src = getRolePhoto(p.role);
+
             document.getElementById('pmodal-wl').textContent = `${st.wins}W - ${st.losses}L`;
             document.getElementById('pmodal-wr').textContent = `${st.winrate}%`;
             document.getElementById('pmodal-total').textContent = st.total;
 
             const champsBox = document.getElementById('pmodal-champs');
             if (!st.sortedChamps.length) {
-                champsBox.innerHTML = `<p class="text-xs text-slate-400 italic">Wala pang Tournament o Scrim matches na naitala para kay ${p.ign}.</p>`;
+                champsBox.innerHTML = `<p class="text-xs text-slate-400 italic">No recorded matches for ${p.ign}.</p>`;
             } else {
                 champsBox.innerHTML = st.sortedChamps.map(c => `
                     <div class="bg-[#090a0f] border border-white/10 p-2.5 rounded-xl flex items-center justify-between">
@@ -1130,7 +1350,7 @@
             });
 
             if (!entries.length) {
-                box.innerHTML = `<p class="text-xs text-slate-400 italic col-span-full">Walang match history sa filter na ito.</p>`;
+                box.innerHTML = `<p class="text-xs text-slate-400 italic col-span-full">No match history found.</p>`;
                 return;
             }
 
@@ -1213,7 +1433,7 @@
             const logo = document.getElementById('adm-logo-url').value.trim() || DEFAULT_LOGO;
             const email = document.getElementById('adm-contact-email').value.trim() || 'guianggaming.business@gmail.com';
             const about = document.getElementById('adm-about-text').value.trim();
-            db.ref('guiangHub/settings').set({ cover, logo, email, about }).then(() => alert('Na-save ang Cover Photo, Logo, at Settings.'));
+            db.ref('guiangHub/settings').set({ cover, logo, email, about }).then(() => alert('Settings saved.'));
         }
 
         function resetForm(type) {
@@ -1248,6 +1468,7 @@
                 document.getElementById('edit-group-id').value = '';
                 document.getElementById('adm-group-name').value = '';
                 document.getElementById('adm-group-logo').value = '';
+                document.getElementById('preview-group-logo').src = FALLBACKS.logo;
                 document.getElementById('save-group-btn').textContent = 'Save Team Group';
                 document.getElementById('cancel-group-btn').classList.add('hidden');
             } else if (type === 'subteam') {
@@ -1255,13 +1476,15 @@
                 document.getElementById('adm-subteam-name').value = '';
                 document.getElementById('adm-subteam-game').value = '';
                 document.getElementById('adm-subteam-logo').value = '';
+                document.getElementById('preview-subteam-logo').src = FALLBACKS.logo;
                 document.getElementById('save-subteam-btn').textContent = 'Save Team';
                 document.getElementById('cancel-subteam-btn').classList.add('hidden');
             } else if (type === 'player') {
                 document.getElementById('edit-player-id').value = '';
                 document.getElementById('adm-player-ign').value = '';
-                document.getElementById('adm-player-role').value = '';
+                document.getElementById('adm-player-role').value = 'Baron';
                 document.getElementById('adm-player-pfp').value = '';
+                document.getElementById('preview-player-pfp').src = FALLBACKS.player;
                 document.getElementById('save-player-btn').textContent = 'Save Player';
                 document.getElementById('cancel-player-btn').classList.add('hidden');
             } else if (type === 'match') {
@@ -1294,7 +1517,7 @@
             const title = document.getElementById('adm-news-title').value.trim();
             const link = document.getElementById('adm-news-link').value.trim();
             const desc = document.getElementById('adm-news-desc').value.trim();
-            if (!title || !desc) return alert('Ilagay ang title at details.');
+            if (!title || !desc) return alert('Please enter title and details.');
             upsert('news', id, { title, link, desc }, 'news');
         }
         function editNews(id) {
@@ -1312,7 +1535,7 @@
             const title = document.getElementById('adm-ach-title').value.trim();
             const date = document.getElementById('adm-ach-date').value.trim();
             const desc = document.getElementById('adm-ach-desc').value.trim();
-            if (!title) return alert('Ilagay ang achievement title.');
+            if (!title) return alert('Please enter achievement title.');
             upsert('achievements', id, { title, date, desc }, 'ach');
         }
         function editAch(id) {
@@ -1329,7 +1552,7 @@
             const id = document.getElementById('edit-vid-id').value;
             const title = document.getElementById('adm-vid-title').value.trim();
             const url = document.getElementById('adm-vid-url').value.trim();
-            if (!title || !url) return alert('Ilagay ang video title at URL.');
+            if (!title || !url) return alert('Please enter video title and URL.');
             upsert('videos', id, { title, url }, 'vid');
         }
         function editVid(id) {
@@ -1347,7 +1570,7 @@
             const time = document.getElementById('adm-scrim-time').value.trim();
             const teams = document.getElementById('adm-scrim-teams').value.trim();
             const status = document.getElementById('adm-scrim-status').value;
-            if (!time) return alert('Ilagay ang scrim day/time.');
+            if (!time) return alert('Please enter scrim schedule time.');
             upsert('scrims', id, { game, time, teams, status }, 'scrim');
         }
         function editScrim(id) {
@@ -1365,7 +1588,7 @@
             const id = document.getElementById('edit-group-id').value;
             const name = document.getElementById('adm-group-name').value.trim();
             const logo = document.getElementById('adm-group-logo').value.trim();
-            if (!name) return alert('Ilagay ang group name.');
+            if (!name) return alert('Please enter group name.');
             upsert('groups', id, { name, logo }, 'group');
         }
         function editGroup(id) {
@@ -1373,6 +1596,7 @@
             document.getElementById('edit-group-id').value = id;
             document.getElementById('adm-group-name').value = item.name || '';
             document.getElementById('adm-group-logo').value = item.logo || '';
+            document.getElementById('preview-group-logo').src = item.logo || FALLBACKS.logo;
             document.getElementById('save-group-btn').textContent = 'Update Team Group';
             document.getElementById('cancel-group-btn').classList.remove('hidden');
         }
@@ -1383,7 +1607,7 @@
             const name = document.getElementById('adm-subteam-name').value.trim();
             const game = document.getElementById('adm-subteam-game').value.trim();
             const logo = document.getElementById('adm-subteam-logo').value.trim();
-            if (!groupId || !name) return alert('Pumili ng group at ilagay ang team name.');
+            if (!groupId || !name) return alert('Please select a group and enter Team (Tag).');
             upsert('teams', id, { groupId, name, game, logo }, 'subteam');
         }
         function editSubTeam(id) {
@@ -1393,6 +1617,7 @@
             document.getElementById('adm-subteam-name').value = item.name || '';
             document.getElementById('adm-subteam-game').value = item.game || '';
             document.getElementById('adm-subteam-logo').value = item.logo || '';
+            document.getElementById('preview-subteam-logo').src = item.logo || FALLBACKS.logo;
             document.getElementById('save-subteam-btn').textContent = 'Update Team';
             document.getElementById('cancel-subteam-btn').classList.remove('hidden');
         }
@@ -1403,7 +1628,7 @@
             const ign = document.getElementById('adm-player-ign').value.trim();
             const role = document.getElementById('adm-player-role').value.trim();
             const pfp = document.getElementById('adm-player-pfp').value.trim();
-            if (!teamId || !ign) return alert('Pumili ng team at ilagay ang player IGN.');
+            if (!teamId || !ign) return alert('Please select a team and enter player IGN.');
             upsert('players', id, { teamId, ign, role, pfp }, 'player');
         }
         function editPlayerItem(id) {
@@ -1411,8 +1636,9 @@
             document.getElementById('edit-player-id').value = id;
             document.getElementById('adm-player-team').value = item.teamId || '';
             document.getElementById('adm-player-ign').value = item.ign || '';
-            document.getElementById('adm-player-role').value = item.role || '';
+            document.getElementById('adm-player-role').value = item.role || 'Baron';
             document.getElementById('adm-player-pfp').value = item.pfp || '';
+            document.getElementById('preview-player-pfp').src = item.pfp || FALLBACKS.player;
             document.getElementById('save-player-btn').textContent = 'Update Player';
             document.getElementById('cancel-player-btn').classList.remove('hidden');
         }
@@ -1427,7 +1653,7 @@
             const date = document.getElementById('adm-m-date').value.trim();
             const blueData = document.getElementById('adm-m-blue').value.trim();
             const redData = document.getElementById('adm-m-red').value.trim();
-            if (!team || !opponent) return alert('Ilagay ang Team A at Team B.');
+            if (!team || !opponent) return alert('Please enter both Team (Tag) A and Team (Tag) B.');
             upsert('matches', id, { team, opponent, score, type, result, date, blueData, redData }, 'match');
         }
         function editMatchItem(id) {
@@ -1450,7 +1676,7 @@
             const name = document.getElementById('adm-part-name').value.trim();
             const logo = document.getElementById('adm-part-logo').value.trim();
             const link = document.getElementById('adm-part-link').value.trim();
-            if (!name) return alert('Ilagay ang partner name.');
+            if (!name) return alert('Please enter partner name.');
             upsert('partners', id, { name, logo, link }, 'part');
         }
         function editPart(id) {
@@ -1464,7 +1690,7 @@
         }
 
         function delNode(path, id) {
-            if (confirm('Burahin ang item na ito?')) db.ref(`guiangHub/${path}/${id}`).remove();
+            if (confirm('Delete this item?')) db.ref(`guiangHub/${path}/${id}`).remove();
         }
 
         function renderAdminLists() {
