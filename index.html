@@ -42,6 +42,24 @@
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
+
+        .ban-slash-box {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ban-slash-box::after {
+            content: "";
+            position: absolute;
+            left: -25%;
+            top: 50%;
+            width: 150%;
+            height: 2px;
+            background: #ef4444;
+            transform: rotate(-45deg);
+            box-shadow: 0 0 6px rgba(239, 68, 68, 0.85);
+            pointer-events: none;
+        }
     </style>
 </head>
 <body class="antialiased pb-20">
@@ -92,7 +110,7 @@
                 <a href="#teams-section" class="hover:text-red-500 transition">Teams</a>
                 <a href="#rankings-section" class="hover:text-red-500 transition">Rankings</a>
                 <a href="#matches-section" class="hover:text-red-500 transition">Matches</a>
-                <a href="#wildrounds-section" class="hover:text-amber-400 transition">Wildrounds Smash</a>
+                <a href="#wildrounds-section" class="hover:text-amber-400 transition">Wildrounds</a>
                 <a href="#contact-section" class="hover:text-red-500 transition">Contact</a>
             </nav>
 
@@ -122,7 +140,7 @@
                     <a href="#teams-section" class="glass-card hover:bg-white/10 text-white px-4 py-2 rounded-lg text-xs font-extrabold uppercase tracking-wider transition">Team Rosters</a>
                     <a href="#rankings-section" class="glass-card hover:bg-white/10 text-white px-4 py-2 rounded-lg text-xs font-extrabold uppercase tracking-wider transition">Player Rankings</a>
                     <a href="#matches-section" class="glass-card hover:bg-white/10 text-white px-4 py-2 rounded-lg text-xs font-extrabold uppercase tracking-wider transition">Match History</a>
-                    <a href="#wildrounds-section" class="glass-card hover:border-amber-400/50 text-amber-300 px-4 py-2 rounded-lg text-xs font-extrabold uppercase tracking-wider transition">Wildrounds Smash</a>
+                    <a href="#wildrounds-section" class="glass-card hover:border-amber-400/50 text-amber-300 px-4 py-2 rounded-lg text-xs font-extrabold uppercase tracking-wider transition">Wildrounds Intl</a>
                 </div>
             </div>
         </div>
@@ -301,19 +319,18 @@
             </div>
         </section>
 
-        <!-- PLAYER RANKINGS FOR TOURNAMENTS, SCRIMS & WILDROUNDS SMASH -->
+        <!-- PLAYER RANKINGS FOR TOURNAMENTS AND SCRIMS -->
         <section id="rankings-section" class="space-y-4 scroll-mt-20">
             <div class="flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center space-x-2.5">
                     <div class="w-1 h-5 bg-red-600 rounded"></div>
-                    <h2 class="display-font font-black text-sm sm:text-base text-white uppercase">Player Rankings — Leaderboard</h2>
+                    <h2 class="display-font font-black text-sm sm:text-base text-white uppercase">Player Rankings — Tournaments & Scrims</h2>
                 </div>
                 <div class="flex flex-wrap items-center gap-1.5 text-[11px] font-bold">
                     <input type="text" id="rank-search-input" oninput="renderPlayerRankings()" placeholder="Search player / team..." class="bg-[#090a0f] border border-white/10 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-red-500">
                     <button onclick="filterRankings('ALL')" id="rfilter-ALL" class="rfilter-btn bg-red-600 text-white px-3 py-1.5 rounded-lg">ALL</button>
                     <button onclick="filterRankings('Tournament')" id="rfilter-Tournament" class="rfilter-btn glass-card text-slate-300 px-3 py-1.5 rounded-lg">TOURNAMENT</button>
                     <button onclick="filterRankings('Scrim')" id="rfilter-Scrim" class="rfilter-btn glass-card text-slate-300 px-3 py-1.5 rounded-lg">SCRIM</button>
-                    <button onclick="filterRankings('Wildrounds Smash')" id="rfilter-Wildrounds Smash" class="rfilter-btn glass-card text-amber-300 border border-amber-500/30 px-3 py-1.5 rounded-lg">WILDROUNDS SMASH</button>
                 </div>
             </div>
 
@@ -339,18 +356,17 @@
             </div>
         </section>
 
-        <!-- MATCH HISTORY (WITH GOLD & TEAM KDA) -->
+        <!-- MATCH HISTORY (WITH GOLD, TEAM KDA & BAN CHAMPS) -->
         <section id="matches-section" class="space-y-4 scroll-mt-20">
             <div class="flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center space-x-2.5">
                     <div class="w-1 h-5 bg-red-600 rounded"></div>
-                    <h2 class="display-font font-black text-sm sm:text-base text-white uppercase">Match History • Gold, Team KDA & Scoreboards</h2>
+                    <h2 class="display-font font-black text-sm sm:text-base text-white uppercase">Match History • Bans, Gold, Team KDA & Scoreboards</h2>
                 </div>
-                <div class="flex flex-wrap gap-1.5 text-[11px] font-bold">
+                <div class="flex gap-1.5 text-[11px] font-bold">
                     <button onclick="filterMatches('ALL')" id="mfilter-ALL" class="mfilter-btn bg-red-600 text-white px-3 py-1.5 rounded-lg">ALL</button>
                     <button onclick="filterMatches('Tournament')" id="mfilter-Tournament" class="mfilter-btn glass-card text-slate-300 px-3 py-1.5 rounded-lg">TOURNAMENT</button>
                     <button onclick="filterMatches('Scrim')" id="mfilter-Scrim" class="mfilter-btn glass-card text-slate-300 px-3 py-1.5 rounded-lg">SCRIM</button>
-                    <button onclick="filterMatches('Wildrounds Smash')" id="mfilter-Wildrounds Smash" class="mfilter-btn glass-card text-amber-300 border border-amber-500/30 px-3 py-1.5 rounded-lg">WILDROUNDS SMASH</button>
                 </div>
             </div>
 
@@ -359,18 +375,18 @@
             </div>
         </section>
 
-        <!-- WILDROUNDS SMASH SECTION -->
+        <!-- SEPARATED WILDROUNDS INTERNATIONAL SECTION (SPACED AWAY FROM TOURNAMENTS & SCRIMS) -->
         <section id="wildrounds-section" class="mt-16 pt-8 border-t-2 border-amber-500/30 space-y-5 scroll-mt-20">
             <div class="flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center space-x-2.5">
                     <div class="w-1 h-6 bg-amber-400 rounded"></div>
                     <div>
-                        <h2 class="display-font font-black text-sm sm:text-base text-white uppercase">Wildrounds Smash</h2>
-                        <p class="text-[11px] text-slate-400">Multi-region teams & rosters across countries.</p>
+                        <h2 class="display-font font-black text-sm sm:text-base text-white uppercase">Wildrounds International</h2>
+                        <p class="text-[11px] text-slate-400">Dedicated international showcase separated from regular tournaments & scrims.</p>
                     </div>
                 </div>
                 <span class="text-[10px] font-black uppercase px-3 py-1 rounded-full bg-amber-500/15 text-amber-300 border border-amber-400/35">
-                    <i class="fa-solid fa-earth-asia mr-1"></i> Wildrounds Smash • Multi-Region
+                    <i class="fa-solid fa-earth-asia mr-1"></i> International Lineup • This Year
                 </span>
             </div>
 
@@ -766,16 +782,16 @@
                     </div>
                     <div>
                         <label class="text-[10px] font-bold uppercase text-slate-400">Player Achievements (comma or new line separated)</label>
-                        <textarea id="adm-player-achievements" rows="2" placeholder="e.g. Top Team - Wildrounds Smash, Champion" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white mt-1"></textarea>
+                        <textarea id="adm-player-achievements" rows="2" placeholder="e.g. Top Team - Wildrounds Smash Last Year, Champion This Year" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white mt-1"></textarea>
                     </div>
                     <button id="save-player-btn" type="button" onclick="savePlayer()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-xs font-bold uppercase">Add / Save Player</button>
                     <div id="adm-player-list" class="space-y-1.5 max-h-36 overflow-y-auto"></div>
                 </div>
 
-                <!-- 8. Match History (With Gold & Team KDA) -->
+                <!-- 8. Match History (With Gold, Team KDA & Ban Champs) -->
                 <div class="glass-card p-5 rounded-xl space-y-3">
                     <div class="flex justify-between items-center">
-                        <h4 class="text-xs font-black uppercase text-red-400">8. Match History (Score, Gold & Team KDA)</h4>
+                        <h4 class="text-xs font-black uppercase text-red-400">8. Match History (Bans, Score, Gold & Team KDA)</h4>
                         <button id="cancel-match-btn" type="button" onclick="resetForm('match')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
                     </div>
                     <input type="hidden" id="edit-match-id">
@@ -783,6 +799,11 @@
                         <input type="text" id="adm-m-team" placeholder="Team (Tag) A" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white">
                         <input type="text" id="adm-m-opp" placeholder="Team (Tag) B" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white">
                         <input type="text" id="adm-m-score" placeholder="Score (e.g. 2 - 0)" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="text" id="adm-m-team-bans" placeholder="Team A Ban Champs (e.g. Ezreal, Graves, Olaf)" class="w-full bg-[#090a0f] border border-rose-500/25 rounded px-2.5 py-2 text-xs text-rose-200">
+                        <input type="text" id="adm-m-opp-bans" placeholder="Team B Ban Champs (e.g. Yasuo, Jayce)" class="w-full bg-[#090a0f] border border-rose-500/25 rounded px-2.5 py-2 text-xs text-rose-200">
                     </div>
 
                     <div class="grid grid-cols-2 gap-2">
@@ -814,7 +835,6 @@
                         <select id="adm-m-type" class="w-full bg-[#090a0f] border border-white/10 rounded px-2 py-2 text-xs text-white">
                             <option value="Tournament">Tournament</option>
                             <option value="Scrim">Scrim</option>
-                            <option value="Wildrounds Smash">Wildrounds Smash</option>
                         </select>
                         <select id="adm-m-result" class="w-full bg-[#090a0f] border border-white/10 rounded px-2 py-2 text-xs text-white">
                             <option value="Win">Team A Win</option>
@@ -853,83 +873,38 @@
                 <div id="adm-part-list" class="space-y-1.5 max-h-28 overflow-y-auto"></div>
             </div>
 
-            <!-- 10. Wildrounds Smash Teams & Players -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- 10A. Wildrounds Smash Teams -->
-                <div class="glass-card p-5 rounded-xl space-y-3 border border-amber-500/25">
-                    <div class="flex justify-between items-center">
-                        <h4 class="text-xs font-black uppercase text-amber-300">10A. Wildrounds Smash Teams (By Country/Region)</h4>
-                        <button id="cancel-wr-btn" type="button" onclick="resetForm('wildrounds')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
-                    </div>
-                    <input type="hidden" id="edit-wr-id">
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                        <select id="adm-wr-track" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white font-bold">
-                            <option value="Community Track Team">Community Track Team</option>
-                            <option value="Creator Track Team for Showmatch">Creator Track Team for Showmatch</option>
-                        </select>
-                        <input type="text" id="adm-wr-team" placeholder="Team (Tag) Name" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
-                        <input type="text" id="adm-wr-region" placeholder="Region (e.g. PH, ID, MY)" value="PH" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <img id="preview-wr-logo" src="" onerror="handleImgError(this, 'logo')" class="w-9 h-9 rounded-lg object-cover border border-white/10 shrink-0">
-                        <input type="text" id="adm-wr-logo" placeholder="Team Logo URL (blank = 2 letters)" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
-                        <button type="button" onclick="triggerFilePicker('wr-logo', 180, true)" class="bg-amber-600 hover:bg-amber-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
-                            <i class="fa-solid fa-crop-simple mr-1"></i>Crop Photo
-                        </button>
-                        <input type="file" id="file-wr-logo" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-wr-logo', 'preview-wr-logo', 180)">
-                    </div>
-                    <input type="text" id="adm-wr-notes" placeholder="Country / Notes / Achievements Info (optional)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
-                    <button id="save-wr-btn" type="button" onclick="saveWildroundsTeam()" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-2 rounded text-xs font-extrabold uppercase">Add / Save Wildrounds Smash Team</button>
-                    <div id="adm-wr-list" class="space-y-1.5 max-h-36 overflow-y-auto"></div>
+            <!-- 10. Wildrounds International Teams -->
+            <div class="glass-card p-5 rounded-xl space-y-3 border border-amber-500/25">
+                <div class="flex justify-between items-center">
+                    <h4 class="text-xs font-black uppercase text-amber-300">10. Wildrounds International Teams (Community & Creator Showmatch)</h4>
+                    <button id="cancel-wr-btn" type="button" onclick="resetForm('wildrounds')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
                 </div>
-
-                <!-- 10B. Add / Edit Players Inside Wildrounds Smash Teams -->
-                <div class="glass-card p-5 rounded-xl space-y-3 border border-amber-500/25">
-                    <div class="flex justify-between items-center">
-                        <h4 class="text-xs font-black uppercase text-amber-300">10B. Add Players to Wildrounds Smash Team</h4>
-                        <button id="cancel-wrplayer-btn" type="button" onclick="resetForm('wrplayer')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
-                    </div>
-                    <input type="hidden" id="edit-wrplayer-id">
-                    <select id="adm-wrplayer-team" onchange="renderAdminWrPlayerList()" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white"></select>
-                    <div class="grid grid-cols-3 gap-2">
-                        <input type="text" id="adm-wrplayer-ign" placeholder="Player IGN (e.g. Takeku)" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white">
-                        <select id="adm-wrplayer-role" class="w-full bg-[#090a0f] border border-white/10 rounded px-2 py-2 text-xs text-white">
-                            <option value="Owner">Owner</option>
-                            <option value="Coach">Coach</option>
-                            <option value="Baron">Baron</option>
-                            <option value="Jungle">Jungle</option>
-                            <option value="Mid">Mid</option>
-                            <option value="ADC">ADC</option>
-                            <option value="Support">Support</option>
-                            <option value="Flex">Flex</option>
-                        </select>
-                        <input type="text" id="adm-wrplayer-region" placeholder="Region (e.g. PH)" value="PH" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white">
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <input type="text" id="adm-wrplayer-gold" placeholder="Gold (e.g. 13,474)" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-amber-200">
-                        <input type="number" id="adm-wrplayer-mvp" placeholder="MVP Count (e.g. 1)" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white">
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <img id="preview-wrplayer-pfp" src="" onerror="handleImgError(this, 'player')" class="w-10 h-10 rounded-lg object-cover border border-white/10 shrink-0">
-                        <input type="text" id="adm-wrplayer-pfp" placeholder="Player Photo URL (blank = 2 letters like TA)" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
-                        <button type="button" onclick="triggerFilePicker('wrplayer-pfp', 180, true)" class="bg-amber-600 hover:bg-amber-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
-                            <i class="fa-solid fa-crop-simple mr-1"></i>Crop Photo
-                        </button>
-                        <input type="file" id="file-wrplayer-pfp" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-wrplayer-pfp', 'preview-wrplayer-pfp', 180)">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold uppercase text-slate-400">Player Achievements (comma or new line separated)</label>
-                        <textarea id="adm-wrplayer-achievements" rows="2" placeholder="e.g. Wildrounds Smash MVP" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white mt-1"></textarea>
-                    </div>
-                    <button id="save-wrplayer-btn" type="button" onclick="saveWrPlayer()" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-2 rounded text-xs font-extrabold uppercase">Add / Save Wildrounds Player</button>
-                    <div id="adm-wrplayer-list" class="space-y-1.5 max-h-36 overflow-y-auto"></div>
+                <input type="hidden" id="edit-wr-id">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <select id="adm-wr-track" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white font-bold">
+                        <option value="Community Track Team">Community Track Team</option>
+                        <option value="Creator Track Team for Showmatch">Creator Track Team for Showmatch</option>
+                    </select>
+                    <input type="text" id="adm-wr-team" placeholder="Team (Tag) Name" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
+                    <input type="text" id="adm-wr-year" placeholder="Edition / Year (e.g. Wildrounds Intl 2026)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
                 </div>
+                <div class="flex items-center gap-2">
+                    <img id="preview-wr-logo" src="" onerror="handleImgError(this, 'logo')" class="w-9 h-9 rounded-lg object-cover border border-white/10 shrink-0">
+                    <input type="text" id="adm-wr-logo" placeholder="Team Logo URL (blank = 2 letters)" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
+                    <button type="button" onclick="triggerFilePicker('wr-logo', 180, true)" class="bg-amber-600 hover:bg-amber-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
+                        <i class="fa-solid fa-crop-simple mr-1"></i>Crop Photo
+                    </button>
+                    <input type="file" id="file-wr-logo" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-wr-logo', 'preview-wr-logo', 180)">
+                </div>
+                <input type="text" id="adm-wr-notes" placeholder="Notes / Achievements / Lineup Info (optional)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
+                <button id="save-wr-btn" type="button" onclick="saveWildroundsTeam()" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-2 rounded text-xs font-extrabold uppercase">Add / Save Wildrounds Team</button>
+                <div id="adm-wr-list" class="space-y-1.5 max-h-36 overflow-y-auto"></div>
             </div>
 
-            <!-- 11. Custom Player Rankings (Tournaments, Scrims & Wildrounds Smash) -->
+            <!-- 11. Custom Player Rankings (Tournaments & Scrims) -->
             <div class="glass-card p-5 rounded-xl space-y-3 border border-blue-500/25">
                 <div class="flex justify-between items-center">
-                    <h4 class="text-xs font-black uppercase text-blue-300">11. Custom Player Rankings Entry (Tournament / Scrim / Wildrounds Smash)</h4>
+                    <h4 class="text-xs font-black uppercase text-blue-300">11. Custom Player Rankings Entry (Tournaments / Scrims)</h4>
                     <button id="cancel-rank-btn" type="button" onclick="resetForm('ranking')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
                 </div>
                 <input type="hidden" id="edit-rank-id">
@@ -937,7 +912,6 @@
                     <select id="adm-rank-mode" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white font-bold">
                         <option value="Tournament">Tournament</option>
                         <option value="Scrim">Scrim</option>
-                        <option value="Wildrounds Smash">Wildrounds Smash</option>
                     </select>
                     <input type="text" id="adm-rank-ign" placeholder="Player IGN" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
                     <input type="text" id="adm-rank-team" placeholder="Team (Tag)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
@@ -1000,10 +974,7 @@
             <div class="flex items-center space-x-3 border-b border-white/10 pb-3">
                 <div id="tmodal-logo-box" class="w-12 h-12 rounded-xl overflow-hidden border border-white/15 shrink-0"></div>
                 <div class="min-w-0">
-                    <div class="flex items-center gap-2">
-                        <h3 id="tmodal-name" class="display-font font-black text-base text-white uppercase truncate">TEAM NAME</h3>
-                        <span id="tmodal-region-badge" class="hidden text-[10px] font-black uppercase px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-400/30">PH</span>
-                    </div>
+                    <h3 id="tmodal-name" class="display-font font-black text-base text-white uppercase truncate">TEAM NAME</h3>
                     <p id="tmodal-meta" class="text-xs text-slate-400">Game • Team Winrate: <span id="tmodal-wr" class="text-emerald-400 font-bold">0%</span></p>
                 </div>
             </div>
@@ -1118,7 +1089,7 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="bg-[#090a0f]/80 border border-blue-500/25 rounded-xl p-3 space-y-2">
+                <div class="bg-[#090a0f]/80 border border-blue-500/25 rounded-xl p-3 space-y-2.5">
                     <div class="flex items-center justify-between gap-2 border-b border-white/10 pb-2">
                         <div class="flex items-center gap-2 min-w-0">
                             <div id="mmodal-blue-logo-box" class="w-5 h-5 rounded overflow-hidden border border-white/10 shrink-0"></div>
@@ -1129,9 +1100,13 @@
                             <span id="mmodal-blue-gold" class="text-amber-300">Gold: -</span>
                         </div>
                     </div>
+                    <div class="space-y-1.5">
+                        <p class="text-[10px] font-black uppercase tracking-wider text-rose-300">Ban Champs</p>
+                        <div id="mmodal-blue-bans" class="flex flex-wrap items-center gap-1.5"></div>
+                    </div>
                     <div id="mmodal-blue-rows" class="space-y-2"></div>
                 </div>
-                <div class="bg-[#090a0f]/80 border border-red-500/25 rounded-xl p-3 space-y-2">
+                <div class="bg-[#090a0f]/80 border border-red-500/25 rounded-xl p-3 space-y-2.5">
                     <div class="flex items-center justify-between gap-2 border-b border-white/10 pb-2">
                         <div class="flex items-center gap-2 min-w-0">
                             <div id="mmodal-red-logo-box" class="w-5 h-5 rounded overflow-hidden border border-white/10 shrink-0"></div>
@@ -1141,6 +1116,10 @@
                             <span id="mmodal-red-kda" class="text-red-300">KDA: -</span>
                             <span id="mmodal-red-gold" class="text-amber-300">Gold: -</span>
                         </div>
+                    </div>
+                    <div class="space-y-1.5">
+                        <p class="text-[10px] font-black uppercase tracking-wider text-rose-300">Ban Champs</p>
+                        <div id="mmodal-red-bans" class="flex flex-wrap items-center gap-1.5"></div>
                     </div>
                     <div id="mmodal-red-rows" class="space-y-2"></div>
                 </div>
@@ -1494,7 +1473,6 @@
             matches: {},
             partners: [],
             wildroundsTeams: [],
-            wildroundsPlayers: [],
             customRankings: []
         };
         let selectedGroupId = null;
@@ -1572,6 +1550,26 @@
         function parseAchievementsList(raw) {
             if (!raw) return [];
             return raw.split(/[\n,]+/).map(s => s.trim()).filter(Boolean);
+        }
+
+        function parseBanChampsList(raw) {
+            if (!raw) return [];
+            return raw.split(/[\n,]+/).map(s => s.trim()).filter(Boolean);
+        }
+
+        function renderBanChampsHtml(rawBans) {
+            const bans = parseBanChampsList(rawBans);
+            if (!bans.length) {
+                return `<span class="text-[10px] text-slate-500 italic">None</span>`;
+            }
+            return bans.map(champ => `
+                <div title="Banned: ${champ}" class="group flex flex-col items-center gap-0.5">
+                    <div class="ban-slash-box w-9 h-9 rounded-md border border-rose-500/50 bg-[#141722] shadow">
+                        <img src="${getChampIcon(champ)}" onerror="handleImgError(this, 'champ')" alt="${champ}" class="w-full h-full object-cover opacity-80">
+                    </div>
+                    <span class="text-[9px] font-bold text-rose-200 max-w-[46px] truncate">${champ}</span>
+                </div>
+            `).join('');
         }
 
         function parseEmailList(raw) {
@@ -1725,7 +1723,6 @@
                 setCleanImgSrc(prev, resolved, `role-${r}`);
             });
             renderTeamGroupsAndSubTeams();
-            renderWildroundsTeams();
         });
 
         function saveRolePhotos() {
@@ -1778,10 +1775,6 @@
         });
         bindList('partners', 'partners', renderPartners);
         bindList('wildroundsTeams', 'wildroundsTeams', renderWildroundsTeams);
-        bindList('wildroundsPlayers', 'wildroundsPlayers', () => {
-            renderWildroundsTeams();
-            renderPlayerRankings();
-        });
         bindList('customRankings', 'customRankings', renderPlayerRankings);
 
         db.ref('guiangHub/matches').on('value', snap => {
@@ -2025,7 +2018,7 @@
 
             Object.values(state.matches).forEach(m => {
                 const mType = (m.type || '').toLowerCase();
-                if (!['tournament', 'scrim', 'wildrounds smash'].includes(mType)) return;
+                if (mType !== 'tournament' && mType !== 'scrim') return;
 
                 const blueRows = parseMatchLines(m.blueData);
                 const redRows = parseMatchLines(m.redData);
@@ -2102,10 +2095,7 @@
         function filterRankings(mode) {
             rankFilterType = mode;
             document.querySelectorAll('.rfilter-btn').forEach(btn => {
-                const isWr = btn.id === 'rfilter-Wildrounds Smash';
-                btn.className = isWr
-                    ? 'rfilter-btn glass-card text-amber-300 border border-amber-500/30 px-3 py-1.5 rounded-lg'
-                    : 'rfilter-btn glass-card text-slate-300 px-3 py-1.5 rounded-lg';
+                btn.className = 'rfilter-btn glass-card text-slate-300 px-3 py-1.5 rounded-lg';
             });
             const active = document.getElementById(`rfilter-${mode}`);
             if (active) active.className = 'rfilter-btn bg-red-600 text-white px-3 py-1.5 rounded-lg';
@@ -2120,11 +2110,8 @@
             const map = new Map();
 
             const findPlayerMeta = (ign) => {
-                const found = state.players.find(p => (p.ign || '').trim().toLowerCase() === ign.toLowerCase())
-                    || state.wildroundsPlayers.find(p => (p.ign || '').trim().toLowerCase() === ign.toLowerCase());
-                const team = found
-                    ? (state.teams.find(t => t.id === found.teamId) || state.wildroundsTeams.find(t => t.id === found.teamId))
-                    : null;
+                const found = state.players.find(p => (p.ign || '').trim().toLowerCase() === ign.toLowerCase());
+                const team = found ? state.teams.find(t => t.id === found.teamId) : null;
                 return {
                     role: found?.role || '',
                     teamName: team?.name || '',
@@ -2272,22 +2259,23 @@
                     return `<p class="text-xs text-slate-400 italic">${emptyMsg}</p>`;
                 }
                 return items.map(item => {
+                    const matchedRosterTeam = state.teams.find(
+                        t => (t.name || '').trim().toLowerCase() === (item.name || '').trim().toLowerCase()
+                    );
                     const wr = computeTeamWinrate(item.name);
+                    const clickAttr = matchedRosterTeam ? `onclick="openTeamPopout('${matchedRosterTeam.id}')"` : '';
+                    const cursorClass = matchedRosterTeam ? 'cursor-pointer hover:border-amber-400/50' : '';
                     const notesList = parseAchievementsList(item.notes);
-                    const region = (item.region || 'PH').trim().toUpperCase();
-                    const roster = sortPlayersByRole(state.wildroundsPlayers.filter(p => p.teamId === item.id));
+                    const logoToUse = item.logo || matchedRosterTeam?.logo || '';
 
                     return `
-                        <div onclick="openWildroundsTeamPopout('${item.id}')" class="bg-[#090a0f]/85 border border-white/10 hover:border-amber-400/50 p-3.5 rounded-xl cursor-pointer transition space-y-2">
+                        <div ${clickAttr} class="bg-[#090a0f]/85 border border-white/10 ${cursorClass} p-3.5 rounded-xl transition space-y-1.5">
                             <div class="flex items-center justify-between gap-3">
                                 <div class="flex items-center gap-3 min-w-0">
-                                    ${renderAvatarHtml(item.logo, item.name, 'w-11 h-11 rounded-xl', 'logo')}
+                                    ${renderAvatarHtml(logoToUse, item.name, 'w-11 h-11 rounded-xl', 'logo')}
                                     <div class="min-w-0">
-                                        <div class="flex items-center gap-1.5">
-                                            <p class="text-xs sm:text-sm font-black text-white uppercase truncate">${item.name}</p>
-                                            <span class="text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-400/30">${region}</span>
-                                        </div>
-                                        <p class="text-[10px] font-bold ${accentClass}">${roster.length} ${roster.length === 1 ? 'Player' : 'Players'} • Click for Roster & Champs</p>
+                                        <p class="text-xs sm:text-sm font-black text-white uppercase truncate">${item.name}</p>
+                                        <p class="text-[10px] font-bold ${accentClass}">${item.year || 'Wildrounds International • This Year'}</p>
                                     </div>
                                 </div>
                                 <div class="text-right shrink-0">
@@ -2296,6 +2284,7 @@
                                 </div>
                             </div>
                             ${notesList.length ? `<p class="text-[11px] text-slate-300 leading-snug"><i class="fa-solid fa-trophy text-amber-400 mr-1"></i>${notesList.join(' • ')}</p>` : ''}
+                            ${matchedRosterTeam ? `<p class="text-[10px] text-slate-400"><i class="fa-solid fa-users mr-1 text-red-400"></i>Click to view full roster</p>` : ''}
                         </div>
                     `;
                 }).join('');
@@ -2303,89 +2292,6 @@
 
             commBox.innerHTML = buildCards(commTeams, 'No Community Track team added yet.', 'text-emerald-400');
             creatBox.innerHTML = buildCards(creatTeams, 'No Creator Track Showmatch team added yet.', 'text-purple-400');
-        }
-
-        function openWildroundsTeamPopout(teamId) {
-            const team = state.wildroundsTeams.find(t => t.id === teamId);
-            if (!team) return;
-            const region = (team.region || 'PH').trim().toUpperCase();
-
-            document.getElementById('tmodal-logo-box').innerHTML = renderAvatarHtml(team.logo, team.name, 'w-12 h-12 rounded-xl', 'logo');
-            document.getElementById('tmodal-name').textContent = team.name;
-            const regBadge = document.getElementById('tmodal-region-badge');
-            regBadge.textContent = region;
-            regBadge.classList.remove('hidden');
-            document.getElementById('tmodal-meta').innerHTML = `${team.track || 'Wildrounds Smash'} • Team Winrate: <span class="text-emerald-400 font-bold">${computeTeamWinrate(team.name)}</span>`;
-
-            const tAch = parseAchievementsList(team.notes);
-            const tAchBox = document.getElementById('tmodal-achievements');
-            if (tAch.length) {
-                tAchBox.innerHTML = tAch.map(a => `
-                    <div class="bg-[#090a0f] border border-amber-500/25 px-3 py-1.5 rounded-lg flex items-center gap-2 text-[11px] text-amber-200 font-semibold">
-                        <i class="fa-solid fa-trophy text-amber-400 shrink-0"></i>
-                        <span>${a}</span>
-                    </div>
-                `).join('');
-            } else {
-                tAchBox.innerHTML = '';
-            }
-
-            const teamChamps = computeTeamMostPickedAndKdaChamps(team.name).slice(0, 6);
-            const teamChampsBox = document.getElementById('tmodal-team-champs');
-            if (!teamChamps.length) {
-                teamChampsBox.innerHTML = `<p class="text-xs text-slate-400 italic col-span-full">No match champion stats recorded for ${team.name} yet.</p>`;
-            } else {
-                teamChampsBox.innerHTML = teamChamps.map(c => `
-                    <div class="bg-[#090a0f] border border-white/10 p-2.5 rounded-xl flex items-center justify-between gap-2">
-                        <div class="flex items-center gap-2.5 min-w-0">
-                            <img src="${getChampIcon(c.champ)}" onerror="handleImgError(this, 'champ')" class="w-9 h-9 rounded-lg object-cover border border-white/10 shrink-0">
-                            <div class="min-w-0">
-                                <p class="text-xs font-black text-white truncate">${c.champ}</p>
-                                <p class="text-[10px] text-slate-400">${c.picks} ${c.picks === 1 ? 'Pick' : 'Picks'} • ${c.wr}% WR</p>
-                            </div>
-                        </div>
-                        <span class="text-[11px] font-black text-emerald-400 bg-emerald-500/10 border border-emerald-500/25 px-2 py-1 rounded shrink-0">${c.kdaRatio.toFixed(1)} KDA</span>
-                    </div>
-                `).join('');
-            }
-
-            const teamPlayers = sortPlayersByRole(state.wildroundsPlayers.filter(p => p.teamId === teamId));
-            const list = document.getElementById('tmodal-players');
-            if (!teamPlayers.length) {
-                list.innerHTML = `<p class="text-xs text-slate-400 italic">No players assigned to this Wildrounds Smash team yet.</p>`;
-            } else {
-                list.innerHTML = teamPlayers.map(p => {
-                    const st = computePlayerStats(p);
-                    const rKey = getRoleKey(p.role);
-                    const roleImg = getRolePhoto(p.role);
-                    const pAch = parseAchievementsList(p.achievements);
-                    const pRegion = (p.region || region || 'PH').trim().toUpperCase();
-                    return `
-                        <div onclick="openPlayerModal('${p.id}', 'wildrounds')" class="bg-[#090a0f] hover:border-red-500/40 border border-white/10 p-3 rounded-xl flex items-center justify-between gap-3 cursor-pointer transition">
-                            <div class="flex items-center space-x-3 min-w-0">
-                                ${renderAvatarHtml(p.pfp, p.ign, 'w-11 h-11 rounded-lg', 'player')}
-                                <div class="min-w-0">
-                                    <div class="flex items-center gap-1.5">
-                                        <p class="text-xs font-black text-white uppercase truncate">${p.ign}</p>
-                                        <span class="text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-400/30">${pRegion}</span>
-                                    </div>
-                                    <div class="flex items-center space-x-1.5 mt-0.5">
-                                        <img src="${roleImg}" onerror="handleImgError(this, 'role-${rKey}')" class="w-4 h-4 rounded object-cover border border-white/10 shrink-0">
-                                        <span class="text-[10px] font-bold text-slate-300">${p.role || 'Player'}</span>
-                                        <span class="text-[10px] text-slate-500">• ${team.name}</span>
-                                    </div>
-                                    ${pAch.length ? `<p class="text-[10px] text-amber-300 truncate mt-0.5"><i class="fa-solid fa-trophy mr-1"></i>${pAch[0]}</p>` : ''}
-                                </div>
-                            </div>
-                            <div class="text-right shrink-0">
-                                <p class="text-xs font-black text-emerald-400">${st.winrate}% WR</p>
-                                <p class="text-[10px] text-slate-300 font-bold">${st.wins}W - ${st.losses}L</p>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            }
-            document.getElementById('team-modal').classList.remove('hidden');
         }
 
         function renderTeamGroupsAndSubTeams() {
@@ -2472,7 +2378,6 @@
             const logoUrl = team.logo || group?.logo || '';
             document.getElementById('tmodal-logo-box').innerHTML = renderAvatarHtml(logoUrl, team.name, 'w-12 h-12 rounded-xl', 'logo');
             document.getElementById('tmodal-name').textContent = team.name;
-            document.getElementById('tmodal-region-badge').classList.add('hidden');
             document.getElementById('tmodal-meta').innerHTML = `${team.game || 'Esports'} • Team Winrate: <span class="text-emerald-400 font-bold">${computeTeamWinrate(team.name)}</span>`;
 
             const tAch = parseAchievementsList(team.achievements);
@@ -2519,7 +2424,7 @@
                     const pAch = parseAchievementsList(p.achievements);
                     const region = (p.region || 'PH').trim().toUpperCase();
                     return `
-                        <div onclick="openPlayerModal('${p.id}', 'regular')" class="bg-[#090a0f] hover:border-red-500/40 border border-white/10 p-3 rounded-xl flex items-center justify-between gap-3 cursor-pointer transition">
+                        <div onclick="openPlayerModal('${p.id}')" class="bg-[#090a0f] hover:border-red-500/40 border border-white/10 p-3 rounded-xl flex items-center justify-between gap-3 cursor-pointer transition">
                             <div class="flex items-center space-x-3 min-w-0">
                                 ${renderAvatarHtml(p.pfp, p.ign, 'w-11 h-11 rounded-lg', 'player')}
                                 <div class="min-w-0">
@@ -2591,17 +2496,13 @@
             `;
         }
 
-        function openPlayerModal(playerId, source = 'regular') {
-            const p = source === 'wildrounds'
-                ? (state.wildroundsPlayers.find(item => item.id === playerId) || state.players.find(item => item.id === playerId))
-                : (state.players.find(item => item.id === playerId) || state.wildroundsPlayers.find(item => item.id === playerId));
+        function openPlayerModal(playerId) {
+            const p = state.players.find(item => item.id === playerId);
             if (!p) return;
-            const team = source === 'wildrounds'
-                ? state.wildroundsTeams.find(t => t.id === p.teamId)
-                : state.teams.find(t => t.id === p.teamId);
+            const team = state.teams.find(t => t.id === p.teamId);
             const st = computePlayerStats(p);
             const rKey = getRoleKey(p.role);
-            const region = (p.region || team?.region || 'PH').trim().toUpperCase();
+            const region = (p.region || 'PH').trim().toUpperCase();
 
             document.getElementById('pmodal-pfp-box').innerHTML = renderAvatarHtml(p.pfp, p.ign, 'w-14 h-14 rounded-xl', 'player');
             document.getElementById('pmodal-ign').textContent = p.ign;
@@ -2650,10 +2551,7 @@
         function filterMatches(type) {
             matchFilterType = type;
             document.querySelectorAll('.mfilter-btn').forEach(btn => {
-                const isWr = btn.id === 'mfilter-Wildrounds Smash';
-                btn.className = isWr
-                    ? 'mfilter-btn glass-card text-amber-300 border border-amber-500/30 px-3 py-1.5 rounded-lg'
-                    : 'mfilter-btn glass-card text-slate-300 px-3 py-1.5 rounded-lg';
+                btn.className = 'mfilter-btn glass-card text-slate-300 px-3 py-1.5 rounded-lg';
             });
             const activeBtn = document.getElementById(`mfilter-${type}`);
             if (activeBtn) activeBtn.className = 'mfilter-btn bg-red-600 text-white px-3 py-1.5 rounded-lg';
@@ -2683,6 +2581,8 @@
                 const goldB = (m.oppGold || '').trim();
                 const kdaA = computeSideTeamKda(m, 'blue');
                 const kdaB = computeSideTeamKda(m, 'red');
+                const bansA = parseBanChampsList(m.teamBans);
+                const bansB = parseBanChampsList(m.oppBans);
 
                 return `
                     <div onclick="openMatchModal('${id}')" class="glass-card hover:border-red-500/40 p-4 rounded-xl cursor-pointer transition space-y-2.5">
@@ -2707,6 +2607,18 @@
                                 ${renderAvatarHtml(teamBLogo, m.opponent || 'TB', 'w-8 h-8 rounded-lg', 'logo')}
                             </div>
                         </div>
+                        ${(bansA.length || bansB.length) ? `
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1.5 border-t border-white/5 text-[10px]">
+                                <div class="truncate">
+                                    <span class="font-black uppercase text-rose-300 mr-1">${m.team || 'Team A'} Bans:</span>
+                                    <span class="text-slate-300">${bansA.length ? bansA.join(', ') : '-'}</span>
+                                </div>
+                                <div class="truncate sm:text-right">
+                                    <span class="font-black uppercase text-rose-300 mr-1">${m.opponent || 'Team B'} Bans:</span>
+                                    <span class="text-slate-300">${bansB.length ? bansB.join(', ') : '-'}</span>
+                                </div>
+                            </div>
+                        ` : ''}
                         <div class="flex items-center justify-between text-[11px] font-extrabold pt-1 border-t border-white/5">
                             <span class="text-amber-300">${goldA ? `💰 ${goldA}` : ''}</span>
                             <span class="text-slate-200">${m.score || ''}</span>
@@ -2744,6 +2656,8 @@
             document.getElementById('mmodal-red-kda').textContent = `KDA: ${computeSideTeamKda(m, 'red')}`;
             document.getElementById('mmodal-blue-gold').textContent = m.teamGold ? `💰 ${m.teamGold}` : '💰 -';
             document.getElementById('mmodal-red-gold').textContent = m.oppGold ? `💰 ${m.oppGold}` : '💰 -';
+            document.getElementById('mmodal-blue-bans').innerHTML = renderBanChampsHtml(m.teamBans);
+            document.getElementById('mmodal-red-bans').innerHTML = renderBanChampsHtml(m.oppBans);
 
             const buildSide = (raw) => {
                 const rows = parseMatchLines(raw);
@@ -2861,6 +2775,8 @@
                 document.getElementById('adm-m-team').value = '';
                 document.getElementById('adm-m-opp').value = '';
                 document.getElementById('adm-m-score').value = '';
+                document.getElementById('adm-m-team-bans').value = '';
+                document.getElementById('adm-m-opp-bans').value = '';
                 document.getElementById('adm-m-team-gold').value = '';
                 document.getElementById('adm-m-opp-gold').value = '';
                 document.getElementById('adm-m-team-kda').value = '';
@@ -2886,24 +2802,12 @@
                 document.getElementById('edit-wr-id').value = '';
                 document.getElementById('adm-wr-track').value = 'Community Track Team';
                 document.getElementById('adm-wr-team').value = '';
-                document.getElementById('adm-wr-region').value = 'PH';
+                document.getElementById('adm-wr-year').value = '';
                 document.getElementById('adm-wr-logo').value = '';
                 document.getElementById('adm-wr-notes').value = '';
                 setCleanImgSrc(document.getElementById('preview-wr-logo'), '', 'logo');
-                document.getElementById('save-wr-btn').textContent = 'Add / Save Wildrounds Smash Team';
+                document.getElementById('save-wr-btn').textContent = 'Add / Save Wildrounds Team';
                 document.getElementById('cancel-wr-btn').classList.add('hidden');
-            } else if (type === 'wrplayer') {
-                document.getElementById('edit-wrplayer-id').value = '';
-                document.getElementById('adm-wrplayer-ign').value = '';
-                document.getElementById('adm-wrplayer-role').value = 'Owner';
-                document.getElementById('adm-wrplayer-region').value = 'PH';
-                document.getElementById('adm-wrplayer-gold').value = '';
-                document.getElementById('adm-wrplayer-mvp').value = '';
-                document.getElementById('adm-wrplayer-pfp').value = '';
-                document.getElementById('adm-wrplayer-achievements').value = '';
-                setCleanImgSrc(document.getElementById('preview-wrplayer-pfp'), '', 'player');
-                document.getElementById('save-wrplayer-btn').textContent = 'Add / Save Wildrounds Player';
-                document.getElementById('cancel-wrplayer-btn').classList.add('hidden');
             } else if (type === 'ranking') {
                 document.getElementById('edit-rank-id').value = '';
                 document.getElementById('adm-rank-mode').value = 'Tournament';
@@ -3118,6 +3022,8 @@
             const team = document.getElementById('adm-m-team').value.trim();
             const opponent = document.getElementById('adm-m-opp').value.trim();
             const score = document.getElementById('adm-m-score').value.trim();
+            const teamBans = document.getElementById('adm-m-team-bans').value.trim();
+            const oppBans = document.getElementById('adm-m-opp-bans').value.trim();
             const teamGold = document.getElementById('adm-m-team-gold').value.trim();
             const oppGold = document.getElementById('adm-m-opp-gold').value.trim();
             const teamKda = document.getElementById('adm-m-team-kda').value.trim();
@@ -3130,7 +3036,7 @@
             const blueData = document.getElementById('adm-m-blue').value.trim();
             const redData = document.getElementById('adm-m-red').value.trim();
             if (!team || !opponent) return alert('Please enter both Team (Tag) A and Team (Tag) B.');
-            upsert('matches', id, { team, opponent, score, teamGold, oppGold, teamKda, oppKda, teamLogo, oppLogo, type, result, date, blueData, redData }, 'match', 'Match');
+            upsert('matches', id, { team, opponent, score, teamBans, oppBans, teamGold, oppGold, teamKda, oppKda, teamLogo, oppLogo, type, result, date, blueData, redData }, 'match', 'Match');
         }
         function editMatchItem(id) {
             const item = state.matches[id]; if (!item) return;
@@ -3138,6 +3044,8 @@
             document.getElementById('adm-m-team').value = item.team || '';
             document.getElementById('adm-m-opp').value = item.opponent || '';
             document.getElementById('adm-m-score').value = item.score || '';
+            document.getElementById('adm-m-team-bans').value = item.teamBans || '';
+            document.getElementById('adm-m-opp-bans').value = item.oppBans || '';
             document.getElementById('adm-m-team-gold').value = item.teamGold || '';
             document.getElementById('adm-m-opp-gold').value = item.oppGold || '';
             document.getElementById('adm-m-team-kda').value = item.teamKda || '';
@@ -3178,62 +3086,23 @@
             const id = document.getElementById('edit-wr-id').value;
             const track = document.getElementById('adm-wr-track').value;
             const name = document.getElementById('adm-wr-team').value.trim();
-            const region = (document.getElementById('adm-wr-region').value || 'PH').trim().toUpperCase();
+            const year = document.getElementById('adm-wr-year').value.trim() || '2026';
             const logo = document.getElementById('adm-wr-logo').value.trim();
             const notes = document.getElementById('adm-wr-notes').value.trim();
-            if (!name) return alert('Please enter Wildrounds Smash team name.');
-            upsert('wildroundsTeams', id, { track, name, region, logo, notes }, 'wildrounds', 'Wildrounds Smash Team', (createdKey) => {
-                if (createdKey) {
-                    const wrSel = document.getElementById('adm-wrplayer-team');
-                    if (wrSel) wrSel.value = createdKey;
-                }
-            });
+            if (!name) return alert('Please enter Wildrounds team name.');
+            upsert('wildroundsTeams', id, { track, name, year, logo, notes }, 'wildrounds', 'Wildrounds Team');
         }
         function editWildroundsTeam(id) {
             const item = state.wildroundsTeams.find(i => i.id === id); if (!item) return;
             document.getElementById('edit-wr-id').value = id;
             document.getElementById('adm-wr-track').value = item.track || 'Community Track Team';
             document.getElementById('adm-wr-team').value = item.name || '';
-            document.getElementById('adm-wr-region').value = item.region || 'PH';
+            document.getElementById('adm-wr-year').value = item.year || '';
             document.getElementById('adm-wr-logo').value = item.logo || '';
             document.getElementById('adm-wr-notes').value = item.notes || '';
             setCleanImgSrc(document.getElementById('preview-wr-logo'), item.logo || '', 'logo');
-            document.getElementById('save-wr-btn').textContent = 'Update Wildrounds Smash Team';
+            document.getElementById('save-wr-btn').textContent = 'Update Wildrounds Team';
             document.getElementById('cancel-wr-btn').classList.remove('hidden');
-        }
-
-        function saveWrPlayer() {
-            const id = document.getElementById('edit-wrplayer-id').value;
-            const teamId = document.getElementById('adm-wrplayer-team').value || (state.wildroundsTeams[0] && state.wildroundsTeams[0].id);
-            const ign = document.getElementById('adm-wrplayer-ign').value.trim();
-            const role = document.getElementById('adm-wrplayer-role').value.trim();
-            const teamObj = state.wildroundsTeams.find(t => t.id === teamId);
-            const region = (document.getElementById('adm-wrplayer-region').value || teamObj?.region || 'PH').trim().toUpperCase();
-            const gold = document.getElementById('adm-wrplayer-gold').value.trim();
-            const mvp = parseInt(document.getElementById('adm-wrplayer-mvp').value, 10) || 0;
-            const pfp = document.getElementById('adm-wrplayer-pfp').value.trim();
-            const achievements = document.getElementById('adm-wrplayer-achievements').value.trim();
-            if (!teamId) return alert('Please add or select a Wildrounds Smash Team first.');
-            if (!ign) return alert('Please enter player IGN.');
-            upsert('wildroundsPlayers', id, { teamId, ign, role, region, gold, mvp, pfp, achievements }, 'wrplayer', 'Wildrounds Smash Player', () => {
-                const wrSel = document.getElementById('adm-wrplayer-team');
-                if (wrSel) wrSel.value = teamId;
-            });
-        }
-        function editWrPlayerItem(id) {
-            const item = state.wildroundsPlayers.find(i => i.id === id); if (!item) return;
-            document.getElementById('edit-wrplayer-id').value = id;
-            document.getElementById('adm-wrplayer-team').value = item.teamId || '';
-            document.getElementById('adm-wrplayer-ign').value = item.ign || '';
-            document.getElementById('adm-wrplayer-role').value = item.role || 'Owner';
-            document.getElementById('adm-wrplayer-region').value = item.region || 'PH';
-            document.getElementById('adm-wrplayer-gold').value = item.gold || '';
-            document.getElementById('adm-wrplayer-mvp').value = item.mvp ?? '';
-            document.getElementById('adm-wrplayer-pfp').value = item.pfp || '';
-            document.getElementById('adm-wrplayer-achievements').value = item.achievements || '';
-            setCleanImgSrc(document.getElementById('preview-wrplayer-pfp'), item.pfp || '', 'player');
-            document.getElementById('save-wrplayer-btn').textContent = 'Update Wildrounds Player';
-            document.getElementById('cancel-wrplayer-btn').classList.remove('hidden');
         }
 
         function saveCustomRanking() {
@@ -3291,15 +3160,6 @@
             if (prevTmVal && state.teams.some(t => t.id === prevTmVal)) {
                 tmSel.value = prevTmVal;
             }
-
-            const wrSel = document.getElementById('adm-wrplayer-team');
-            if (wrSel) {
-                const prevWrVal = wrSel.value;
-                wrSel.innerHTML = state.wildroundsTeams.map(t => `<option value="${t.id}">${t.name} [${t.region || 'PH'}]</option>`).join('') || `<option value="">No Wildrounds Smash teams yet</option>`;
-                if (prevWrVal && state.wildroundsTeams.some(t => t.id === prevWrVal)) {
-                    wrSel.value = prevWrVal;
-                }
-            }
         }
 
         function renderAdminSubTeamList() {
@@ -3347,30 +3207,6 @@
             `).join('');
         }
 
-        function renderAdminWrPlayerList() {
-            const wrSel = document.getElementById('adm-wrplayer-team');
-            const filterTeamId = wrSel ? wrSel.value : '';
-            const listEl = document.getElementById('adm-wrplayer-list');
-            if (!listEl) return;
-
-            const filtered = sortPlayersByRole(
-                filterTeamId ? state.wildroundsPlayers.filter(p => p.teamId === filterTeamId) : state.wildroundsPlayers
-            );
-
-            listEl.innerHTML = filtered.map(i => {
-                const tm = state.wildroundsTeams.find(t => t.id === i.teamId);
-                return `
-                    <div class="flex items-center justify-between bg-[#090a0f] px-2.5 py-1.5 rounded border border-white/10 text-[11px]">
-                        <span class="truncate pr-2">[${i.region || 'PH'} • ${i.role || 'Player'}] ${i.ign}${tm ? ` <span class="text-amber-300">(${tm.name})</span>` : ''}</span>
-                        <div class="flex items-center space-x-2 shrink-0">
-                            <button type="button" onclick="editWrPlayerItem('${i.id}')" class="text-blue-400 hover:text-blue-300 font-bold">Edit</button>
-                            <button type="button" onclick="delNode('wildroundsPlayers', '${i.id}')" class="text-red-400 hover:text-red-300 font-bold">Delete</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
         function renderAdminLists() {
             const rowHtml = (items, subPath, editFnName, labelFn) => items.map(i => `
                 <div class="flex items-center justify-between bg-[#090a0f] px-2.5 py-1.5 rounded border border-white/10 text-[11px]">
@@ -3390,12 +3226,11 @@
             renderAdminSubTeamList();
             renderAdminPlayerList();
             document.getElementById('adm-part-list').innerHTML = rowHtml(state.partners, 'partners', 'editPart', i => i.name);
-            document.getElementById('adm-wr-list').innerHTML = rowHtml(state.wildroundsTeams, 'wildroundsTeams', 'editWildroundsTeam', i => `[${i.region || 'PH'}] ${i.name} (${i.track || 'Community'})`);
-            renderAdminWrPlayerList();
-            document.getElementById('adm-rank-list').innerHTML = rowHtml(state.customRankings, 'customRankings', 'editCustomRanking', i => `[${i.mode}] ${i.ign} (${i.team || '-'}) • KDA ${i.avgKda || '-'}`);
+            document.getElementById('adm-wr-list').innerHTML = rowHtml(state.wildroundsTeams, 'wildroundsTeams', 'editWildroundsTeam', i => `[${i.track || 'Track'}] ${i.name} (${i.year || '2026'})`);
+            document.getElementById('adm-rank-list').innerHTML = rowHtml(state.customRankings, 'customRankings', 'editCustomRanking', i => `[${i.mode || 'Tournament'}] ${i.ign} (${i.team || '-'}) • KDA ${i.avgKda || '-'}`);
 
-            const mEntries = Object.entries(state.matches).map(([id, v]) => ({ id, ...v }));
-            document.getElementById('adm-match-list').innerHTML = rowHtml(mEntries, 'matches', 'editMatchItem', i => `[${i.type}] ${i.team} vs ${i.opponent} (${i.score || i.result})`);
+            const matchEntries = Object.entries(state.matches).map(([id, m]) => ({ id, ...m }));
+            document.getElementById('adm-match-list').innerHTML = rowHtml(matchEntries, 'matches', 'editMatchItem', i => `[${i.type}] ${i.team} vs ${i.opponent}`);
         }
     </script>
 </body>
