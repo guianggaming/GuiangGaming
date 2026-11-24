@@ -2306,75 +2306,118 @@
             }).join('');
         }
 
-        function countPlayersForWildroundsTeam(wrItem) {
-            if (!wrItem) return 0;
-            const normName = normalizeTeamKey(wrItem.name);
-            const matchedRoster = findMatchingRosterTeam(wrItem.name);
-            const matched = state.players.filter(p => {
-                if (p.wrTeamId && p.wrTeamId === wrItem.id) return true;
-                if (p.wrTeamName && normalizeTeamKey(p.wrTeamName) === normName) return true;
-                if (matchedRoster && p.teamId === matchedRoster.id) return true;
-                return false;
-            });
-            return matched.length;
+       function isPlayerInWildroundsTeam(player, wrItem) {
+            if (!player || !wrItem) return false;
+            const normWrName = normalizeTeamKey(wrItem.name);
+            if (player.wrTeamId && player.wrTeamId === wrItem.id) return true;
+            if (player.isWildrounds && player.wrTeamName && normalizeTeamKey(player.wrTeamName) === normWrName) return true;
+            if (!player.teamId && player.wrTeamName && normalizeTeamKey(player.wrTeamName) === normWrName) return true;
+            return false;
         }
 
-        function renderWildroundsTeams() {
-            const commBox = document.getElementById('wildrounds-community-list');
-            const creatBox = document.getElementById('wildrounds-creator-list');
-            const commCount = document.getElementById('wr-community-count');
-            const creatCount = document.getElementById('wr-creator-count');
-            if (!commBox || !creatBox) return;
+        function countPlayersForWildroundsTeam(wrItem) {
+            if (!wrItem) return 0;
+            return state.players.filter(p => isPlayerInWildroundsTeam(p, wrItem)).length;
+        }
 
-            const commTeams = state.wildroundsTeams.filter(t => (t.track || '').toLowerCase().includes('community'));
-            const creatTeams = state.wildroundsTeams.filter(t => !(t.track || '').toLowerCase().includes('community'));
+        function saveWrPlayer() {
+            const id = document.getElementById('edit-wr-player-id').value;
+            const wrTeamId = document.getElementById('adm-wr-player-team').value || (state.wildroundsTeams[0] && state.wildroundsTeams[0].id);
+            const wrTeamObj = state.wildroundsTeams.find(w => w.id === wrTeamId);
+            const wrTeamName = wrTeamObj ? wrTeamObj.name : '';
+            const ign = document.getElementById('adm-wr-player-ign').value.trim();
+            const role = document.getElementById('adm-wr-player-role').value.trim();
+            const region = (document.getElementById('adm-wr-player-region').value || 'PH').trim().toUpperCase();
+            const gold = document.getElementById('adm-wr-player-gold').value.trim();
+            const mvp = parseInt(document.getElementById('adm-wr-player-mvp').value, 10) || 0;
+            const pfp = document.getElementById('adm-wr-player-pfp').value.trim();
+            const achievements = document.getElementById('adm-wr-player-achievements').value.trim();
 
-            if (commCount) commCount.textContent = `${commTeams.length} ${commTeams.length === 1 ? 'Team' : 'Teams'}`;
-            if (creatCount) creatCount.textContent = `${creatTeams.length} ${creatTeams.length === 1 ? 'Team' : 'Teams'}`;
+            if (!wrTeamId) return alert('Please add or select a Wildrounds Team first.');
+            if (!ign) return alert('Please enter player IGN.');
 
-            const buildCards = (items, emptyMsg, accentClass) => {
-                if (!items.length) {
-                    return `<p class="text-xs text-slate-400 italic">${emptyMsg}</p>`;
-                }
-                return items.map(item => {
-                    const matchedRosterTeam = findMatchingRosterTeam(item.name);
-                    const wr = computeTeamWinrate(item.name);
-                    const pCount = countPlayersForWildroundsTeam(item);
-                    const clickAttr = `onclick="openWildroundsTeamModal('${item.id}')"`;
-                    const notesList = parseAchievementsList(item.notes);
-                    const logoToUse = item.logo || matchedRosterTeam?.logo || '';
-
-                    return `
-                        <div ${clickAttr} role="button" tabindex="0" class="bg-[#090a0f]/85 border border-white/10 hover:border-amber-400/50 p-3.5 rounded-xl transition space-y-1.5 cursor-pointer">
-                            <div class="flex items-center justify-between gap-3">
-                                <div class="flex items-center gap-3 min-w-0">
-                                    ${renderAvatarHtml(logoToUse, item.name, 'w-11 h-11 rounded-xl', 'logo')}
-                                    <div class="min-w-0">
-                                        <p class="text-xs sm:text-sm font-black text-white uppercase truncate">${item.name}</p>
-                                        <p class="text-[10px] font-bold ${accentClass}">${item.year || 'Wildrounds International • This Year'} • ${pCount} ${pCount === 1 ? 'Player' : 'Players'}</p>
-                                    </div>
-                                </div>
-                                <div class="text-right shrink-0">
-                                    <span class="text-[10px] uppercase font-bold text-slate-400 block">WR</span>
-                                    <span class="text-xs font-black text-emerald-400">${wr}</span>
-                                </div>
-                            </div>
-                            ${notesList.length ? `<p class="text-[11px] text-slate-300 leading-snug"><i class="fa-solid fa-trophy text-amber-400 mr-1"></i>${notesList.join(' • ')}</p>` : ''}
-                            <p class="text-[10px] text-amber-300/90"><i class="fa-solid fa-users mr-1 text-amber-400"></i>Click to view players & team stats</p>
-                        </div>
-                    `;
-                }).join('');
+            // Huwag i-link sa regular teamId ng Section 7 para hindi maghalo ang records sa labas ng Wildrounds
+            const payload = {
+                isWildrounds: true,
+                wrTeamId,
+                wrTeamName,
+                teamId: '',
+                ign,
+                role,
+                region,
+                gold,
+                mvp,
+                pfp,
+                achievements
             };
 
-            commBox.innerHTML = buildCards(commTeams, 'No Community Track team added yet.', 'text-emerald-400');
-            creatBox.innerHTML = buildCards(creatTeams, 'No Creator Track Showmatch team added yet.', 'text-purple-400');
+            upsert('players', id, payload, 'wrPlayer', `Wildrounds Player "${ign}" (${wrTeamName})`, () => {
+                const wrSel = document.getElementById('adm-wr-player-team');
+                if (wrSel) wrSel.value = wrTeamId;
+                renderAdminWrPlayerList();
+                renderWildroundsTeams();
+            });
+        }
+
+        function renderAdminWrPlayerList() {
+            const wrSel = document.getElementById('adm-wr-player-team');
+            const filterWrId = wrSel ? wrSel.value : '';
+            const listEl = document.getElementById('adm-wr-player-list');
+            if (!listEl) return;
+
+            const wrObj = state.wildroundsTeams.find(w => w.id === filterWrId);
+
+            const filtered = sortPlayersByRole(
+                state.players.filter(p => {
+                    if (!filterWrId) return Boolean(p.isWildrounds || p.wrTeamId);
+                    return wrObj ? isPlayerInWildroundsTeam(p, wrObj) : p.wrTeamId === filterWrId;
+                })
+            );
+
+            if (!filtered.length) {
+                listEl.innerHTML = `<p class="text-[11px] text-slate-400 italic">No Wildrounds players added to this team yet.</p>`;
+                return;
+            }
+
+            listEl.innerHTML = filtered.map(i => `
+                <div class="flex items-center justify-between bg-[#090a0f] px-2.5 py-1.5 rounded border border-amber-500/20 text-[11px]">
+                    <span class="truncate pr-2">[${i.region || 'PH'} • ${i.role || 'Player'}] ${i.ign} <span class="text-amber-300">(${i.wrTeamName || wrObj?.name || 'WR'})</span></span>
+                    <div class="flex items-center space-x-2 shrink-0">
+                        <button type="button" onclick="editWrPlayerItem('${i.id}')" class="text-blue-400 hover:text-blue-300 font-bold">Edit</button>
+                        <button type="button" onclick="delNode('players', '${i.id}')" class="text-red-400 hover:text-red-300 font-bold">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function gatherPlayersForTeam(teamObj, wrFallbackObj = null) {
+            // Kapag Wildrounds team ang binuksan, kunin lamang ang mga players na naka-assign sa Wildrounds team na iyon
+            if (wrFallbackObj) {
+                const wrRoster = state.players.filter(p => isPlayerInWildroundsTeam(p, wrFallbackObj));
+                return sortPlayersByRole(wrRoster);
+            }
+
+            const teamId = teamObj?.id || '';
+            const teamName = teamObj?.name || '';
+            const normTeam = normalizeTeamKey(teamName);
+
+            const roster = state.players.filter(p => {
+                if (p.isWildrounds) return false;
+                if (teamId && p.teamId === teamId) return true;
+                if (!teamId && normTeam) {
+                    const pTeam = state.teams.find(t => t.id === p.teamId);
+                    if (pTeam && normalizeTeamKey(pTeam.name) === normTeam) return true;
+                }
+                return false;
+            });
+
+            return sortPlayersByRole(roster);
         }
 
         function openWildroundsTeamModal(wrId) {
             const wrItem = state.wildroundsTeams.find(w => w.id === wrId);
             if (!wrItem) return;
-            const matchedRosterTeam = findMatchingRosterTeam(wrItem.name);
-            openTeamPopout(matchedRosterTeam ? matchedRosterTeam.id : null, wrItem);
+            openTeamPopout(null, wrItem);
         }
 
         function renderTeamGroupsAndSubTeams() {
