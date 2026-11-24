@@ -1148,6 +1148,10 @@
         const OWNER_EMAIL = "brian.guiang@gmail.com";
         const DEFAULT_ADMIN_EMAILS = ["kushimetakeku2004@gmail.com"];
 
+        function normalizeTeamKey(str) {
+            return (str || '').trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+        }
+
         function getTwoLetters(label) {
             const clean = (label || '').trim().replace(/[^a-zA-Z0-9]/g, '');
             if (!clean) return 'GG';
@@ -1539,11 +1543,24 @@
             return state.rolePhotos[k] || DEFAULT_ROLE_PHOTOS[k] || ROLE_SVG_FALLBACKS[k] || FALLBACKS.player;
         }
 
+        function findMatchingRosterTeam(teamName) {
+            const normTarget = normalizeTeamKey(teamName);
+            if (!normTarget) return null;
+            let match = state.teams.find(t => normalizeTeamKey(t.name) === normTarget);
+            if (match) return match;
+            match = state.teams.find(t => {
+                const n = normalizeTeamKey(t.name);
+                return n && (n.includes(normTarget) || normTarget.includes(n));
+            });
+            return match || null;
+        }
+
         function findTeamLogoByName(teamName) {
             if (!teamName) return '';
-            const t = state.teams.find(item => (item.name || '').trim().toLowerCase() === teamName.trim().toLowerCase());
+            const t = findMatchingRosterTeam(teamName);
             if (t && t.logo) return t.logo;
-            const wr = state.wildroundsTeams.find(item => (item.name || '').trim().toLowerCase() === teamName.trim().toLowerCase());
+            const normTarget = normalizeTeamKey(teamName);
+            const wr = state.wildroundsTeams.find(item => normalizeTeamKey(item.name) === normTarget);
             return wr ? (wr.logo || '') : '';
         }
 
@@ -1969,19 +1986,19 @@
         }
 
         function computeTeamMostPickedAndKdaChamps(teamName) {
-            const target = (teamName || '').trim().toLowerCase();
+            const target = normalizeTeamKey(teamName);
             if (!target) return [];
             const champMap = new Map();
 
             Object.values(state.matches).forEach(m => {
-                const tA = (m.team || '').trim().toLowerCase();
-                const tB = (m.opponent || '').trim().toLowerCase();
+                const tA = normalizeTeamKey(m.team);
+                const tB = normalizeTeamKey(m.opponent);
                 let sideRows = [];
                 let won = false;
-                if (tA === target) {
+                if (tA && (tA === target || tA.includes(target) || target.includes(tA))) {
                     sideRows = parseMatchLines(m.blueData);
                     won = m.result === 'Win';
-                } else if (tB === target) {
+                } else if (tB && (tB === target || tB.includes(target) || target.includes(tB))) {
                     sideRows = parseMatchLines(m.redData);
                     won = m.result === 'Lose';
                 }
@@ -2077,14 +2094,15 @@
         }
 
         function computeTeamWinrate(teamName) {
-            const target = (teamName || '').trim().toLowerCase();
+            const target = normalizeTeamKey(teamName);
+            if (!target) return '0%';
             let wins = 0, losses = 0;
             Object.values(state.matches).forEach(m => {
-                const tA = (m.team || '').trim().toLowerCase();
-                const tB = (m.opponent || '').trim().toLowerCase();
-                if (tA === target) {
+                const tA = normalizeTeamKey(m.team);
+                const tB = normalizeTeamKey(m.opponent);
+                if (tA && (tA === target || tA.includes(target) || target.includes(tA))) {
                     if (m.result === 'Win') wins++; else if (m.result === 'Lose') losses++;
-                } else if (tB === target) {
+                } else if (tB && (tB === target || tB.includes(target) || target.includes(tB))) {
                     if (m.result === 'Lose') wins++; else if (m.result === 'Win') losses++;
                 }
             });
@@ -2113,6 +2131,7 @@
                 const found = state.players.find(p => (p.ign || '').trim().toLowerCase() === ign.toLowerCase());
                 const team = found ? state.teams.find(t => t.id === found.teamId) : null;
                 return {
+                    id: found?.id || '',
                     role: found?.role || '',
                     teamName: team?.name || '',
                     pfp: found?.pfp || '',
@@ -2136,6 +2155,7 @@
                         const meta = findPlayerMeta(r.ign);
                         if (!map.has(key)) {
                             map.set(key, {
+                                playerId: meta.id,
                                 ign: r.ign.trim(),
                                 team: meta.teamName || side.team,
                                 role: meta.role,
@@ -2175,6 +2195,7 @@
 
                 if (!map.has(key)) {
                     map.set(key, {
+                        playerId: meta.id,
                         ign: cr.ign.trim(),
                         team: cr.team || meta.teamName || '-',
                         role: meta.role,
@@ -2217,8 +2238,10 @@
                         : idx === 2
                             ? 'bg-orange-500/20 text-orange-300 border-orange-400/30'
                             : 'bg-white/5 text-slate-400 border-white/10';
+                const safeIgn = encodeURIComponent(p.ign);
+                const safeTeam = encodeURIComponent(p.team || '');
                 return `
-                    <tr class="hover:bg-white/5 transition">
+                    <tr onclick="openPlayerByName('${safeIgn}', '${safeTeam}')" class="hover:bg-white/5 transition cursor-pointer">
                         <td class="py-2.5 px-3 font-black">
                             <span class="inline-flex items-center justify-center w-6 h-6 rounded border text-[11px] ${rankBadge}">${idx + 1}</span>
                         </td>
@@ -2259,17 +2282,14 @@
                     return `<p class="text-xs text-slate-400 italic">${emptyMsg}</p>`;
                 }
                 return items.map(item => {
-                    const matchedRosterTeam = state.teams.find(
-                        t => (t.name || '').trim().toLowerCase() === (item.name || '').trim().toLowerCase()
-                    );
+                    const matchedRosterTeam = findMatchingRosterTeam(item.name);
                     const wr = computeTeamWinrate(item.name);
-                    const clickAttr = matchedRosterTeam ? `onclick="openTeamPopout('${matchedRosterTeam.id}')"` : '';
-                    const cursorClass = matchedRosterTeam ? 'cursor-pointer hover:border-amber-400/50' : '';
+                    const clickAttr = `onclick="openWildroundsTeamModal('${item.id}')"`;
                     const notesList = parseAchievementsList(item.notes);
                     const logoToUse = item.logo || matchedRosterTeam?.logo || '';
 
                     return `
-                        <div ${clickAttr} class="bg-[#090a0f]/85 border border-white/10 ${cursorClass} p-3.5 rounded-xl transition space-y-1.5">
+                        <div ${clickAttr} role="button" tabindex="0" class="bg-[#090a0f]/85 border border-white/10 hover:border-amber-400/50 p-3.5 rounded-xl transition space-y-1.5 cursor-pointer">
                             <div class="flex items-center justify-between gap-3">
                                 <div class="flex items-center gap-3 min-w-0">
                                     ${renderAvatarHtml(logoToUse, item.name, 'w-11 h-11 rounded-xl', 'logo')}
@@ -2284,7 +2304,7 @@
                                 </div>
                             </div>
                             ${notesList.length ? `<p class="text-[11px] text-slate-300 leading-snug"><i class="fa-solid fa-trophy text-amber-400 mr-1"></i>${notesList.join(' • ')}</p>` : ''}
-                            ${matchedRosterTeam ? `<p class="text-[10px] text-slate-400"><i class="fa-solid fa-users mr-1 text-red-400"></i>Click to view full roster</p>` : ''}
+                            <p class="text-[10px] text-amber-300/90"><i class="fa-solid fa-users mr-1 text-amber-400"></i>Click to view players & team stats</p>
                         </div>
                     `;
                 }).join('');
@@ -2292,6 +2312,17 @@
 
             commBox.innerHTML = buildCards(commTeams, 'No Community Track team added yet.', 'text-emerald-400');
             creatBox.innerHTML = buildCards(creatTeams, 'No Creator Track Showmatch team added yet.', 'text-purple-400');
+        }
+
+        function openWildroundsTeamModal(wrId) {
+            const wrItem = state.wildroundsTeams.find(w => w.id === wrId);
+            if (!wrItem) return;
+            const matchedRosterTeam = findMatchingRosterTeam(wrItem.name);
+            if (matchedRosterTeam) {
+                openTeamPopout(matchedRosterTeam.id, wrItem);
+                return;
+            }
+            openTeamPopout(null, wrItem);
         }
 
         function renderTeamGroupsAndSubTeams() {
@@ -2371,19 +2402,72 @@
             renderTeamGroupsAndSubTeams();
         }
 
-        function openTeamPopout(teamId) {
-            const team = state.teams.find(t => t.id === teamId);
-            if (!team) return;
-            const group = state.groups.find(g => g.id === team.groupId);
-            const logoUrl = team.logo || group?.logo || '';
-            document.getElementById('tmodal-logo-box').innerHTML = renderAvatarHtml(logoUrl, team.name, 'w-12 h-12 rounded-xl', 'logo');
-            document.getElementById('tmodal-name').textContent = team.name;
-            document.getElementById('tmodal-meta').innerHTML = `${team.game || 'Esports'} • Team Winrate: <span class="text-emerald-400 font-bold">${computeTeamWinrate(team.name)}</span>`;
+        function gatherPlayersForTeam(teamObj, wrFallbackObj = null) {
+            const teamId = teamObj?.id || '';
+            const teamName = teamObj?.name || wrFallbackObj?.name || '';
+            const normTeam = normalizeTeamKey(teamName);
 
-            const tAch = parseAchievementsList(team.achievements);
+            let roster = teamId ? state.players.filter(p => p.teamId === teamId) : [];
+            if (!roster.length && normTeam) {
+                roster = state.players.filter(p => {
+                    const pTeam = state.teams.find(t => t.id === p.teamId);
+                    return pTeam && normalizeTeamKey(pTeam.name) === normTeam;
+                });
+            }
+
+            if (roster.length) {
+                return sortPlayersByRole(roster);
+            }
+
+            // Fallback: collect player IGNs from matches played by this team so modal still shows clickable players
+            const seenIgn = new Set();
+            const matchPlayers = [];
+            Object.values(state.matches).forEach(m => {
+                const tA = normalizeTeamKey(m.team);
+                const tB = normalizeTeamKey(m.opponent);
+                let rows = [];
+                if (tA && (tA === normTeam || tA.includes(normTeam) || normTeam.includes(tA))) {
+                    rows = parseMatchLines(m.blueData);
+                } else if (tB && (tB === normTeam || tB.includes(normTeam) || normTeam.includes(tB))) {
+                    rows = parseMatchLines(m.redData);
+                }
+                rows.forEach(r => {
+                    const key = (r.ign || '').trim().toLowerCase();
+                    if (!key || seenIgn.has(key)) return;
+                    seenIgn.add(key);
+                    const existing = state.players.find(p => (p.ign || '').trim().toLowerCase() === key);
+                    matchPlayers.push(existing || {
+                        id: `match_${key}`,
+                        ign: r.ign.trim(),
+                        role: 'Player',
+                        region: 'PH',
+                        teamName
+                    });
+                });
+            });
+            return matchPlayers;
+        }
+
+        function openTeamPopout(teamId, wrFallbackObj = null) {
+            const team = teamId ? state.teams.find(t => t.id === teamId) : null;
+            if (!team && !wrFallbackObj) return;
+
+            const displayName = team?.name || wrFallbackObj?.name || 'TEAM';
+            const group = team ? state.groups.find(g => g.id === team.groupId) : null;
+            const logoUrl = team?.logo || wrFallbackObj?.logo || group?.logo || '';
+            const gameLabel = team?.game || wrFallbackObj?.track || 'Wildrounds International';
+
+            document.getElementById('tmodal-logo-box').innerHTML = renderAvatarHtml(logoUrl, displayName, 'w-12 h-12 rounded-xl', 'logo');
+            document.getElementById('tmodal-name').textContent = displayName;
+            document.getElementById('tmodal-meta').innerHTML = `${gameLabel} • Team Winrate: <span class="text-emerald-400 font-bold">${computeTeamWinrate(displayName)}</span>`;
+
+            const combinedAch = [
+                ...parseAchievementsList(team?.achievements),
+                ...parseAchievementsList(wrFallbackObj?.notes)
+            ];
             const tAchBox = document.getElementById('tmodal-achievements');
-            if (tAch.length) {
-                tAchBox.innerHTML = tAch.map(a => `
+            if (combinedAch.length) {
+                tAchBox.innerHTML = combinedAch.map(a => `
                     <div class="bg-[#090a0f] border border-amber-500/25 px-3 py-1.5 rounded-lg flex items-center gap-2 text-[11px] text-amber-200 font-semibold">
                         <i class="fa-solid fa-trophy text-amber-400 shrink-0"></i>
                         <span>${a}</span>
@@ -2393,10 +2477,10 @@
                 tAchBox.innerHTML = '';
             }
 
-            const teamChamps = computeTeamMostPickedAndKdaChamps(team.name).slice(0, 6);
+            const teamChamps = computeTeamMostPickedAndKdaChamps(displayName).slice(0, 6);
             const teamChampsBox = document.getElementById('tmodal-team-champs');
             if (!teamChamps.length) {
-                teamChampsBox.innerHTML = `<p class="text-xs text-slate-400 italic col-span-full">No match champion stats recorded for ${team.name} yet.</p>`;
+                teamChampsBox.innerHTML = `<p class="text-xs text-slate-400 italic col-span-full">No match champion stats recorded for ${displayName} yet.</p>`;
             } else {
                 teamChampsBox.innerHTML = teamChamps.map(c => `
                     <div class="bg-[#090a0f] border border-white/10 p-2.5 rounded-xl flex items-center justify-between gap-2">
@@ -2412,10 +2496,10 @@
                 `).join('');
             }
 
-            const teamPlayers = sortPlayersByRole(state.players.filter(p => p.teamId === teamId));
+            const teamPlayers = gatherPlayersForTeam(team, wrFallbackObj);
             const list = document.getElementById('tmodal-players');
             if (!teamPlayers.length) {
-                list.innerHTML = `<p class="text-xs text-slate-400 italic">No players assigned to this team.</p>`;
+                list.innerHTML = `<p class="text-xs text-slate-400 italic">No players assigned to this team yet. Add players under Section 7 in Admin Portal.</p>`;
             } else {
                 list.innerHTML = teamPlayers.map(p => {
                     const st = computePlayerStats(p);
@@ -2423,8 +2507,11 @@
                     const roleImg = getRolePhoto(p.role);
                     const pAch = parseAchievementsList(p.achievements);
                     const region = (p.region || 'PH').trim().toUpperCase();
+                    const clickHandler = p.id && state.players.some(item => item.id === p.id)
+                        ? `onclick="openPlayerModal('${p.id}')"`
+                        : `onclick="openPlayerByName('${encodeURIComponent(p.ign)}', '${encodeURIComponent(displayName)}')"`;
                     return `
-                        <div onclick="openPlayerModal('${p.id}')" class="bg-[#090a0f] hover:border-red-500/40 border border-white/10 p-3 rounded-xl flex items-center justify-between gap-3 cursor-pointer transition">
+                        <div ${clickHandler} role="button" tabindex="0" class="bg-[#090a0f] hover:border-red-500/40 border border-white/10 p-3 rounded-xl flex items-center justify-between gap-3 cursor-pointer transition">
                             <div class="flex items-center space-x-3 min-w-0">
                                 ${renderAvatarHtml(p.pfp, p.ign, 'w-11 h-11 rounded-lg', 'player')}
                                 <div class="min-w-0">
@@ -2435,7 +2522,7 @@
                                     <div class="flex items-center space-x-1.5 mt-0.5">
                                         <img src="${roleImg}" onerror="handleImgError(this, 'role-${rKey}')" class="w-4 h-4 rounded object-cover border border-white/10 shrink-0">
                                         <span class="text-[10px] font-bold text-slate-300">${p.role || 'Player'}</span>
-                                        <span class="text-[10px] text-slate-500">• ${team.name}</span>
+                                        <span class="text-[10px] text-slate-500">• ${displayName}</span>
                                     </div>
                                     ${pAch.length ? `<p class="text-[10px] text-amber-300 truncate mt-0.5"><i class="fa-solid fa-trophy mr-1"></i>${pAch[0]}</p>` : ''}
                                 </div>
@@ -2496,10 +2583,30 @@
             `;
         }
 
-        function openPlayerModal(playerId) {
-            const p = state.players.find(item => item.id === playerId);
+        function openPlayerByName(encodedIgn, encodedTeam = '') {
+            const ign = decodeURIComponent(encodedIgn || '').trim();
+            const teamName = decodeURIComponent(encodedTeam || '').trim();
+            if (!ign) return;
+            const found = state.players.find(item => (item.ign || '').trim().toLowerCase() === ign.toLowerCase());
+            if (found) {
+                openPlayerModal(found.id);
+                return;
+            }
+            openPlayerModal({
+                ign,
+                role: 'Player',
+                region: 'PH',
+                teamName: teamName || 'Roster'
+            });
+        }
+
+        function openPlayerModal(playerIdOrObj) {
+            const p = typeof playerIdOrObj === 'string'
+                ? state.players.find(item => item.id === playerIdOrObj)
+                : playerIdOrObj;
             if (!p) return;
-            const team = state.teams.find(t => t.id === p.teamId);
+            const team = p.teamId ? state.teams.find(t => t.id === p.teamId) : null;
+            const teamLabel = team?.name || p.teamName || 'Roster';
             const st = computePlayerStats(p);
             const rKey = getRoleKey(p.role);
             const region = (p.region || 'PH').trim().toUpperCase();
@@ -2507,7 +2614,7 @@
             document.getElementById('pmodal-pfp-box').innerHTML = renderAvatarHtml(p.pfp, p.ign, 'w-14 h-14 rounded-xl', 'player');
             document.getElementById('pmodal-ign').textContent = p.ign;
             document.getElementById('pmodal-region-badge').textContent = region;
-            document.getElementById('pmodal-sub').textContent = `${p.role || 'Player'} • ${team?.name || 'Roster'}`;
+            document.getElementById('pmodal-sub').textContent = `${p.role || 'Player'} • ${teamLabel}`;
             const roleEl = document.getElementById('pmodal-role-img');
             delete roleEl.dataset.fb;
             roleEl.dataset.fbType = `role-${rKey}`;
