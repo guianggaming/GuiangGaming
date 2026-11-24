@@ -923,7 +923,6 @@
                         <input type="text" id="adm-m-date" placeholder="Match Date" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white">
                     </div>
 
-                    <!-- LALABAS LANG KAPAG WILDROUNDS ANG NAPILI -->
                     <div id="adm-m-wr-track-wrap" class="hidden bg-[#090a0f]/90 border border-amber-500/30 rounded-lg p-2.5 space-y-1">
                         <label class="text-[10px] font-black uppercase text-amber-300 block">Wildrounds Track</label>
                         <select id="adm-m-wr-track" class="w-full bg-[#12141e] border border-white/10 rounded px-2.5 py-2 text-xs text-white font-bold">
@@ -1775,27 +1774,68 @@
             return state.rolePhotos[k] || DEFAULT_ROLE_PHOTOS[k] || ROLE_SVG_FALLBACKS[k] || FALLBACKS.player;
         }
 
+        function teamNamesMatch(nameA, nameB) {
+            const a = normalizeTeamKey(nameA);
+            const b = normalizeTeamKey(nameB);
+            if (!a || !b) return false;
+            if (a === b) return true;
+            const partsA = (nameA || '').trim().toLowerCase().split(/\s+/);
+            const partsB = (nameB || '').trim().toLowerCase().split(/\s+/);
+            const tagA = normalizeTeamKey(partsA[partsA.length - 1] || '');
+            const tagB = normalizeTeamKey(partsB[partsB.length - 1] || '');
+            if ((partsA.length > 1 && tagA && tagA === b) || (partsB.length > 1 && tagB && tagB === a)) {
+                return true;
+            }
+            return false;
+        }
+
         function isTeamInDatabase(teamName) {
             const target = normalizeTeamKey(teamName);
             if (!target) return false;
 
             const inRosterTeams = state.teams.some(t => {
                 const n = normalizeTeamKey(t.name);
-                return n && n === target;
+                return n && (n === target || teamNamesMatch(t.name, teamName));
             });
             if (inRosterTeams) return true;
 
             const inWildroundsTeams = state.wildroundsTeams.some(w => {
                 const n = normalizeTeamKey(w.name);
-                return n && n === target;
+                return n && (n === target || teamNamesMatch(w.name, teamName));
             });
             return inWildroundsTeams;
+        }
+
+        function isPlayerRegisteredInDb(ign, scope = 'regular') {
+            const targetIgn = (ign || '').trim().toLowerCase();
+            if (!targetIgn) return false;
+            if (!Array.isArray(state.players) || state.players.length === 0) return false;
+
+            const matches = state.players.filter(p => (p.ign || '').trim().toLowerCase() === targetIgn);
+            if (!matches.length) return false;
+
+            if (scope === 'creator') {
+                return matches.some(p => {
+                    if (!p.isWildrounds) return false;
+                    const wrTeam = state.wildroundsTeams.find(w => w.id === p.wrTeamId);
+                    const track = (wrTeam?.track || '').toLowerCase();
+                    return !track.includes('community');
+                });
+            }
+            if (scope === 'community') {
+                return matches.some(p => {
+                    if (!p.isWildrounds) return false;
+                    const wrTeam = state.wildroundsTeams.find(w => w.id === p.wrTeamId);
+                    return (wrTeam?.track || '').toLowerCase().includes('community');
+                });
+            }
+            return matches.some(p => !p.isWildrounds);
         }
 
         function findMatchingRosterTeam(teamName) {
             const normTarget = normalizeTeamKey(teamName);
             if (!normTarget) return null;
-            return state.teams.find(t => normalizeTeamKey(t.name) === normTarget) || null;
+            return state.teams.find(t => normalizeTeamKey(t.name) === normTarget || teamNamesMatch(t.name, teamName)) || null;
         }
 
         function findTeamLogoByName(teamName) {
@@ -1803,7 +1843,7 @@
             const t = findMatchingRosterTeam(teamName);
             if (t && t.logo) return t.logo;
             const normTarget = normalizeTeamKey(teamName);
-            const wr = state.wildroundsTeams.find(item => normalizeTeamKey(item.name) === normTarget);
+            const wr = state.wildroundsTeams.find(item => normalizeTeamKey(item.name) === normTarget || teamNamesMatch(item.name, teamName));
             return wr ? (wr.logo || '') : '';
         }
 
@@ -2254,22 +2294,6 @@
             return `${ratio} (${k}/${d}/${a})`;
         }
 
-        function teamNamesMatch(nameA, nameB) {
-            const a = normalizeTeamKey(nameA);
-            const b = normalizeTeamKey(nameB);
-            if (!a || !b) return false;
-            if (a === b) return true;
-            // Support tag suffix like "SEOULSEARCHING SS" vs "SS" when separated by space
-            const partsA = (nameA || '').trim().toLowerCase().split(/\s+/);
-            const partsB = (nameB || '').trim().toLowerCase().split(/\s+/);
-            const tagA = normalizeTeamKey(partsA[partsA.length - 1] || '');
-            const tagB = normalizeTeamKey(partsB[partsB.length - 1] || '');
-            if ((partsA.length > 1 && tagA && tagA === b) || (partsB.length > 1 && tagB && tagB === a)) {
-                return true;
-            }
-            return false;
-        }
-
         function computeTeamMostPickedAndKdaChamps(teamName) {
             const target = normalizeTeamKey(teamName);
             if (!target) return [];
@@ -2496,22 +2520,30 @@
                 ];
 
                 sides.forEach(side => {
-                    if (scope === 'regular') {
-                        if (!isTeamInDatabase(side.team)) return;
-                    } else {
+                    if (!isTeamInDatabase(side.team)) return;
+
+                    if (scope === 'community' || scope === 'creator') {
                         const track = getWildroundsTrackForMatchSide(m, side.team);
                         if (scope === 'community' && track !== 'Community') return;
                         if (scope === 'creator' && track !== 'Creator') return;
                     }
 
                     side.rows.forEach(r => {
-                        const key = (r.ign || '').trim().toLowerCase();
+                        const cleanIgn = (r.ign || '').trim();
+                        const key = cleanIgn.toLowerCase();
                         if (!key) return;
-                        const meta = findScopedPlayerMeta(r.ign, scope);
+
+                        if (!isPlayerRegisteredInDb(cleanIgn, scope)) return;
+
+                        const meta = findScopedPlayerMeta(cleanIgn, scope);
+                        if (scope === 'regular' && (meta.role || '').trim().toLowerCase() === 'creator') {
+                            return;
+                        }
+
                         if (!map.has(key)) {
                             map.set(key, {
                                 playerId: meta.id,
-                                ign: r.ign.trim(),
+                                ign: cleanIgn,
                                 team: meta.teamName || side.team,
                                 role: meta.role,
                                 pfp: meta.pfp,
@@ -2536,15 +2568,20 @@
             });
 
             manualEntries.forEach(cr => {
+                const cleanIgn = (cr.ign || '').trim();
+                const key = cleanIgn.toLowerCase();
+                if (!key) return;
+
                 if (scope === 'regular') {
                     const mode = (cr.mode || 'Tournament').toLowerCase();
                     if (modeFilter !== 'ALL' && mode !== modeFilter.toLowerCase()) return;
+                    if (!isTeamInDatabase(cr.team)) return;
+                    if (!isPlayerRegisteredInDb(cleanIgn, 'regular')) return;
+                } else if (scope === 'community' || scope === 'creator') {
                     if (cr.team && !isTeamInDatabase(cr.team)) return;
                 }
 
-                const key = (cr.ign || '').trim().toLowerCase();
-                if (!key) return;
-                const meta = findScopedPlayerMeta(cr.ign, scope);
+                const meta = findScopedPlayerMeta(cleanIgn, scope);
                 const k = parseInt(cr.k, 10) || 0;
                 const d = parseInt(cr.d, 10) || 0;
                 const a = parseInt(cr.a, 10) || 0;
@@ -2555,7 +2592,7 @@
                 if (!map.has(key)) {
                     map.set(key, {
                         playerId: meta.id,
-                        ign: cr.ign.trim(),
+                        ign: cleanIgn,
                         team: cr.team || meta.teamName || '-',
                         role: meta.role,
                         pfp: meta.pfp,
@@ -3400,31 +3437,17 @@
             }
         }
 
-        function upsert(path, editId, payload, formType, label, onSuccessFn) {
-            const finalPayload = editId
-                ? { ...payload }
-                : { ...payload, createdAt: Date.now() };
-
-            const targetRef = editId
-                ? db.ref(`guiangHub/${path}/${editId}`)
-                : db.ref(`guiangHub/${path}`).push();
-
-            const action = editId
-                ? targetRef.update(finalPayload)
-                : targetRef.set(finalPayload);
-
-            action
+        function upsertItem(path, editId, payload, formType, label) {
+            const ref = db.ref(`guiangHub/${path}`);
+            const promise = editId
+                ? ref.child(editId).update(payload)
+                : ref.push({ ...payload, createdAt: firebase.database.ServerValue.TIMESTAMP });
+            return promise
                 .then(() => {
-                    const createdKey = editId || targetRef.key || null;
                     resetForm(formType);
-                    if (typeof onSuccessFn === 'function') onSuccessFn(createdKey);
-                    setAdminStatus(`${label || 'Item'} ${editId ? 'updated' : 'added'} successfully!`);
+                    setAdminStatus(`${label} ${editId ? 'updated' : 'added'} successfully.`);
                 })
-                .catch(err => {
-                    console.error(`Firebase save error on ${path}:`, err);
-                    setAdminStatus(`Failed to save ${label || 'item'}: ${err.message}`, true);
-                    alert(`Failed to save: ${err.message}`);
-                });
+                .catch(err => setAdminStatus(`Error saving ${label}: ${err.message}`, true));
         }
 
         function saveNews() {
@@ -3432,15 +3455,16 @@
             const title = document.getElementById('adm-news-title').value.trim();
             const link = document.getElementById('adm-news-link').value.trim();
             const desc = document.getElementById('adm-news-desc').value.trim();
-            if (!title || !desc) return alert('Please enter announcement title and details.');
-            upsert('news', id, { title, link, desc }, 'news', 'News');
+            if (!title) return alert('Enter announcement title.');
+            upsertItem('news', id, { title, link, desc }, 'news', 'News');
         }
         function editNews(id) {
-            const item = state.news.find(i => i.id === id); if (!item) return;
-            document.getElementById('edit-news-id').value = id;
-            document.getElementById('adm-news-title').value = item.title || '';
-            document.getElementById('adm-news-link').value = item.link || '';
-            document.getElementById('adm-news-desc').value = item.desc || '';
+            const n = state.news.find(x => x.id === id);
+            if (!n) return;
+            document.getElementById('edit-news-id').value = n.id;
+            document.getElementById('adm-news-title').value = n.title || '';
+            document.getElementById('adm-news-link').value = n.link || '';
+            document.getElementById('adm-news-desc').value = n.desc || '';
             document.getElementById('save-news-btn').textContent = 'Update News';
             document.getElementById('cancel-news-btn').classList.remove('hidden');
         }
@@ -3450,15 +3474,16 @@
             const title = document.getElementById('adm-ach-title').value.trim();
             const date = document.getElementById('adm-ach-date').value.trim();
             const desc = document.getElementById('adm-ach-desc').value.trim();
-            if (!title) return alert('Please enter achievement title.');
-            upsert('achievements', id, { title, date, desc }, 'ach', 'Achievement');
+            if (!title) return alert('Enter achievement title.');
+            upsertItem('achievements', id, { title, date, desc }, 'ach', 'Achievement');
         }
-        function editAch(id) {
-            const item = state.achievements.find(i => i.id === id); if (!item) return;
-            document.getElementById('edit-ach-id').value = id;
-            document.getElementById('adm-ach-title').value = item.title || '';
-            document.getElementById('adm-ach-date').value = item.date || '';
-            document.getElementById('adm-ach-desc').value = item.desc || '';
+        function editAchievement(id) {
+            const a = state.achievements.find(x => x.id === id);
+            if (!a) return;
+            document.getElementById('edit-ach-id').value = a.id;
+            document.getElementById('adm-ach-title').value = a.title || '';
+            document.getElementById('adm-ach-date').value = a.date || '';
+            document.getElementById('adm-ach-desc').value = a.desc || '';
             document.getElementById('save-ach-btn').textContent = 'Update Achievement';
             document.getElementById('cancel-ach-btn').classList.remove('hidden');
         }
@@ -3467,14 +3492,15 @@
             const id = document.getElementById('edit-vid-id').value;
             const title = document.getElementById('adm-vid-title').value.trim();
             const url = document.getElementById('adm-vid-url').value.trim();
-            if (!title || !url) return alert('Please enter video title and URL.');
-            upsert('videos', id, { title, url }, 'vid', 'Video');
+            if (!title || !url) return alert('Enter video title and URL.');
+            upsertItem('videos', id, { title, url }, 'vid', 'Video');
         }
         function editVideo(id) {
-            const item = state.videos.find(i => i.id === id); if (!item) return;
-            document.getElementById('edit-vid-id').value = id;
-            document.getElementById('adm-vid-title').value = item.title || '';
-            document.getElementById('adm-vid-url').value = item.url || '';
+            const v = state.videos.find(x => x.id === id);
+            if (!v) return;
+            document.getElementById('edit-vid-id').value = v.id;
+            document.getElementById('adm-vid-title').value = v.title || '';
+            document.getElementById('adm-vid-url').value = v.url || '';
             document.getElementById('save-vid-btn').textContent = 'Update Video';
             document.getElementById('cancel-vid-btn').classList.remove('hidden');
         }
@@ -3486,17 +3512,18 @@
             const time = document.getElementById('adm-scrim-time').value.trim();
             const teams = document.getElementById('adm-scrim-teams').value.trim();
             const status = document.getElementById('adm-scrim-status').value;
-            if (!time) return alert('Please enter day & time.');
-            upsert('scrims', id, { slotType, game, time, teams, status }, 'scrim', 'Schedule slot');
+            if (!time) return alert('Enter day & time.');
+            upsertItem('scrims', id, { slotType, game, time, teams, status }, 'scrim', 'Schedule Slot');
         }
         function editScrim(id) {
-            const item = state.scrims.find(i => i.id === id); if (!item) return;
-            document.getElementById('edit-scrim-id').value = id;
-            document.getElementById('adm-scrim-type').value = item.slotType || 'Scrim';
-            document.getElementById('adm-scrim-game').value = item.game || '';
-            document.getElementById('adm-scrim-time').value = item.time || '';
-            document.getElementById('adm-scrim-teams').value = item.teams || '';
-            document.getElementById('adm-scrim-status').value = item.status || 'Open Slot';
+            const s = state.scrims.find(x => x.id === id);
+            if (!s) return;
+            document.getElementById('edit-scrim-id').value = s.id;
+            document.getElementById('adm-scrim-type').value = s.slotType || 'Scrim';
+            document.getElementById('adm-scrim-game').value = s.game || '';
+            document.getElementById('adm-scrim-time').value = s.time || '';
+            document.getElementById('adm-scrim-teams').value = s.teams || '';
+            document.getElementById('adm-scrim-status').value = s.status || 'Open Slot';
             document.getElementById('save-scrim-btn').textContent = 'Update Schedule Slot';
             document.getElementById('cancel-scrim-btn').classList.remove('hidden');
         }
@@ -3506,18 +3533,17 @@
             const name = document.getElementById('adm-group-name').value.trim();
             const achievements = document.getElementById('adm-group-achievements').value.trim();
             const logo = document.getElementById('adm-group-logo').value.trim();
-            if (!name) return alert('Please enter team group name.');
-            upsert('groups', id, { name, achievements, logo }, 'group', 'Team group', (savedId) => {
-                if (savedId) selectedGroupId = savedId;
-            });
+            if (!name) return alert('Enter group name.');
+            upsertItem('groups', id, { name, achievements, logo }, 'group', 'Team Group');
         }
-        function editGroup(id) {
-            const item = state.groups.find(i => i.id === id); if (!item) return;
-            document.getElementById('edit-group-id').value = id;
-            document.getElementById('adm-group-name').value = item.name || '';
-            document.getElementById('adm-group-achievements').value = item.achievements || '';
-            document.getElementById('adm-group-logo').value = item.logo || '';
-            setCleanImgSrc(document.getElementById('preview-group-logo'), item.logo, 'logo');
+        function editTeamGroup(id) {
+            const g = state.groups.find(x => x.id === id);
+            if (!g) return;
+            document.getElementById('edit-group-id').value = g.id;
+            document.getElementById('adm-group-name').value = g.name || '';
+            document.getElementById('adm-group-achievements').value = g.achievements || '';
+            document.getElementById('adm-group-logo').value = g.logo || '';
+            setCleanImgSrc(document.getElementById('preview-group-logo'), g.logo, 'logo');
             document.getElementById('save-group-btn').textContent = 'Update Team Group';
             document.getElementById('cancel-group-btn').classList.remove('hidden');
         }
@@ -3529,20 +3555,20 @@
             const game = document.getElementById('adm-subteam-game').value.trim();
             const achievements = document.getElementById('adm-subteam-achievements').value.trim();
             const logo = document.getElementById('adm-subteam-logo').value.trim();
-            if (!groupId || !name) return alert('Please select a group and enter team (tag) name.');
-            upsert('teams', id, { groupId, name, game, achievements, logo }, 'subteam', 'Team', () => {
-                if (groupId) selectedGroupId = groupId;
-            });
+            if (!groupId) return alert('Create a Team Group first.');
+            if (!name) return alert('Enter Team (Tag).');
+            upsertItem('teams', id, { groupId, name, game, achievements, logo }, 'subteam', 'Team');
         }
         function editSubTeam(id) {
-            const item = state.teams.find(i => i.id === id); if (!item) return;
-            document.getElementById('edit-subteam-id').value = id;
-            document.getElementById('adm-subteam-group').value = item.groupId || '';
-            document.getElementById('adm-subteam-name').value = item.name || '';
-            document.getElementById('adm-subteam-game').value = item.game || '';
-            document.getElementById('adm-subteam-achievements').value = item.achievements || '';
-            document.getElementById('adm-subteam-logo').value = item.logo || '';
-            setCleanImgSrc(document.getElementById('preview-subteam-logo'), item.logo, 'logo');
+            const t = state.teams.find(x => x.id === id);
+            if (!t) return;
+            document.getElementById('edit-subteam-id').value = t.id;
+            document.getElementById('adm-subteam-group').value = t.groupId || '';
+            document.getElementById('adm-subteam-name').value = t.name || '';
+            document.getElementById('adm-subteam-game').value = t.game || '';
+            document.getElementById('adm-subteam-achievements').value = t.achievements || '';
+            document.getElementById('adm-subteam-logo').value = t.logo || '';
+            setCleanImgSrc(document.getElementById('preview-subteam-logo'), t.logo, 'logo');
             document.getElementById('save-subteam-btn').textContent = 'Update Team';
             document.getElementById('cancel-subteam-btn').classList.remove('hidden');
         }
@@ -3552,56 +3578,30 @@
             const teamId = document.getElementById('adm-player-team').value;
             const ign = document.getElementById('adm-player-ign').value.trim();
             const role = document.getElementById('adm-player-role').value;
-            const region = document.getElementById('adm-player-region').value.trim() || 'PH';
+            const region = (document.getElementById('adm-player-region').value || 'PH').trim().toUpperCase();
             const gold = document.getElementById('adm-player-gold').value.trim();
             const mvp = parseInt(document.getElementById('adm-player-mvp').value, 10) || 0;
             const pfp = document.getElementById('adm-player-pfp').value.trim();
             const achievements = document.getElementById('adm-player-achievements').value.trim();
-            if (!teamId || !ign) return alert('Please select a team and enter player IGN.');
-            upsert('players', id, { teamId, ign, role, region, gold, mvp, pfp, achievements, isWildrounds: false }, 'player', 'Player');
+            if (!teamId) return alert('Create a Team first.');
+            if (!ign) return alert('Enter Player IGN.');
+            upsertItem('players', id, { teamId, ign, role, region, gold, mvp, pfp, achievements, isWildrounds: false }, 'player', 'Player');
         }
         function editPlayer(id) {
-            const item = state.players.find(i => i.id === id); if (!item) return;
-            document.getElementById('edit-player-id').value = id;
-            document.getElementById('adm-player-team').value = item.teamId || '';
-            document.getElementById('adm-player-ign').value = item.ign || '';
-            document.getElementById('adm-player-role').value = item.role || 'Owner';
-            document.getElementById('adm-player-region').value = item.region || 'PH';
-            document.getElementById('adm-player-gold').value = item.gold || '';
-            document.getElementById('adm-player-mvp').value = item.mvp || '';
-            document.getElementById('adm-player-pfp').value = item.pfp || '';
-            document.getElementById('adm-player-achievements').value = item.achievements || '';
-            setCleanImgSrc(document.getElementById('preview-player-pfp'), item.pfp, 'player');
+            const p = state.players.find(x => x.id === id);
+            if (!p) return;
+            document.getElementById('edit-player-id').value = p.id;
+            document.getElementById('adm-player-team').value = p.teamId || '';
+            document.getElementById('adm-player-ign').value = p.ign || '';
+            document.getElementById('adm-player-role').value = p.role || 'Baron';
+            document.getElementById('adm-player-region').value = p.region || 'PH';
+            document.getElementById('adm-player-gold').value = p.gold || '';
+            document.getElementById('adm-player-mvp').value = p.mvp || '';
+            document.getElementById('adm-player-pfp').value = p.pfp || '';
+            document.getElementById('adm-player-achievements').value = p.achievements || '';
+            setCleanImgSrc(document.getElementById('preview-player-pfp'), p.pfp, 'player');
             document.getElementById('save-player-btn').textContent = 'Update Player';
             document.getElementById('cancel-player-btn').classList.remove('hidden');
-        }
-
-        function saveWildroundsTeam() {
-            const id = document.getElementById('edit-wr-id').value;
-            const track = document.getElementById('adm-wr-track').value;
-            const name = document.getElementById('adm-wr-team').value.trim();
-            const year = document.getElementById('adm-wr-year').value.trim() || 'Wildrounds International • This Year';
-            const logo = document.getElementById('adm-wr-logo').value.trim();
-            const notes = document.getElementById('adm-wr-notes').value.trim();
-            if (!name) return alert('Please enter Wildrounds team (tag) name.');
-            upsert('wildroundsTeams', id, { track, name, year, logo, notes }, 'wildrounds', 'Wildrounds team', (savedId) => {
-                renderAdminSelects();
-                const sel = document.getElementById('adm-wr-player-team');
-                if (sel && savedId) sel.value = savedId;
-                renderAdminWrPlayerList();
-            });
-        }
-        function editWildroundsTeam(id) {
-            const item = state.wildroundsTeams.find(i => i.id === id); if (!item) return;
-            document.getElementById('edit-wr-id').value = id;
-            document.getElementById('adm-wr-track').value = item.track || 'Community Track Team';
-            document.getElementById('adm-wr-team').value = item.name || '';
-            document.getElementById('adm-wr-year').value = item.year || '';
-            document.getElementById('adm-wr-logo').value = item.logo || '';
-            document.getElementById('adm-wr-notes').value = item.notes || '';
-            setCleanImgSrc(document.getElementById('preview-wr-logo'), item.logo, 'logo');
-            document.getElementById('save-wr-btn').textContent = 'Update Wildrounds Team';
-            document.getElementById('cancel-wr-btn').classList.remove('hidden');
         }
 
         function saveWrPlayer() {
@@ -3609,16 +3609,18 @@
             const wrTeamId = document.getElementById('adm-wr-player-team').value;
             const ign = document.getElementById('adm-wr-player-ign').value.trim();
             const role = document.getElementById('adm-wr-player-role').value;
-            const region = document.getElementById('adm-wr-player-region').value.trim() || 'PH';
+            const region = (document.getElementById('adm-wr-player-region').value || 'PH').trim().toUpperCase();
             const gold = document.getElementById('adm-wr-player-gold').value.trim();
             const mvp = parseInt(document.getElementById('adm-wr-player-mvp').value, 10) || 0;
             const pfp = document.getElementById('adm-wr-player-pfp').value.trim();
             const achievements = document.getElementById('adm-wr-player-achievements').value.trim();
-            if (!wrTeamId || !ign) return alert('Please select a Wildrounds team and enter player IGN.');
-            const wrTeam = state.wildroundsTeams.find(w => w.id === wrTeamId);
-            const payload = {
+            if (!wrTeamId) return alert('Add a Wildrounds Team in 10A first.');
+            if (!ign) return alert('Enter Player IGN.');
+            const wrTeamObj = state.wildroundsTeams.find(w => w.id === wrTeamId);
+            const wrTeamName = wrTeamObj ? wrTeamObj.name : '';
+            upsertItem('players', id, {
                 wrTeamId,
-                wrTeamName: wrTeam ? wrTeam.name : '',
+                wrTeamName,
                 ign,
                 role,
                 region,
@@ -3627,21 +3629,21 @@
                 pfp,
                 achievements,
                 isWildrounds: true
-            };
-            upsert('players', id, payload, 'wrPlayer', 'Wildrounds player');
+            }, 'wrPlayer', 'Wildrounds Player');
         }
         function editWrPlayer(id) {
-            const item = state.players.find(i => i.id === id); if (!item) return;
-            document.getElementById('edit-wr-player-id').value = id;
-            if (item.wrTeamId) document.getElementById('adm-wr-player-team').value = item.wrTeamId;
-            document.getElementById('adm-wr-player-ign').value = item.ign || '';
-            document.getElementById('adm-wr-player-role').value = item.role || 'Baron';
-            document.getElementById('adm-wr-player-region').value = item.region || 'PH';
-            document.getElementById('adm-wr-player-gold').value = item.gold || '';
-            document.getElementById('adm-wr-player-mvp').value = item.mvp || '';
-            document.getElementById('adm-wr-player-pfp').value = item.pfp || '';
-            document.getElementById('adm-wr-player-achievements').value = item.achievements || '';
-            setCleanImgSrc(document.getElementById('preview-wr-player-pfp'), item.pfp, 'player');
+            const p = state.players.find(x => x.id === id);
+            if (!p) return;
+            document.getElementById('edit-wr-player-id').value = p.id;
+            if (p.wrTeamId) document.getElementById('adm-wr-player-team').value = p.wrTeamId;
+            document.getElementById('adm-wr-player-ign').value = p.ign || '';
+            document.getElementById('adm-wr-player-role').value = p.role || 'Baron';
+            document.getElementById('adm-wr-player-region').value = p.region || 'PH';
+            document.getElementById('adm-wr-player-gold').value = p.gold || '';
+            document.getElementById('adm-wr-player-mvp').value = p.mvp || '';
+            document.getElementById('adm-wr-player-pfp').value = p.pfp || '';
+            document.getElementById('adm-wr-player-achievements').value = p.achievements || '';
+            setCleanImgSrc(document.getElementById('preview-wr-player-pfp'), p.pfp, 'player');
             document.getElementById('save-wr-player-btn').textContent = 'Update Wildrounds Player';
             document.getElementById('cancel-wr-player-btn').classList.remove('hidden');
         }
@@ -3665,32 +3667,40 @@
             const date = document.getElementById('adm-m-date').value.trim();
             const blueData = document.getElementById('adm-m-blue').value.trim();
             const redData = document.getElementById('adm-m-red').value.trim();
-            if (!team || !opponent) return alert('Please enter both Team A and Team B.');
-            upsert('matches', id, { team, opponent, score, teamBans, oppBans, teamGold, oppGold, teamKda, oppKda, teamLogo, oppLogo, type, wrTrack, result, date, blueData, redData }, 'match', 'Match');
+            if (!team || !opponent) return alert('Enter Team A and Team B.');
+            upsertItem('matches', id, {
+                team, opponent, score,
+                teamBans, oppBans,
+                teamGold, oppGold,
+                teamKda, oppKda,
+                teamLogo, oppLogo,
+                type, wrTrack, result, date, blueData, redData
+            }, 'match', 'Match');
         }
         function editMatch(id) {
-            const item = state.matches[id]; if (!item) return;
+            const m = state.matches[id];
+            if (!m) return;
             document.getElementById('edit-match-id').value = id;
-            document.getElementById('adm-m-team').value = item.team || '';
-            document.getElementById('adm-m-opp').value = item.opponent || '';
-            document.getElementById('adm-m-score').value = item.score || '';
-            document.getElementById('adm-m-team-bans').value = item.teamBans || '';
-            document.getElementById('adm-m-opp-bans').value = item.oppBans || '';
-            document.getElementById('adm-m-team-gold').value = item.teamGold || '';
-            document.getElementById('adm-m-opp-gold').value = item.oppGold || '';
-            document.getElementById('adm-m-team-kda').value = item.teamKda || '';
-            document.getElementById('adm-m-opp-kda').value = item.oppKda || '';
-            document.getElementById('adm-m-team-logo').value = item.teamLogo || '';
-            document.getElementById('adm-m-opp-logo').value = item.oppLogo || '';
-            setCleanImgSrc(document.getElementById('preview-m-team-logo'), item.teamLogo, 'logo');
-            setCleanImgSrc(document.getElementById('preview-m-opp-logo'), item.oppLogo, 'logo');
-            document.getElementById('adm-m-type').value = item.type || 'Tournament';
-            document.getElementById('adm-m-wr-track').value = item.wrTrack || 'Community';
+            document.getElementById('adm-m-team').value = m.team || '';
+            document.getElementById('adm-m-opp').value = m.opponent || '';
+            document.getElementById('adm-m-score').value = m.score || '';
+            document.getElementById('adm-m-team-bans').value = m.teamBans || '';
+            document.getElementById('adm-m-opp-bans').value = m.oppBans || '';
+            document.getElementById('adm-m-team-gold').value = m.teamGold || '';
+            document.getElementById('adm-m-opp-gold').value = m.oppGold || '';
+            document.getElementById('adm-m-team-kda').value = m.teamKda || '';
+            document.getElementById('adm-m-opp-kda').value = m.oppKda || '';
+            document.getElementById('adm-m-team-logo').value = m.teamLogo || '';
+            document.getElementById('adm-m-opp-logo').value = m.oppLogo || '';
+            setCleanImgSrc(document.getElementById('preview-m-team-logo'), m.teamLogo, 'logo');
+            setCleanImgSrc(document.getElementById('preview-m-opp-logo'), m.oppLogo, 'logo');
+            document.getElementById('adm-m-type').value = m.type || 'Tournament';
+            document.getElementById('adm-m-wr-track').value = m.wrTrack || 'Community';
             toggleWildroundsMatchTrackField();
-            document.getElementById('adm-m-result').value = item.result || 'Win';
-            document.getElementById('adm-m-date').value = item.date || '';
-            document.getElementById('adm-m-blue').value = item.blueData || '';
-            document.getElementById('adm-m-red').value = item.redData || '';
+            document.getElementById('adm-m-result').value = m.result || 'Win';
+            document.getElementById('adm-m-date').value = m.date || '';
+            document.getElementById('adm-m-blue').value = m.blueData || '';
+            document.getElementById('adm-m-red').value = m.redData || '';
             document.getElementById('save-match-btn').textContent = 'Update Match';
             document.getElementById('cancel-match-btn').classList.remove('hidden');
         }
@@ -3700,23 +3710,48 @@
             const name = document.getElementById('adm-part-name').value.trim();
             const logo = document.getElementById('adm-part-logo').value.trim();
             const link = document.getElementById('adm-part-link').value.trim();
-            if (!name) return alert('Please enter partner or sponsor name.');
-            upsert('partners', id, { name, logo, link }, 'part', 'Partner / Sponsor');
+            if (!name) return alert('Enter partner/sponsor name.');
+            upsertItem('partners', id, { name, logo, link }, 'part', 'Partner / Sponsor');
         }
         function editPartner(id) {
-            const item = state.partners.find(i => i.id === id); if (!item) return;
-            document.getElementById('edit-part-id').value = id;
-            document.getElementById('adm-part-name').value = item.name || '';
-            document.getElementById('adm-part-logo').value = item.logo || '';
-            document.getElementById('adm-part-link').value = item.link || '';
-            setCleanImgSrc(document.getElementById('preview-part-logo'), item.logo, 'logo');
+            const p = state.partners.find(x => x.id === id);
+            if (!p) return;
+            document.getElementById('edit-part-id').value = p.id;
+            document.getElementById('adm-part-name').value = p.name || '';
+            document.getElementById('adm-part-logo').value = p.logo || '';
+            document.getElementById('adm-part-link').value = p.link || '';
+            setCleanImgSrc(document.getElementById('preview-part-logo'), p.logo, 'logo');
             document.getElementById('save-part-btn').textContent = 'Update Partner / Sponsor';
             document.getElementById('cancel-part-btn').classList.remove('hidden');
         }
 
+        function saveWildroundsTeam() {
+            const id = document.getElementById('edit-wr-id').value;
+            const track = document.getElementById('adm-wr-track').value;
+            const name = document.getElementById('adm-wr-team').value.trim();
+            const year = document.getElementById('adm-wr-year').value.trim();
+            const logo = document.getElementById('adm-wr-logo').value.trim();
+            const notes = document.getElementById('adm-wr-notes').value.trim();
+            if (!name) return alert('Enter Wildrounds Team (Tag) name.');
+            upsertItem('wildroundsTeams', id, { track, name, year, logo, notes }, 'wildrounds', 'Wildrounds Team');
+        }
+        function editWildroundsTeam(id) {
+            const w = state.wildroundsTeams.find(x => x.id === id);
+            if (!w) return;
+            document.getElementById('edit-wr-id').value = w.id;
+            document.getElementById('adm-wr-track').value = w.track || 'Community Track Team';
+            document.getElementById('adm-wr-team').value = w.name || '';
+            document.getElementById('adm-wr-year').value = w.year || '';
+            document.getElementById('adm-wr-logo').value = w.logo || '';
+            document.getElementById('adm-wr-notes').value = w.notes || '';
+            setCleanImgSrc(document.getElementById('preview-wr-logo'), w.logo, 'logo');
+            document.getElementById('save-wr-btn').textContent = 'Update Wildrounds Team';
+            document.getElementById('cancel-wr-btn').classList.remove('hidden');
+        }
+
         function saveCustomRanking() {
             const id = document.getElementById('edit-rank-id').value;
-            const mode = document.getElementById('adm-rank-mode').value || 'Tournament';
+            const mode = document.getElementById('adm-rank-mode').value;
             const ign = document.getElementById('adm-rank-ign').value.trim();
             const team = document.getElementById('adm-rank-team').value.trim();
             const avgKda = document.getElementById('adm-rank-kda-ratio').value.trim();
@@ -3725,28 +3760,29 @@
             const a = parseInt(document.getElementById('adm-rank-a').value, 10) || 0;
             const gold = document.getElementById('adm-rank-gold').value.trim();
             const gp = parseInt(document.getElementById('adm-rank-gp').value, 10) || 1;
-            if (!ign) return alert('Please enter Player IGN.');
-            upsert('customRankings', id, { mode, ign, team, avgKda, k, d, a, gold, gp }, 'ranking', 'Player ranking');
+            if (!ign) return alert('Enter Player IGN.');
+            upsertItem('customRankings', id, { mode, ign, team, avgKda, k, d, a, gold, gp }, 'ranking', 'Player Ranking');
         }
         function editCustomRanking(id) {
-            const item = state.customRankings.find(i => i.id === id); if (!item) return;
-            document.getElementById('edit-rank-id').value = id;
-            document.getElementById('adm-rank-mode').value = item.mode || 'Tournament';
-            document.getElementById('adm-rank-ign').value = item.ign || '';
-            document.getElementById('adm-rank-team').value = item.team || '';
-            document.getElementById('adm-rank-kda-ratio').value = item.avgKda || '';
-            document.getElementById('adm-rank-k').value = item.k ?? '';
-            document.getElementById('adm-rank-d').value = item.d ?? '';
-            document.getElementById('adm-rank-a').value = item.a ?? '';
-            document.getElementById('adm-rank-gold').value = item.gold || '';
-            document.getElementById('adm-rank-gp').value = item.gp ?? '';
+            const r = state.customRankings.find(x => x.id === id);
+            if (!r) return;
+            document.getElementById('edit-rank-id').value = r.id;
+            document.getElementById('adm-rank-mode').value = r.mode || 'Tournament';
+            document.getElementById('adm-rank-ign').value = r.ign || '';
+            document.getElementById('adm-rank-team').value = r.team || '';
+            document.getElementById('adm-rank-kda-ratio').value = r.avgKda || '';
+            document.getElementById('adm-rank-k').value = r.k ?? '';
+            document.getElementById('adm-rank-d').value = r.d ?? '';
+            document.getElementById('adm-rank-a').value = r.a ?? '';
+            document.getElementById('adm-rank-gold').value = r.gold || '';
+            document.getElementById('adm-rank-gp').value = r.gp ?? '';
             document.getElementById('save-rank-btn').textContent = 'Update Player Ranking';
             document.getElementById('cancel-rank-btn').classList.remove('hidden');
         }
 
         function saveWrTrackRanking() {
             const id = document.getElementById('edit-wrrank-id').value;
-            const track = document.getElementById('adm-wrrank-track').value || 'Community';
+            const track = document.getElementById('adm-wrrank-track').value;
             const ign = document.getElementById('adm-wrrank-ign').value.trim();
             const team = document.getElementById('adm-wrrank-team').value.trim();
             const avgKda = document.getElementById('adm-wrrank-kda-ratio').value.trim();
@@ -3755,23 +3791,24 @@
             const a = parseInt(document.getElementById('adm-wrrank-a').value, 10) || 0;
             const gold = document.getElementById('adm-wrrank-gold').value.trim();
             const gp = parseInt(document.getElementById('adm-wrrank-gp').value, 10) || 1;
-            if (!ign) return alert('Please enter Player / Creator IGN.');
-            const targetPath = track === 'Creator' ? 'wrCreatorRankings' : 'wrCommunityRankings';
-            upsert(targetPath, id, { track, ign, team, avgKda, k, d, a, gold, gp }, 'wrRanking', `Wildrounds ${track} stat`);
+            if (!ign) return alert('Enter Player / Creator IGN.');
+            const dbPath = track === 'Creator' ? 'wrCreatorRankings' : 'wrCommunityRankings';
+            upsertItem(dbPath, id, { track, ign, team, avgKda, k, d, a, gold, gp }, 'wrRanking', 'Wildrounds Track Stat');
         }
-        function editWrTrackRanking(track, id) {
-            const source = track === 'Creator' ? state.wrCreatorRankings : state.wrCommunityRankings;
-            const item = source.find(i => i.id === id); if (!item) return;
-            document.getElementById('edit-wrrank-id').value = id;
-            document.getElementById('adm-wrrank-track').value = track;
-            document.getElementById('adm-wrrank-ign').value = item.ign || '';
-            document.getElementById('adm-wrrank-team').value = item.team || '';
-            document.getElementById('adm-wrrank-kda-ratio').value = item.avgKda || '';
-            document.getElementById('adm-wrrank-k').value = item.k ?? '';
-            document.getElementById('adm-wrrank-d').value = item.d ?? '';
-            document.getElementById('adm-wrrank-a').value = item.a ?? '';
-            document.getElementById('adm-wrrank-gold').value = item.gold || '';
-            document.getElementById('adm-wrrank-gp').value = item.gp ?? '';
+        function editWrTrackRanking(trackType, id) {
+            const list = trackType === 'Creator' ? state.wrCreatorRankings : state.wrCommunityRankings;
+            const r = list.find(x => x.id === id);
+            if (!r) return;
+            document.getElementById('edit-wrrank-id').value = r.id;
+            document.getElementById('adm-wrrank-track').value = trackType;
+            document.getElementById('adm-wrrank-ign').value = r.ign || '';
+            document.getElementById('adm-wrrank-team').value = r.team || '';
+            document.getElementById('adm-wrrank-kda-ratio').value = r.avgKda || '';
+            document.getElementById('adm-wrrank-k').value = r.k ?? '';
+            document.getElementById('adm-wrrank-d').value = r.d ?? '';
+            document.getElementById('adm-wrrank-a').value = r.a ?? '';
+            document.getElementById('adm-wrrank-gold').value = r.gold || '';
+            document.getElementById('adm-wrrank-gp').value = r.gp ?? '';
             document.getElementById('save-wrrank-btn').textContent = 'Update Wildrounds Track Stat';
             document.getElementById('cancel-wrrank-btn').classList.remove('hidden');
         }
@@ -3780,89 +3817,109 @@
             if (!confirm('Delete this item?')) return;
             db.ref(`guiangHub/${path}/${id}`).remove()
                 .then(() => setAdminStatus('Item deleted.'))
-                .catch(err => setAdminStatus('Delete failed: ' + err.message, true));
+                .catch(err => setAdminStatus('Error deleting item: ' + err.message, true));
         }
 
         function renderAdminSelects() {
-            const grpSel = document.getElementById('adm-subteam-group');
-            const prevGrp = grpSel ? grpSel.value : '';
-            if (grpSel) {
-                grpSel.innerHTML = state.groups.map(g => `<option value="${g.id}">${g.name}</option>`).join('');
-                if (prevGrp && state.groups.some(g => g.id === prevGrp)) grpSel.value = prevGrp;
-            }
-
-            const tmSel = document.getElementById('adm-player-team');
-            const prevTm = tmSel ? tmSel.value : '';
-            if (tmSel) {
-                tmSel.innerHTML = state.teams.map(t => {
-                    const g = state.groups.find(x => x.id === t.groupId);
-                    return `<option value="${t.id}">${g ? g.name + ' - ' : ''}${t.name}</option>`;
-                }).join('');
-                if (prevTm && state.teams.some(t => t.id === prevTm)) tmSel.value = prevTm;
-            }
-
+            const gSel = document.getElementById('adm-subteam-group');
+            const tSel = document.getElementById('adm-player-team');
             const wrSel = document.getElementById('adm-wr-player-team');
-            const prevWr = wrSel ? wrSel.value : '';
+            if (gSel) {
+                const prevG = gSel.value;
+                gSel.innerHTML = state.groups.map(g => `<option value="${g.id}">${g.name}</option>`).join('');
+                if (prevG && state.groups.some(g => g.id === prevG)) gSel.value = prevG;
+            }
+            if (tSel) {
+                const prevT = tSel.value;
+                tSel.innerHTML = state.teams.map(t => `<option value="${t.id}">${t.name} (${t.game || 'Esports'})</option>`).join('');
+                if (prevT && state.teams.some(t => t.id === prevT)) tSel.value = prevT;
+            }
             if (wrSel) {
+                const prevWr = wrSel.value;
                 wrSel.innerHTML = state.wildroundsTeams.map(w => `<option value="${w.id}">${w.name} (${w.track || 'Wildrounds'})</option>`).join('');
                 if (prevWr && state.wildroundsTeams.some(w => w.id === prevWr)) wrSel.value = prevWr;
             }
         }
 
-        function rowHtml(label, onEdit, onDel) {
-            return `<div class="bg-[#090a0f] border border-white/10 px-2.5 py-1.5 rounded flex items-center justify-between gap-2 text-[11px]"><span class="truncate text-slate-200">${label}</span><div class="flex items-center space-x-2 shrink-0"><button type="button" onclick="${onEdit}" class="text-blue-400 hover:underline font-bold">Edit</button><button type="button" onclick="${onDel}" class="text-red-400 hover:underline font-bold">Del</button></div></div>`;
+        function adminRowHtml(label, editFn, delFn) {
+            return `
+                <div class="bg-[#090a0f] border border-white/10 px-2.5 py-1.5 rounded flex items-center justify-between gap-2 text-[11px]">
+                    <span class="text-slate-200 truncate">${label}</span>
+                    <div class="flex items-center space-x-2 shrink-0">
+                        <button type="button" onclick="${editFn}" class="text-amber-400 hover:text-amber-300 font-bold">Edit</button>
+                        <button type="button" onclick="${delFn}" class="text-red-400 hover:text-red-300 font-bold">Del</button>
+                    </div>
+                </div>
+            `;
         }
 
         function renderAdminSubTeamList() {
-            const grpSel = document.getElementById('adm-subteam-group');
+            const groupId = document.getElementById('adm-subteam-group')?.value;
+            const list = state.teams.filter(t => !groupId || t.groupId === groupId);
             const box = document.getElementById('adm-subteam-list');
-            if (!box) return;
-            const selectedGrpId = grpSel ? grpSel.value : '';
-            const items = selectedGrpId ? state.teams.filter(t => t.groupId === selectedGrpId) : state.teams;
-            box.innerHTML = items.map(t => rowHtml(`${t.name} (${t.game || 'Team'})`, `editSubTeam('${t.id}')`, `deleteItem('teams','${t.id}')`)).join('');
+            if (box) box.innerHTML = list.map(t => adminRowHtml(`${t.name} (${t.game || ''})`, `editSubTeam('${t.id}')`, `deleteItem('teams','${t.id}')`)).join('');
         }
 
         function renderAdminPlayerList() {
-            const tmSel = document.getElementById('adm-player-team');
+            const teamId = document.getElementById('adm-player-team')?.value;
+            const list = sortPlayersByRole(state.players.filter(p => !p.isWildrounds && (!teamId || p.teamId === teamId)));
             const box = document.getElementById('adm-player-list');
-            if (!box) return;
-            const selectedTmId = tmSel ? tmSel.value : '';
-            const regularPlayers = state.players.filter(p => !p.isWildrounds);
-            const items = selectedTmId ? regularPlayers.filter(p => p.teamId === selectedTmId) : regularPlayers;
-            box.innerHTML = items.map(p => rowHtml(`${p.ign} (${p.role || 'Player'} • ${p.region || 'PH'})`, `editPlayer('${p.id}')`, `deleteItem('players','${p.id}')`)).join('');
+            if (box) box.innerHTML = list.map(p => adminRowHtml(`${p.ign} [${p.role || 'Player'} • ${p.region || 'PH'}]`, `editPlayer('${p.id}')`, `deleteItem('players','${p.id}')`)).join('');
         }
 
         function renderAdminWrPlayerList() {
-            const wrSel = document.getElementById('adm-wr-player-team');
+            const wrTeamId = document.getElementById('adm-wr-player-team')?.value;
+            const wrObj = state.wildroundsTeams.find(w => w.id === wrTeamId);
+            const list = sortPlayersByRole(state.players.filter(p => {
+                if (wrObj) return isPlayerInWildroundsTeam(p, wrObj);
+                return Boolean(p.isWildrounds);
+            }));
             const box = document.getElementById('adm-wr-player-list');
-            if (!box) return;
-            const selectedWrId = wrSel ? wrSel.value : '';
-            const wrItem = state.wildroundsTeams.find(w => w.id === selectedWrId);
-            const wrPlayers = state.players.filter(p => wrItem ? isPlayerInWildroundsTeam(p, wrItem) : Boolean(p.isWildrounds));
-            box.innerHTML = wrPlayers.map(p => rowHtml(`${p.ign} (${p.role || 'Player'} • ${p.wrTeamName || wrItem?.name || 'WR'})`, `editWrPlayer('${p.id}')`, `deleteItem('players','${p.id}')`)).join('');
+            if (box) box.innerHTML = list.map(p => adminRowHtml(`${p.ign} [${p.role || 'Player'} • ${p.region || 'PH'}]`, `editWrPlayer('${p.id}')`, `deleteItem('players','${p.id}')`)).join('');
         }
 
         function renderAdminLists() {
-            document.getElementById('adm-news-list').innerHTML = state.news.map(i => rowHtml(i.title, `editNews('${i.id}')`, `deleteItem('news','${i.id}')`)).join('');
-            document.getElementById('adm-ach-list').innerHTML = state.achievements.map(i => rowHtml(i.title, `editAch('${i.id}')`, `deleteItem('achievements','${i.id}')`)).join('');
-            document.getElementById('adm-vid-list').innerHTML = state.videos.map(i => rowHtml(i.title, `editVideo('${i.id}')`, `deleteItem('videos','${i.id}')`)).join('');
-            document.getElementById('adm-scrim-list').innerHTML = state.scrims.map(i => rowHtml(`${i.slotType || 'Scrim'}: ${i.time} (${i.status})`, `editScrim('${i.id}')`, `deleteItem('scrims','${i.id}')`)).join('');
-            document.getElementById('adm-group-list').innerHTML = state.groups.map(i => rowHtml(i.name, `editGroup('${i.id}')`, `deleteItem('groups','${i.id}')`)).join('');
+            const nBox = document.getElementById('adm-news-list');
+            if (nBox) nBox.innerHTML = state.news.map(n => adminRowHtml(n.title, `editNews('${n.id}')`, `deleteItem('news','${n.id}')`)).join('');
+
+            const aBox = document.getElementById('adm-ach-list');
+            if (aBox) aBox.innerHTML = state.achievements.map(a => adminRowHtml(a.title, `editAchievement('${a.id}')`, `deleteItem('achievements','${a.id}')`)).join('');
+
+            const vBox = document.getElementById('adm-vid-list');
+            if (vBox) vBox.innerHTML = state.videos.map(v => adminRowHtml(v.title, `editVideo('${v.id}')`, `deleteItem('videos','${v.id}')`)).join('');
+
+            const sBox = document.getElementById('adm-scrim-list');
+            if (sBox) sBox.innerHTML = state.scrims.map(s => adminRowHtml(`${s.slotType || 'Scrim'} • ${s.time} (${s.status})`, `editScrim('${s.id}')`, `deleteItem('scrims','${s.id}')`)).join('');
+
+            const gBox = document.getElementById('adm-group-list');
+            if (gBox) gBox.innerHTML = state.groups.map(g => adminRowHtml(g.name, `editTeamGroup('${g.id}')`, `deleteItem('groups','${g.id}')`)).join('');
+
             renderAdminSubTeamList();
             renderAdminPlayerList();
             renderAdminWrPlayerList();
-            document.getElementById('adm-match-list').innerHTML = Object.entries(state.matches).map(([id, m]) => rowHtml(`${m.team} vs ${m.opponent} (${m.type}${m.wrTrack ? ' - ' + m.wrTrack : ''})`, `editMatch('${id}')`, `deleteItem('matches','${id}')`)).join('');
-            document.getElementById('adm-part-list').innerHTML = state.partners.map(i => rowHtml(i.name, `editPartner('${i.id}')`, `deleteItem('partners','${i.id}')`)).join('');
-            document.getElementById('adm-wr-list').innerHTML = state.wildroundsTeams.map(i => rowHtml(`${i.name} (${i.track})`, `editWildroundsTeam('${i.id}')`, `deleteItem('wildroundsTeams','${i.id}')`)).join('');
-            document.getElementById('adm-rank-list').innerHTML = state.customRankings.map(i => rowHtml(`${i.ign} [${i.mode || 'Tournament'}] (${i.team || '-'}) • KDA ${i.avgKda || '-'}`, `editCustomRanking('${i.id}')`, `deleteItem('customRankings','${i.id}')`)).join('');
-            const wrRankCombined = [
-                ...state.wrCommunityRankings.map(i => ({ ...i, _track: 'Community' })),
-                ...state.wrCreatorRankings.map(i => ({ ...i, _track: 'Creator' }))
-            ];
-            const wrRankPath = (t) => t === 'Creator' ? 'wrCreatorRankings' : 'wrCommunityRankings';
-            document.getElementById('adm-wrrank-list').innerHTML = wrRankCombined.map(i =>
-                rowHtml(`${i.ign} [WR ${i._track}] (${i.team || '-'}) • KDA ${i.avgKda || '-'}`, `editWrTrackRanking('${i._track}','${i.id}')`, `deleteItem('${wrRankPath(i._track)}','${i.id}')`)
-            ).join('');
+
+            const mBox = document.getElementById('adm-match-list');
+            if (mBox) {
+                mBox.innerHTML = Object.entries(state.matches)
+                    .filter(([, m]) => m && typeof m === 'object')
+                    .map(([id, m]) => adminRowHtml(`${m.team} vs ${m.opponent} (${m.type})`, `editMatch('${id}')`, `deleteItem('matches','${id}')`)).join('');
+            }
+
+            const pBox = document.getElementById('adm-part-list');
+            if (pBox) pBox.innerHTML = state.partners.map(p => adminRowHtml(p.name, `editPartner('${p.id}')`, `deleteItem('partners','${p.id}')`)).join('');
+
+            const wrBox = document.getElementById('adm-wr-list');
+            if (wrBox) wrBox.innerHTML = state.wildroundsTeams.map(w => adminRowHtml(`${w.name} [${w.track || ''}]`, `editWildroundsTeam('${w.id}')`, `deleteItem('wildroundsTeams','${w.id}')`)).join('');
+
+            const rBox = document.getElementById('adm-rank-list');
+            if (rBox) rBox.innerHTML = state.customRankings.map(r => adminRowHtml(`${r.ign} (${r.team || '-'}) • ${r.mode}`, `editCustomRanking('${r.id}')`, `deleteItem('customRankings','${r.id}')`)).join('');
+
+            const wrrBox = document.getElementById('adm-wrrank-list');
+            if (wrrBox) {
+                const commItems = state.wrCommunityRankings.map(r => adminRowHtml(`${r.ign} (${r.team || '-'}) • Community`, `editWrTrackRanking('Community','${r.id}')`, `deleteItem('wrCommunityRankings','${r.id}')`));
+                const creatItems = state.wrCreatorRankings.map(r => adminRowHtml(`${r.ign} (${r.team || '-'}) • Creator`, `editWrTrackRanking('Creator','${r.id}')`, `deleteItem('wrCreatorRankings','${r.id}')`));
+                wrrBox.innerHTML = [...commItems, ...creatItems].join('');
+            }
         }
     </script>
 </body>
