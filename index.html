@@ -873,32 +873,73 @@
                 <div id="adm-part-list" class="space-y-1.5 max-h-28 overflow-y-auto"></div>
             </div>
 
-            <!-- 10. Wildrounds International Teams -->
-            <div class="glass-card p-5 rounded-xl space-y-3 border border-amber-500/25">
-                <div class="flex justify-between items-center">
-                    <h4 class="text-xs font-black uppercase text-amber-300">10. Wildrounds International Teams (Community & Creator Showmatch)</h4>
-                    <button id="cancel-wr-btn" type="button" onclick="resetForm('wildrounds')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
+            <!-- 10. Wildrounds International Teams & Players -->
+            <div class="glass-card p-5 rounded-xl space-y-4 border border-amber-500/25">
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-xs font-black uppercase text-amber-300">10A. Wildrounds International Teams (Community & Creator Showmatch)</h4>
+                        <button id="cancel-wr-btn" type="button" onclick="resetForm('wildrounds')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
+                    </div>
+                    <input type="hidden" id="edit-wr-id">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                        <select id="adm-wr-track" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white font-bold">
+                            <option value="Community Track Team">Community Track Team</option>
+                            <option value="Creator Track Team for Showmatch">Creator Track Team for Showmatch</option>
+                        </select>
+                        <input type="text" id="adm-wr-team" placeholder="Team (Tag) Name" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
+                        <input type="text" id="adm-wr-year" placeholder="Edition / Year (e.g. Wildrounds Intl 2026)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <img id="preview-wr-logo" src="" onerror="handleImgError(this, 'logo')" class="w-9 h-9 rounded-lg object-cover border border-white/10 shrink-0">
+                        <input type="text" id="adm-wr-logo" placeholder="Team Logo URL (blank = 2 letters)" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
+                        <button type="button" onclick="triggerFilePicker('wr-logo', 180, true)" class="bg-amber-600 hover:bg-amber-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
+                            <i class="fa-solid fa-crop-simple mr-1"></i>Crop Photo
+                        </button>
+                        <input type="file" id="file-wr-logo" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-wr-logo', 'preview-wr-logo', 180)">
+                    </div>
+                    <input type="text" id="adm-wr-notes" placeholder="Notes / Achievements / Lineup Info (optional)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
+                    <button id="save-wr-btn" type="button" onclick="saveWildroundsTeam()" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-2 rounded text-xs font-extrabold uppercase">Add / Save Wildrounds Team</button>
+                    <div id="adm-wr-list" class="space-y-1.5 max-h-36 overflow-y-auto"></div>
                 </div>
-                <input type="hidden" id="edit-wr-id">
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                    <select id="adm-wr-track" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white font-bold">
-                        <option value="Community Track Team">Community Track Team</option>
-                        <option value="Creator Track Team for Showmatch">Creator Track Team for Showmatch</option>
-                    </select>
-                    <input type="text" id="adm-wr-team" placeholder="Team (Tag) Name" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
-                    <input type="text" id="adm-wr-year" placeholder="Edition / Year (e.g. Wildrounds Intl 2026)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
+
+                <!-- 10B. Add / Edit Players Directly Inside Wildrounds Team -->
+                <div class="pt-3 border-t border-amber-500/20 space-y-2.5">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-xs font-black uppercase text-amber-300">10B. Add / Edit Players Inside Wildrounds Team</h4>
+                        <button id="cancel-wr-player-btn" type="button" onclick="resetForm('wrPlayer')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
+                    </div>
+                    <input type="hidden" id="edit-wr-player-id">
+                    <select id="adm-wr-player-team" onchange="renderAdminWrPlayerList()" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white font-bold"></select>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                        <input type="text" id="adm-wr-player-ign" placeholder="Player IGN" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white">
+                        <select id="adm-wr-player-role" class="w-full bg-[#090a0f] border border-white/10 rounded px-2 py-2 text-xs text-white">
+                            <option value="Owner">Owner</option>
+                            <option value="Coach">Coach</option>
+                            <option value="Baron">Baron</option>
+                            <option value="Jungle">Jungle</option>
+                            <option value="Mid">Mid</option>
+                            <option value="ADC">ADC</option>
+                            <option value="Support">Support</option>
+                            <option value="Flex">Flex</option>
+                        </select>
+                        <input type="text" id="adm-wr-player-region" placeholder="Region (e.g. PH)" value="PH" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white">
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <input type="text" id="adm-wr-player-gold" placeholder="Gold (optional)" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-amber-200">
+                        <input type="number" id="adm-wr-player-mvp" placeholder="MVP Count (optional)" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white">
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <img id="preview-wr-player-pfp" src="" onerror="handleImgError(this, 'player')" class="w-9 h-9 rounded-lg object-cover border border-white/10 shrink-0">
+                        <input type="text" id="adm-wr-player-pfp" placeholder="Player Photo URL (blank = 2 letters)" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
+                        <button type="button" onclick="triggerFilePicker('wr-player-pfp', 180, true)" class="bg-amber-600 hover:bg-amber-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
+                            <i class="fa-solid fa-crop-simple mr-1"></i>Crop Photo
+                        </button>
+                        <input type="file" id="file-wr-player-pfp" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-wr-player-pfp', 'preview-wr-player-pfp', 180)">
+                    </div>
+                    <input type="text" id="adm-wr-player-achievements" placeholder="Player Achievements (optional)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
+                    <button id="save-wr-player-btn" type="button" onclick="saveWrPlayer()" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-2 rounded text-xs font-extrabold uppercase">Add / Save Player to Wildrounds Team</button>
+                    <div id="adm-wr-player-list" class="space-y-1.5 max-h-36 overflow-y-auto"></div>
                 </div>
-                <div class="flex items-center gap-2">
-                    <img id="preview-wr-logo" src="" onerror="handleImgError(this, 'logo')" class="w-9 h-9 rounded-lg object-cover border border-white/10 shrink-0">
-                    <input type="text" id="adm-wr-logo" placeholder="Team Logo URL (blank = 2 letters)" class="flex-1 bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white min-w-0">
-                    <button type="button" onclick="triggerFilePicker('wr-logo', 180, true)" class="bg-amber-600 hover:bg-amber-700 text-white px-2.5 py-2 rounded text-[10px] font-bold shrink-0">
-                        <i class="fa-solid fa-crop-simple mr-1"></i>Crop Photo
-                    </button>
-                    <input type="file" id="file-wr-logo" accept="image/*" class="hidden" onchange="handleImageFile(this, 'adm-wr-logo', 'preview-wr-logo', 180)">
-                </div>
-                <input type="text" id="adm-wr-notes" placeholder="Notes / Achievements / Lineup Info (optional)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
-                <button id="save-wr-btn" type="button" onclick="saveWildroundsTeam()" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-2 rounded text-xs font-extrabold uppercase">Add / Save Wildrounds Team</button>
-                <div id="adm-wr-list" class="space-y-1.5 max-h-36 overflow-y-auto"></div>
             </div>
 
             <!-- 11. Custom Player Rankings (Tournaments & Scrims) -->
@@ -2129,11 +2170,12 @@
 
             const findPlayerMeta = (ign) => {
                 const found = state.players.find(p => (p.ign || '').trim().toLowerCase() === ign.toLowerCase());
-                const team = found ? state.teams.find(t => t.id === found.teamId) : null;
+                const team = found?.teamId ? state.teams.find(t => t.id === found.teamId) : null;
+                const wrTeam = found?.wrTeamId ? state.wildroundsTeams.find(w => w.id === found.wrTeamId) : null;
                 return {
                     id: found?.id || '',
                     role: found?.role || '',
-                    teamName: team?.name || '',
+                    teamName: team?.name || wrTeam?.name || found?.wrTeamName || '',
                     pfp: found?.pfp || '',
                     gold: found?.gold || ''
                 };
@@ -2264,6 +2306,19 @@
             }).join('');
         }
 
+        function countPlayersForWildroundsTeam(wrItem) {
+            if (!wrItem) return 0;
+            const normName = normalizeTeamKey(wrItem.name);
+            const matchedRoster = findMatchingRosterTeam(wrItem.name);
+            const matched = state.players.filter(p => {
+                if (p.wrTeamId && p.wrTeamId === wrItem.id) return true;
+                if (p.wrTeamName && normalizeTeamKey(p.wrTeamName) === normName) return true;
+                if (matchedRoster && p.teamId === matchedRoster.id) return true;
+                return false;
+            });
+            return matched.length;
+        }
+
         function renderWildroundsTeams() {
             const commBox = document.getElementById('wildrounds-community-list');
             const creatBox = document.getElementById('wildrounds-creator-list');
@@ -2284,6 +2339,7 @@
                 return items.map(item => {
                     const matchedRosterTeam = findMatchingRosterTeam(item.name);
                     const wr = computeTeamWinrate(item.name);
+                    const pCount = countPlayersForWildroundsTeam(item);
                     const clickAttr = `onclick="openWildroundsTeamModal('${item.id}')"`;
                     const notesList = parseAchievementsList(item.notes);
                     const logoToUse = item.logo || matchedRosterTeam?.logo || '';
@@ -2295,7 +2351,7 @@
                                     ${renderAvatarHtml(logoToUse, item.name, 'w-11 h-11 rounded-xl', 'logo')}
                                     <div class="min-w-0">
                                         <p class="text-xs sm:text-sm font-black text-white uppercase truncate">${item.name}</p>
-                                        <p class="text-[10px] font-bold ${accentClass}">${item.year || 'Wildrounds International • This Year'}</p>
+                                        <p class="text-[10px] font-bold ${accentClass}">${item.year || 'Wildrounds International • This Year'} • ${pCount} ${pCount === 1 ? 'Player' : 'Players'}</p>
                                     </div>
                                 </div>
                                 <div class="text-right shrink-0">
@@ -2318,11 +2374,7 @@
             const wrItem = state.wildroundsTeams.find(w => w.id === wrId);
             if (!wrItem) return;
             const matchedRosterTeam = findMatchingRosterTeam(wrItem.name);
-            if (matchedRosterTeam) {
-                openTeamPopout(matchedRosterTeam.id, wrItem);
-                return;
-            }
-            openTeamPopout(null, wrItem);
+            openTeamPopout(matchedRosterTeam ? matchedRosterTeam.id : null, wrItem);
         }
 
         function renderTeamGroupsAndSubTeams() {
@@ -2404,22 +2456,25 @@
 
         function gatherPlayersForTeam(teamObj, wrFallbackObj = null) {
             const teamId = teamObj?.id || '';
+            const wrId = wrFallbackObj?.id || '';
             const teamName = teamObj?.name || wrFallbackObj?.name || '';
             const normTeam = normalizeTeamKey(teamName);
 
-            let roster = teamId ? state.players.filter(p => p.teamId === teamId) : [];
-            if (!roster.length && normTeam) {
-                roster = state.players.filter(p => {
+            let roster = state.players.filter(p => {
+                if (wrId && p.wrTeamId === wrId) return true;
+                if (wrFallbackObj && p.wrTeamName && normalizeTeamKey(p.wrTeamName) === normTeam) return true;
+                if (teamId && p.teamId === teamId) return true;
+                if (!teamId && normTeam) {
                     const pTeam = state.teams.find(t => t.id === p.teamId);
-                    return pTeam && normalizeTeamKey(pTeam.name) === normTeam;
-                });
-            }
+                    if (pTeam && normalizeTeamKey(pTeam.name) === normTeam) return true;
+                }
+                return false;
+            });
 
             if (roster.length) {
                 return sortPlayersByRole(roster);
             }
 
-            // Fallback: collect player IGNs from matches played by this team so modal still shows clickable players
             const seenIgn = new Set();
             const matchPlayers = [];
             Object.values(state.matches).forEach(m => {
@@ -2452,18 +2507,18 @@
             const team = teamId ? state.teams.find(t => t.id === teamId) : null;
             if (!team && !wrFallbackObj) return;
 
-            const displayName = team?.name || wrFallbackObj?.name || 'TEAM';
+            const displayName = wrFallbackObj?.name || team?.name || 'TEAM';
             const group = team ? state.groups.find(g => g.id === team.groupId) : null;
-            const logoUrl = team?.logo || wrFallbackObj?.logo || group?.logo || '';
-            const gameLabel = team?.game || wrFallbackObj?.track || 'Wildrounds International';
+            const logoUrl = wrFallbackObj?.logo || team?.logo || group?.logo || '';
+            const gameLabel = wrFallbackObj?.track || team?.game || 'Wildrounds International';
 
             document.getElementById('tmodal-logo-box').innerHTML = renderAvatarHtml(logoUrl, displayName, 'w-12 h-12 rounded-xl', 'logo');
             document.getElementById('tmodal-name').textContent = displayName;
             document.getElementById('tmodal-meta').innerHTML = `${gameLabel} • Team Winrate: <span class="text-emerald-400 font-bold">${computeTeamWinrate(displayName)}</span>`;
 
             const combinedAch = [
-                ...parseAchievementsList(team?.achievements),
-                ...parseAchievementsList(wrFallbackObj?.notes)
+                ...parseAchievementsList(wrFallbackObj?.notes),
+                ...parseAchievementsList(team?.achievements)
             ];
             const tAchBox = document.getElementById('tmodal-achievements');
             if (combinedAch.length) {
@@ -2499,7 +2554,7 @@
             const teamPlayers = gatherPlayersForTeam(team, wrFallbackObj);
             const list = document.getElementById('tmodal-players');
             if (!teamPlayers.length) {
-                list.innerHTML = `<p class="text-xs text-slate-400 italic">No players assigned to this team yet. Add players under Section 7 in Admin Portal.</p>`;
+                list.innerHTML = `<p class="text-xs text-slate-400 italic">No players assigned to this team yet. Add players under Section 10B (Wildrounds) or Section 7 (Teams) in Admin Portal.</p>`;
             } else {
                 list.innerHTML = teamPlayers.map(p => {
                     const st = computePlayerStats(p);
@@ -2606,7 +2661,8 @@
                 : playerIdOrObj;
             if (!p) return;
             const team = p.teamId ? state.teams.find(t => t.id === p.teamId) : null;
-            const teamLabel = team?.name || p.teamName || 'Roster';
+            const wrTeam = p.wrTeamId ? state.wildroundsTeams.find(w => w.id === p.wrTeamId) : null;
+            const teamLabel = wrTeam?.name || p.wrTeamName || team?.name || p.teamName || 'Roster';
             const st = computePlayerStats(p);
             const rKey = getRoleKey(p.role);
             const region = (p.region || 'PH').trim().toUpperCase();
@@ -2877,6 +2933,18 @@
                 setCleanImgSrc(document.getElementById('preview-player-pfp'), '', 'player');
                 document.getElementById('save-player-btn').textContent = 'Add / Save Player';
                 document.getElementById('cancel-player-btn').classList.add('hidden');
+            } else if (type === 'wrPlayer') {
+                document.getElementById('edit-wr-player-id').value = '';
+                document.getElementById('adm-wr-player-ign').value = '';
+                document.getElementById('adm-wr-player-role').value = 'Baron';
+                document.getElementById('adm-wr-player-region').value = 'PH';
+                document.getElementById('adm-wr-player-gold').value = '';
+                document.getElementById('adm-wr-player-mvp').value = '';
+                document.getElementById('adm-wr-player-pfp').value = '';
+                document.getElementById('adm-wr-player-achievements').value = '';
+                setCleanImgSrc(document.getElementById('preview-wr-player-pfp'), '', 'player');
+                document.getElementById('save-wr-player-btn').textContent = 'Add / Save Player to Wildrounds Team';
+                document.getElementById('cancel-wr-player-btn').classList.add('hidden');
             } else if (type === 'match') {
                 document.getElementById('edit-match-id').value = '';
                 document.getElementById('adm-m-team').value = '';
@@ -3124,6 +3192,61 @@
             document.getElementById('cancel-player-btn').classList.remove('hidden');
         }
 
+        function saveWrPlayer() {
+            const id = document.getElementById('edit-wr-player-id').value;
+            const wrTeamId = document.getElementById('adm-wr-player-team').value || (state.wildroundsTeams[0] && state.wildroundsTeams[0].id);
+            const wrTeamObj = state.wildroundsTeams.find(w => w.id === wrTeamId);
+            const wrTeamName = wrTeamObj ? wrTeamObj.name : '';
+            const ign = document.getElementById('adm-wr-player-ign').value.trim();
+            const role = document.getElementById('adm-wr-player-role').value.trim();
+            const region = (document.getElementById('adm-wr-player-region').value || 'PH').trim().toUpperCase();
+            const gold = document.getElementById('adm-wr-player-gold').value.trim();
+            const mvp = parseInt(document.getElementById('adm-wr-player-mvp').value, 10) || 0;
+            const pfp = document.getElementById('adm-wr-player-pfp').value.trim();
+            const achievements = document.getElementById('adm-wr-player-achievements').value.trim();
+            if (!wrTeamId) return alert('Please add or select a Wildrounds Team first.');
+            if (!ign) return alert('Please enter player IGN.');
+
+            const matchedRoster = findMatchingRosterTeam(wrTeamName);
+            const payload = {
+                wrTeamId,
+                wrTeamName,
+                teamId: matchedRoster ? matchedRoster.id : '',
+                ign,
+                role,
+                region,
+                gold,
+                mvp,
+                pfp,
+                achievements
+            };
+
+            upsert('players', id, payload, 'wrPlayer', `Player "${ign}" in ${wrTeamName || 'Wildrounds Team'}`, () => {
+                const wrSel = document.getElementById('adm-wr-player-team');
+                if (wrSel) wrSel.value = wrTeamId;
+                renderAdminWrPlayerList();
+                renderWildroundsTeams();
+            });
+        }
+
+        function editWrPlayerItem(id) {
+            const item = state.players.find(i => i.id === id); if (!item) return;
+            document.getElementById('edit-wr-player-id').value = id;
+            if (item.wrTeamId) {
+                document.getElementById('adm-wr-player-team').value = item.wrTeamId;
+            }
+            document.getElementById('adm-wr-player-ign').value = item.ign || '';
+            document.getElementById('adm-wr-player-role').value = item.role || 'Baron';
+            document.getElementById('adm-wr-player-region').value = item.region || 'PH';
+            document.getElementById('adm-wr-player-gold').value = item.gold || '';
+            document.getElementById('adm-wr-player-mvp').value = item.mvp ?? '';
+            document.getElementById('adm-wr-player-pfp').value = item.pfp || '';
+            document.getElementById('adm-wr-player-achievements').value = item.achievements || '';
+            setCleanImgSrc(document.getElementById('preview-wr-player-pfp'), item.pfp || '', 'player');
+            document.getElementById('save-wr-player-btn').textContent = 'Update Wildrounds Player';
+            document.getElementById('cancel-wr-player-btn').classList.remove('hidden');
+        }
+
         function saveMatch() {
             const id = document.getElementById('edit-match-id').value;
             const team = document.getElementById('adm-m-team').value.trim();
@@ -3197,7 +3320,14 @@
             const logo = document.getElementById('adm-wr-logo').value.trim();
             const notes = document.getElementById('adm-wr-notes').value.trim();
             if (!name) return alert('Please enter Wildrounds team name.');
-            upsert('wildroundsTeams', id, { track, name, year, logo, notes }, 'wildrounds', 'Wildrounds Team');
+            upsert('wildroundsTeams', id, { track, name, year, logo, notes }, 'wildrounds', `Wildrounds Team "${name}"`, (createdKey) => {
+                if (createdKey) {
+                    const wrSel = document.getElementById('adm-wr-player-team');
+                    if (wrSel) wrSel.value = createdKey;
+                }
+                renderWildroundsTeams();
+                renderAdminWrPlayerList();
+            });
         }
         function editWildroundsTeam(id) {
             const item = state.wildroundsTeams.find(i => i.id === id); if (!item) return;
@@ -3267,6 +3397,15 @@
             if (prevTmVal && state.teams.some(t => t.id === prevTmVal)) {
                 tmSel.value = prevTmVal;
             }
+
+            const wrSel = document.getElementById('adm-wr-player-team');
+            if (wrSel) {
+                const prevWrVal = wrSel.value;
+                wrSel.innerHTML = state.wildroundsTeams.map(w => `<option value="${w.id}">${w.name} (${w.track || 'Wildrounds'})</option>`).join('') || `<option value="">No Wildrounds teams yet</option>`;
+                if (prevWrVal && state.wildroundsTeams.some(w => w.id === prevWrVal)) {
+                    wrSel.value = prevWrVal;
+                }
+            }
         }
 
         function renderAdminSubTeamList() {
@@ -3314,30 +3453,63 @@
             `).join('');
         }
 
-        function renderAdminLists() {
-            const rowHtml = (items, subPath, editFnName, labelFn) => items.map(i => `
-                <div class="flex items-center justify-between bg-[#090a0f] px-2.5 py-1.5 rounded border border-white/10 text-[11px]">
-                    <span class="truncate pr-2">${labelFn(i)}</span>
+        function renderAdminWrPlayerList() {
+            const wrSel = document.getElementById('adm-wr-player-team');
+            const filterWrId = wrSel ? wrSel.value : '';
+            const listEl = document.getElementById('adm-wr-player-list');
+            if (!listEl) return;
+
+            const wrObj = state.wildroundsTeams.find(w => w.id === filterWrId);
+            const normWrName = wrObj ? normalizeTeamKey(wrObj.name) : '';
+
+            const filtered = sortPlayersByRole(
+                state.players.filter(p => {
+                    if (!filterWrId) return Boolean(p.wrTeamId || p.wrTeamName);
+                    if (p.wrTeamId === filterWrId) return true;
+                    if (normWrName && p.wrTeamName && normalizeTeamKey(p.wrTeamName) === normWrName) return true;
+                    return false;
+                })
+            );
+
+            if (!filtered.length) {
+                listEl.innerHTML = `<p class="text-[11px] text-slate-400 italic">No players added to this Wildrounds team yet.</p>`;
+                return;
+            }
+
+            listEl.innerHTML = filtered.map(i => `
+                <div class="flex items-center justify-between bg-[#090a0f] px-2.5 py-1.5 rounded border border-amber-500/20 text-[11px]">
+                    <span class="truncate pr-2">[${i.region || 'PH'} • ${i.role || 'Player'}] ${i.ign} <span class="text-amber-300">(${i.wrTeamName || wrObj?.name || 'WR'})</span></span>
                     <div class="flex items-center space-x-2 shrink-0">
-                        <button type="button" onclick="${editFnName}('${i.id}')" class="text-blue-400 hover:text-blue-300 font-bold">Edit</button>
-                        <button type="button" onclick="delNode('${subPath}', '${i.id}')" class="text-red-400 hover:text-red-300 font-bold">Delete</button>
+                        <button type="button" onclick="editWrPlayerItem('${i.id}')" class="text-blue-400 hover:text-blue-300 font-bold">Edit</button>
+                        <button type="button" onclick="delNode('players', '${i.id}')" class="text-red-400 hover:text-red-300 font-bold">Delete</button>
                     </div>
                 </div>
             `).join('');
+        }
 
-            document.getElementById('adm-news-list').innerHTML = rowHtml(state.news, 'news', 'editNews', i => i.title);
-            document.getElementById('adm-ach-list').innerHTML = rowHtml(state.achievements, 'achievements', 'editAch', i => i.title);
-            document.getElementById('adm-vid-list').innerHTML = rowHtml(state.videos, 'videos', 'editVid', i => i.title);
-            document.getElementById('adm-scrim-list').innerHTML = rowHtml(state.scrims, 'scrims', 'editScrim', i => `[${i.slotType || 'Scrim'}] ${i.time} (${i.status})`);
-            document.getElementById('adm-group-list').innerHTML = rowHtml(state.groups, 'groups', 'editGroup', i => i.name);
+        function renderAdminLists() {
+            const rowHtml = (label, editFn, delFn) => `
+                <div class="flex items-center justify-between bg-[#090a0f] px-2.5 py-1.5 rounded border border-white/10 text-[11px]">
+                    <span class="truncate pr-2">${label}</span>
+                    <div class="flex items-center space-x-2 shrink-0">
+                        <button type="button" onclick="${editFn}" class="text-blue-400 hover:text-blue-300 font-bold">Edit</button>
+                        <button type="button" onclick="${delFn}" class="text-red-400 hover:text-red-300 font-bold">Delete</button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('adm-news-list').innerHTML = state.news.map(i => rowHtml(i.title, `editNews('${i.id}')`, `delNode('news', '${i.id}')`)).join('');
+            document.getElementById('adm-ach-list').innerHTML = state.achievements.map(i => rowHtml(i.title, `editAch('${i.id}')`, `delNode('achievements', '${i.id}')`)).join('');
+            document.getElementById('adm-vid-list').innerHTML = state.videos.map(i => rowHtml(i.title, `editVid('${i.id}')`, `delNode('videos', '${i.id}')`)).join('');
+            document.getElementById('adm-scrim-list').innerHTML = state.scrims.map(i => rowHtml(`[${i.slotType || 'Scrim'}] ${i.time} — ${i.status}`, `editScrim('${i.id}')`, `delNode('scrims', '${i.id}')`)).join('');
+            document.getElementById('adm-group-list').innerHTML = state.groups.map(i => rowHtml(i.name, `editGroup('${i.id}')`, `delNode('groups', '${i.id}')`)).join('');
             renderAdminSubTeamList();
             renderAdminPlayerList();
-            document.getElementById('adm-part-list').innerHTML = rowHtml(state.partners, 'partners', 'editPart', i => i.name);
-            document.getElementById('adm-wr-list').innerHTML = rowHtml(state.wildroundsTeams, 'wildroundsTeams', 'editWildroundsTeam', i => `[${i.track || 'Track'}] ${i.name} (${i.year || '2026'})`);
-            document.getElementById('adm-rank-list').innerHTML = rowHtml(state.customRankings, 'customRankings', 'editCustomRanking', i => `[${i.mode || 'Tournament'}] ${i.ign} (${i.team || '-'}) • KDA ${i.avgKda || '-'}`);
-
-            const matchEntries = Object.entries(state.matches).map(([id, m]) => ({ id, ...m }));
-            document.getElementById('adm-match-list').innerHTML = rowHtml(matchEntries, 'matches', 'editMatchItem', i => `[${i.type}] ${i.team} vs ${i.opponent}`);
+            renderAdminWrPlayerList();
+            document.getElementById('adm-match-list').innerHTML = Object.entries(state.matches).map(([id, m]) => rowHtml(`[${m.type || 'Match'}] ${m.team} vs ${m.opponent} (${m.score || ''})`, `editMatchItem('${id}')`, `delNode('matches', '${id}')`)).join('');
+            document.getElementById('adm-part-list').innerHTML = state.partners.map(i => rowHtml(i.name, `editPart('${i.id}')`, `delNode('partners', '${i.id}')`)).join('');
+            document.getElementById('adm-wr-list').innerHTML = state.wildroundsTeams.map(i => rowHtml(`[${i.track || 'Wildrounds'}] ${i.name} (${i.year || ''})`, `editWildroundsTeam('${i.id}')`, `delNode('wildroundsTeams', '${i.id}')`)).join('');
+            document.getElementById('adm-rank-list').innerHTML = state.customRankings.map(i => rowHtml(`[${i.mode || 'Tournament'}] ${i.ign} (${i.team || '-'}) — ${i.avgKda || ''}`, `editCustomRanking('${i.id}')`, `delNode('customRankings', '${i.id}')`)).join('');
         }
     </script>
 </body>
