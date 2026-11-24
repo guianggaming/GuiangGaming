@@ -179,6 +179,10 @@
                     <span class="text-[10px] font-bold uppercase px-2.5 py-1 rounded bg-blue-600/15 text-blue-400 border border-blue-500/30">League of Legends</span>
                     <span class="text-[10px] font-bold uppercase px-2.5 py-1 rounded bg-emerald-600/15 text-emerald-400 border border-emerald-500/30">Shoutcasting</span>
                 </div>
+                <div class="pt-2 border-t border-white/10 flex flex-wrap gap-3 text-[11px] font-bold">
+                    <a href="https://wildrift.leagueoflegends.com/en-us/champions/" target="_blank" class="text-red-400 hover:text-red-300 underline">Wild Rift Champions</a>
+                    <a href="https://rankedwr.com/champions/" target="_blank" class="text-amber-300 hover:text-amber-200 underline">RankedWR Champions</a>
+                </div>
             </section>
 
             <section id="achievements-section" class="lg:col-span-2 glass-card p-6 rounded-2xl space-y-4 scroll-mt-20">
@@ -802,7 +806,7 @@
                     </div>
 
                     <div class="grid grid-cols-2 gap-2">
-                        <input type="text" id="adm-m-team-bans" placeholder="Team A Ban Champs (e.g. Ezreal, Graves, Olaf)" class="w-full bg-[#090a0f] border border-rose-500/25 rounded px-2.5 py-2 text-xs text-rose-200">
+                        <input type="text" id="adm-m-team-bans" placeholder="Team A Ban Champs (e.g. Kai'Sa, Kha'Zix, Nidalee)" class="w-full bg-[#090a0f] border border-rose-500/25 rounded px-2.5 py-2 text-xs text-rose-200">
                         <input type="text" id="adm-m-opp-bans" placeholder="Team B Ban Champs (e.g. Yasuo, Jayce)" class="w-full bg-[#090a0f] border border-rose-500/25 rounded px-2.5 py-2 text-xs text-rose-200">
                     </div>
 
@@ -1259,18 +1263,26 @@
             'role-adc': ROLE_SVG_FALLBACKS.adc,
             'role-support': ROLE_SVG_FALLBACKS.support,
             'role-flex': ROLE_SVG_FALLBACKS.flex,
-            champ: "data:image/png;base64," + btoa(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60"><rect width="60" height="60" rx="8" fill="#1f2937"/><text x="30" y="36" font-family="Arial,sans-serif" font-size="16" font-weight="bold" fill="#ef4444" text-anchor="middle">GG</text></svg>`)
+            champ: "data:image/png;base64," + btoa(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60"><rect width="60" height="60" rx="8" fill="#1f2937"/><text x="30" y="36" font-family="Arial,sans-serif" font-size="16" font-weight="bold" fill="#ef4444" text-anchor="middle">WR</text></svg>`)
         };
 
         function handleImgError(el, type) {
-            if (!el || el.dataset.fb) return;
-            el.dataset.fb = "1";
-            el.src = FALLBACKS[type] || FALLBACKS.logo;
+            if (!el) return;
+            if (!el.dataset.altTry && type === 'champ' && el.dataset.champKey) {
+                el.dataset.altTry = "1";
+                el.src = `https://ddragon.leagueoflegends.com/cdn/14.23.1/img/champion/${el.dataset.champKey}.png`;
+                return;
+            }
+            if (!el.dataset.fb) {
+                el.dataset.fb = "1";
+                el.src = FALLBACKS[type] || FALLBACKS.logo;
+            }
         }
 
         function setCleanImgSrc(imgEl, src, fallbackType) {
             if (!imgEl) return;
             delete imgEl.dataset.fb;
+            delete imgEl.dataset.altTry;
             imgEl.src = src || FALLBACKS[fallbackType] || FALLBACKS.logo;
         }
 
@@ -1489,51 +1501,66 @@
         }
 
         const DDRAGON_VER = "14.24.1";
-        function getChampIcon(name) {
-            if (!name) return FALLBACKS.champ;
+        const CHAMP_ALIAS_MAP = {
+            'aatrox': 'Aatrox', 'ahri': 'Ahri', 'akali': 'Akali', 'akshan': 'Akshan',
+            'alistar': 'Alistar', 'ambessa': 'Ambessa', 'amumu': 'Amumu', 'annie': 'Annie',
+            'ashe': 'Ashe', 'aurelionsol': 'AurelionSol', 'asol': 'AurelionSol',
+            'aurora': 'Aurora', 'bard': 'Bard', 'blitzcrank': 'Blitzcrank', 'brand': 'Brand',
+            'braum': 'Braum', 'caitlyn': 'Caitlyn', 'camille': 'Camille', 'chogath': 'ChoGath',
+            'corki': 'Corki', 'darius': 'Darius', 'diana': 'Diana', 'drmundo': 'DrMundo',
+            'mundo': 'DrMundo', 'draven': 'Draven', 'ekko': 'Ekko', 'evelynn': 'Evelynn',
+            'ezreal': 'Ezreal', 'fiddlesticks': 'Fiddlesticks', 'fiora': 'Fiora', 'fizz': 'Fizz',
+            'galio': 'Galio', 'garen': 'Garen', 'gnar': 'Gnar', 'gragas': 'Gragas',
+            'graves': 'Graves', 'gwen': 'Gwen', 'hecarim': 'Hecarim', 'heimerdinger': 'Heimerdinger',
+            'hwei': 'Hwei', 'irelia': 'Irelia', 'janna': 'Janna', 'jarvan': 'JarvanIV',
+            'jarvaniv': 'JarvanIV', 'jax': 'Jax', 'jayce': 'Jayce', 'jhin': 'Jhin',
+            'jinx': 'Jinx', 'kaisa': 'KaiSa', 'kalista': 'Kalista', 'karma': 'Karma',
+            'kassadin': 'Kassadin', 'katarina': 'Katarina', 'kennen': 'Kennen', 'khazix': 'KhaZix',
+            'kindred': 'Kindred', 'kogmaw': 'KogMaw', 'ksante': 'KSante', 'leblanc': 'Leblanc',
+            'leesin': 'LeeSin', 'leona': 'Leona', 'lillia': 'Lillia', 'lissandra': 'Lissandra',
+            'lucian': 'Lucian', 'lulu': 'Lulu', 'lux': 'Lux', 'malphite': 'Malphite',
+            'maokai': 'Maokai', 'masteryi': 'MasterYi', 'yi': 'MasterYi', 'mel': 'Mel',
+            'mf': 'MissFortune', 'missfortune': 'MissFortune', 'monkeyking': 'MonkeyKing',
+            'wukong': 'MonkeyKing', 'mordekaiser': 'Mordekaiser', 'morgana': 'Morgana',
+            'nami': 'Nami', 'nasus': 'Nasus', 'nautilus': 'Nautilus', 'nidalee': 'Nidalee',
+            'nilah': 'Nilah', 'nunu': 'Nunu', 'nunuandwillump': 'Nunu', 'olaf': 'Olaf',
+            'orianna': 'Orianna', 'ornn': 'Ornn', 'pantheon': 'Pantheon', 'poppy': 'Poppy',
+            'pyke': 'Pyke', 'rakan': 'Rakan', 'rammus': 'Rammus', 'reksai': 'RekSai',
+            'rell': 'Rell', 'renekton': 'Renekton', 'rengar': 'Rengar', 'riven': 'Riven',
+            'rumble': 'Rumble', 'ryze': 'Ryze', 'samira': 'Samira', 'senna': 'Senna',
+            'seraphine': 'Seraphine', 'sett': 'Sett', 'shen': 'Shen', 'shyvana': 'Shyvana',
+            'singed': 'Singed', 'sion': 'Sion', 'sivir': 'Sivir', 'skarner': 'Skarner',
+            'smolder': 'Smolder', 'sona': 'Sona', 'soraka': 'Soraka', 'swain': 'Swain',
+            'sylas': 'Sylas', 'syndra': 'Syndra', 'taliyah': 'Taliyah', 'talon': 'Talon',
+            'teemo': 'Teemo', 'thresh': 'Thresh', 'tristana': 'Tristana', 'tryndamere': 'Tryndamere',
+            'twistedfate': 'TwistedFate', 'tf': 'TwistedFate', 'twitch': 'Twitch',
+            'urgot': 'Urgot', 'varus': 'Varus', 'vayne': 'Vayne', 'veigar': 'Veigar',
+            'velkoz': 'Velkoz', 'vex': 'Vex', 'vi': 'Vi', 'viego': 'Viego',
+            'viktor': 'Viktor', 'vladimir': 'Vladimir', 'volibear': 'Volibear', 'warwick': 'Warwick',
+            'xayah': 'Xayah', 'xin': 'XinZhao', 'xinzhao': 'XinZhao', 'yasuo': 'Yasuo',
+            'yone': 'Yone', 'yunara': 'Yunara', 'yuumi': 'Yuumi', 'zed': 'Zed',
+            'zeri': 'Zeri', 'ziggs': 'Ziggs', 'zilean': 'Zilean', 'zoe': 'Zoe',
+            'zyra': 'Zyra'
+        };
+
+        function resolveChampKey(name) {
+            if (!name) return '';
             const clean = String(name).trim().toLowerCase().replace(/[^a-z0-9]/g, '');
-            if (!clean) return FALLBACKS.champ;
+            if (!clean) return '';
+            return CHAMP_ALIAS_MAP[clean] || (clean.charAt(0).toUpperCase() + clean.slice(1));
+        }
 
-            const map = {
-                'aatrox': 'Aatrox', 'ahri': 'Ahri', 'akali': 'Akali', 'akshan': 'Akshan',
-                'alistar': 'Alistar', 'ambessa': 'Ambessa', 'amumu': 'Amumu', 'annie': 'Annie',
-                'ashe': 'Ashe', 'aurelionsol': 'AurelionSol', 'asol': 'AurelionSol',
-                'blitzcrank': 'Blitzcrank', 'brand': 'Brand', 'braum': 'Braum', 'caitlyn': 'Caitlyn',
-                'camille': 'Camille', 'chogath': 'ChoGath', 'corki': 'Corki', 'darius': 'Darius',
-                'diana': 'Diana', 'drmundo': 'DrMundo', 'mundo': 'DrMundo', 'draven': 'Draven',
-                'ekko': 'Ekko', 'evelynn': 'Evelynn', 'ezreal': 'Ezreal', 'fiddlesticks': 'Fiddlesticks',
-                'fiora': 'Fiora', 'fizz': 'Fizz', 'galio': 'Galio', 'garen': 'Garen',
-                'gragas': 'Gragas', 'graves': 'Graves', 'gwen': 'Gwen', 'heimerdinger': 'Heimerdinger',
-                'irelia': 'Irelia', 'janna': 'Janna', 'jarvan': 'JarvanIV', 'jarvaniv': 'JarvanIV',
-                'jax': 'Jax', 'jayce': 'Jayce', 'jhin': 'Jhin', 'jinx': 'Jinx',
-                'kai'sa': 'Kai'Sa', 'karma': 'Karma', 'kassadin': 'Kassadin', 'katarina': 'Katarina',
-                'kennen': 'Kennen', 'khazix': 'KhaZix', 'kogmaw': 'KogMaw', 'ksante': 'KSante',
-                'leblanc': 'Leblanc', 'leesin': 'LeeSin', 'leona': 'Leona', 'lillia': 'Lillia',
-                'lucian': 'Lucian', 'lulu': 'Lulu', 'lux': 'Lux', 'malphite': 'Malphite',
-                'maokai': 'Maokai', 'masteryi': 'MasterYi', 'yi': 'MasterYi',
-                'mf': 'MissFortune', 'missfortune': 'MissFortune',
-                'monkeyking': 'MonkeyKing', 'wukong': 'MonkeyKing',
-                'morgana': 'Morgana', 'nami': 'Nami', 'nasus': 'Nasus', 'nautilus': 'Nautilus',
-                'nilah': 'Nilah', 'nunu': 'Nunu', 'nunuandwillump': 'Nunu', 'olaf': 'Olaf',
-                'orianna': 'Orianna', 'ornn': 'Ornn', 'pantheon': 'Pantheon', 'poppy': 'Poppy',
-                'pyke': 'Pyke', 'rakan': 'Rakan', 'rammus': 'Rammus', 'reksai': 'RekSai',
-                'renekton': 'Renekton', 'rengar': 'Rengar', 'riven': 'Riven', 'rumble': 'Rumble',
-                'samira': 'Samira', 'senna': 'Senna', 'seraphine': 'Seraphine', 'sett': 'Sett',
-                'shen': 'Shen', 'shyvana': 'Shyvana', 'singed': 'Singed', 'sion': 'Sion',
-                'sivir': 'Sivir', 'sona': 'Sona', 'soraka': 'Soraka', 'swain': 'Swain',
-                'syndra': 'Syndra', 'talon': 'Talon', 'teemo': 'Teemo', 'thresh': 'Thresh',
-                'tristana': 'Tristana', 'tryndamere': 'Tryndamere',
-                'twistedfate': 'TwistedFate', 'tf': 'TwistedFate',
-                'twitch': 'Twitch', 'urgot': 'Urgot', 'varus': 'Varus', 'vayne': 'Vayne',
-                'veigar': 'Veigar', 'velkoz': 'Velkoz', 'vi': 'Vi', 'viego': 'Viego',
-                'viktor': 'Viktor', 'vladimir': 'Vladimir', 'volibear': 'Volibear', 'warwick': 'Warwick',
-                'xayah': 'Xayah', 'xin': 'XinZhao', 'xinzhao': 'XinZhao',
-                'yasuo': 'Yasuo', 'yone': 'Yone', 'yuumi': 'Yuumi', 'zed': 'Zed',
-                'zeri': 'Zeri', 'ziggs': 'Ziggs', 'zoe': 'Zoe', 'zyra': 'Zyra', 'nidalee': 'Nidalee'
-            };
-
-            const formatted = map[clean] || (clean.charAt(0).toUpperCase() + clean.slice(1));
+        function getChampIcon(name) {
+            const formatted = resolveChampKey(name);
+            if (!formatted) return FALLBACKS.champ;
             return `https://ddragon.leagueoflegends.com/cdn/${DDRAGON_VER}/img/champion/${formatted}.png`;
+        }
+
+        function renderChampImgHtml(name, extraClass = 'w-8 h-8 rounded-lg', altText = '') {
+            const key = resolveChampKey(name);
+            const src = getChampIcon(name);
+            const safeAlt = (altText || name || 'Champion').replace(/"/g, '&quot;');
+            return `<img src="${src}" data-champ-key="${key}" onerror="handleImgError(this, 'champ')" alt="${safeAlt}" class="${extraClass} object-cover border border-white/10 shrink-0">`;
         }
 
         let state = {
@@ -1625,6 +1652,23 @@
             return state.rolePhotos[k] || DEFAULT_ROLE_PHOTOS[k] || ROLE_SVG_FALLBACKS[k] || FALLBACKS.player;
         }
 
+        function isTeamInDatabase(teamName) {
+            const target = normalizeTeamKey(teamName);
+            if (!target) return false;
+
+            const inRosterTeams = state.teams.some(t => {
+                const n = normalizeTeamKey(t.name);
+                return n && (n === target || n.includes(target) || target.includes(n));
+            });
+            if (inRosterTeams) return true;
+
+            const inWildroundsTeams = state.wildroundsTeams.some(w => {
+                const n = normalizeTeamKey(w.name);
+                return n && (n === target || n.includes(target) || target.includes(n));
+            });
+            return inWildroundsTeams;
+        }
+
         function findMatchingRosterTeam(teamName) {
             const normTarget = normalizeTeamKey(teamName);
             if (!normTarget) return null;
@@ -1664,7 +1708,7 @@
             return bans.map(champ => `
                 <div title="Banned: ${champ}" class="group flex flex-col items-center gap-0.5">
                     <div class="ban-slash-box w-9 h-9 rounded-md border border-rose-500/50 bg-[#141722] shadow">
-                        <img src="${getChampIcon(champ)}" onerror="handleImgError(this, 'champ')" alt="${champ}" class="w-full h-full object-cover opacity-80">
+                        ${renderChampImgHtml(champ, 'w-full h-full opacity-80', champ)}
                     </div>
                     <span class="text-[9px] font-bold text-rose-200 max-w-[46px] truncate">${champ}</span>
                 </div>
@@ -1872,15 +1916,24 @@
         bindList('achievements', 'achievements', renderAchievements);
         bindList('videos', 'videos', renderVideos);
         bindList('scrims', 'scrims', renderScrims);
-        bindList('groups', 'groups', renderTeamGroupsAndSubTeams);
-        bindList('teams', 'teams', renderTeamGroupsAndSubTeams);
+        bindList('groups', 'groups', () => {
+            renderTeamGroupsAndSubTeams();
+            renderPlayerRankings();
+        });
+        bindList('teams', 'teams', () => {
+            renderTeamGroupsAndSubTeams();
+            renderPlayerRankings();
+        });
         bindList('players', 'players', () => {
             renderTeamGroupsAndSubTeams();
             renderWildroundsTeams();
             renderPlayerRankings();
         });
         bindList('partners', 'partners', renderPartners);
-        bindList('wildroundsTeams', 'wildroundsTeams', renderWildroundsTeams);
+        bindList('wildroundsTeams', 'wildroundsTeams', () => {
+            renderWildroundsTeams();
+            renderPlayerRankings();
+        });
         bindList('customRankings', 'customRankings', renderPlayerRankings);
 
         db.ref('guiangHub/matches').on('value', snap => {
@@ -2250,6 +2303,8 @@
                 ];
 
                 sides.forEach(side => {
+                    if (!isTeamInDatabase(side.team)) return;
+
                     side.rows.forEach(r => {
                         const key = r.ign.trim().toLowerCase();
                         if (!key) return;
@@ -2284,6 +2339,8 @@
             state.customRankings.forEach(cr => {
                 const mode = (cr.mode || 'Tournament').toLowerCase();
                 if (rankFilterType !== 'ALL' && mode !== rankFilterType.toLowerCase()) return;
+                if (cr.team && !isTeamInDatabase(cr.team)) return;
+
                 const key = (cr.ign || '').trim().toLowerCase();
                 if (!key) return;
                 const meta = findPlayerMeta(cr.ign);
@@ -2573,7 +2630,7 @@
                 teamChampsBox.innerHTML = teamChamps.map(c => `
                     <div class="bg-[#090a0f] border border-white/10 p-2.5 rounded-xl flex items-center justify-between gap-2">
                         <div class="flex items-center gap-2.5 min-w-0">
-                            <img src="${getChampIcon(c.champ)}" onerror="handleImgError(this, 'champ')" class="w-9 h-9 rounded-lg object-cover border border-white/10 shrink-0">
+                            ${renderChampImgHtml(c.champ, 'w-9 h-9 rounded-lg', c.champ)}
                             <div class="min-w-0">
                                 <p class="text-xs font-black text-white truncate">${c.champ}</p>
                                 <p class="text-[10px] text-slate-400">${c.picks} ${c.picks === 1 ? 'Pick' : 'Picks'} • ${c.wr}% WR</p>
@@ -2653,7 +2710,7 @@
                 <div class="${cardBorder} border p-2.5 rounded-xl space-y-2">
                     <div class="flex items-center justify-between gap-2">
                         <div class="flex items-center space-x-2.5 min-w-0">
-                            <img src="${getChampIcon(c.champ)}" onerror="handleImgError(this, 'champ')" class="w-9 h-9 rounded-lg object-cover border border-white/10 shrink-0">
+                            ${renderChampImgHtml(c.champ, 'w-9 h-9 rounded-lg', c.champ)}
                             <div class="min-w-0">
                                 <p class="text-xs font-black text-white truncate">${c.champ}</p>
                                 <p class="text-[10px] text-slate-400">${c.wins}W | ${c.losses}L • ${c.picks} ${c.picks === 1 ? 'Match' : 'Matches'}</p>
@@ -2863,7 +2920,7 @@
                 return rows.map(r => `
                     <div class="bg-[#12141e] border border-white/10 p-2.5 rounded-lg flex items-center justify-between gap-2">
                         <div class="flex items-center space-x-2.5 min-w-0">
-                            <img src="${getChampIcon(r.champ)}" onerror="handleImgError(this, 'champ')" class="w-8 h-8 rounded-lg object-cover border border-white/10 shrink-0">
+                            ${renderChampImgHtml(r.champ, 'w-8 h-8 rounded-lg', r.champ)}
                             <div class="min-w-0">
                                 <div class="flex items-center space-x-1.5">
                                     <span class="text-xs font-black text-white truncate">${r.ign}</span>
@@ -3390,7 +3447,7 @@
             const gold = document.getElementById('adm-rank-gold').value.trim();
             const gp = parseInt(document.getElementById('adm-rank-gp').value, 10) || 1;
             if (!ign) return alert('Please enter Player IGN.');
-            upsert('customRankings', id, { mode, ign, team, avgKda, k, d, a, gold, gp }, 'ranking', 'Player Ranking');
+            upsert('customRankings', id, { mode, ign, team, avgKda, k, d, a, gold, gp }, 'ranking', `Ranking for "${ign}"`);
         }
         function editCustomRanking(id) {
             const item = state.customRankings.find(i => i.id === id); if (!item) return;
@@ -3408,142 +3465,99 @@
             document.getElementById('cancel-rank-btn').classList.remove('hidden');
         }
 
-        function delNode(path, id) {
-            if (confirm('Delete this item?')) {
-                db.ref(`guiangHub/${path}/${id}`).remove()
-                    .then(() => setAdminStatus('Item deleted.'))
-                    .catch(err => setAdminStatus('Failed to delete: ' + err.message, true));
-            }
+        function deleteItem(path, id) {
+            if (!confirm('Delete this item?')) return;
+            db.ref(`guiangHub/${path}/${id}`).remove()
+                .then(() => setAdminStatus('Item deleted.'))
+                .catch(err => setAdminStatus('Delete failed: ' + err.message, true));
         }
 
         function renderAdminSelects() {
             const grpSel = document.getElementById('adm-subteam-group');
-            if (grpSel) {
-                const prevGrpVal = grpSel.value || selectedGroupId;
-                grpSel.innerHTML = state.groups.map(g => `<option value="${g.id}">${g.name || ''}</option>`).join('') || `<option value="">No groups yet</option>`;
-                if (prevGrpVal && state.groups.some(g => g.id === prevGrpVal)) {
-                    grpSel.value = prevGrpVal;
-                }
+            const prevGrp = grpSel.value || selectedGroupId;
+            grpSel.innerHTML = state.groups.map(g => `<option value="${g.id}">${g.name}</option>`).join('');
+            if (prevGrp && state.groups.some(g => g.id === prevGrp)) {
+                grpSel.value = prevGrp;
             }
 
             const tmSel = document.getElementById('adm-player-team');
-            if (tmSel) {
-                const prevTmVal = tmSel.value;
-                tmSel.innerHTML = state.teams.map(t => {
-                    const grp = state.groups.find(g => g.id === t.groupId);
-                    return `<option value="${t.id}">${t.name || ''}${grp ? ` (${grp.name})` : ''}</option>`;
-                }).join('') || `<option value="">No teams yet</option>`;
-                if (prevTmVal && state.teams.some(t => t.id === prevTmVal)) {
-                    tmSel.value = prevTmVal;
-                }
+            const prevTm = tmSel.value;
+            tmSel.innerHTML = state.teams.map(t => {
+                const g = state.groups.find(x => x.id === t.groupId);
+                return `<option value="${t.id}">${t.name} (${g ? g.name : 'Group'})</option>`;
+            }).join('');
+            if (prevTm && state.teams.some(t => t.id === prevTm)) {
+                tmSel.value = prevTm;
             }
 
             const wrSel = document.getElementById('adm-wr-player-team');
             if (wrSel) {
-                const prevWrVal = wrSel.value;
-                wrSel.innerHTML = state.wildroundsTeams.map(w => `<option value="${w.id}">${w.name || ''} (${w.track || 'Wildrounds'})</option>`).join('') || `<option value="">No Wildrounds teams yet</option>`;
-                if (prevWrVal && state.wildroundsTeams.some(w => w.id === prevWrVal)) {
-                    wrSel.value = prevWrVal;
+                const prevWr = wrSel.value;
+                wrSel.innerHTML = state.wildroundsTeams.map(w => `<option value="${w.id}">${w.name} (${w.track || 'Wildrounds'})</option>`).join('');
+                if (prevWr && state.wildroundsTeams.some(w => w.id === prevWr)) {
+                    wrSel.value = prevWr;
                 }
             }
         }
 
-        function renderAdminSubTeamList() {
-            const subBox = document.getElementById('adm-subteam-list');
-            if (!subBox) return;
-            const grpSel = document.getElementById('adm-subteam-group');
-            const selectedGrpId = grpSel ? grpSel.value : '';
-            const filteredTeams = selectedGrpId
-                ? state.teams.filter(t => t.groupId === selectedGrpId)
-                : state.teams;
+        function rowHtml(label, editFn, delFn) {
+            return `<div class="flex items-center justify-between bg-[#090a0f] border border-white/10 px-2.5 py-1.5 rounded text-[11px] gap-2"><span class="truncate text-slate-200">${label}</span><div class="flex items-center gap-2 shrink-0"><button type="button" onclick="${editFn}" class="text-blue-400 hover:underline font-bold">Edit</button><button type="button" onclick="${delFn}" class="text-red-400 hover:underline font-bold">Delete</button></div></div>`;
+        }
 
-            subBox.innerHTML = filteredTeams.map(t => {
-                const g = state.groups.find(gr => gr.id === t.groupId);
-                return `
-                    <div class="flex items-center justify-between bg-[#090a0f] px-2.5 py-1.5 rounded text-xs">
-                        <span class="truncate text-white">${t.name || ''} <span class="text-slate-400">(${g ? g.name : 'Group'})</span></span>
-                        <div class="space-x-2 shrink-0">
-                            <button onclick="editSubTeam('${t.id}')" class="text-blue-400 hover:underline text-[11px]">Edit</button>
-                            <button onclick="delNode('teams','${t.id}')" class="text-red-400 hover:underline text-[11px]">Del</button>
-                        </div>
-                    </div>
-                `;
-            }).join('') || `<p class="text-[11px] text-slate-500 italic">No teams in this group yet.</p>`;
+        function renderAdminSubTeamList() {
+            const grpSel = document.getElementById('adm-subteam-group');
+            const selectedGrp = grpSel?.value || selectedGroupId || '';
+            const filteredTeams = selectedGrp
+                ? state.teams.filter(t => t.groupId === selectedGrp)
+                : state.teams;
+            document.getElementById('adm-subteam-list').innerHTML = filteredTeams.length
+                ? filteredTeams.map(t => rowHtml(`${t.name} (${t.game || ''})`, `editSubTeam('${t.id}')`, `deleteItem('teams','${t.id}')`)).join('')
+                : `<p class="text-[10px] text-slate-500 italic">No teams in this group yet.</p>`;
+        }
+
+        function renderAdminPlayerList() {
+            const tmSel = document.getElementById('adm-player-team');
+            const selectedTm = tmSel?.value || '';
+            const filteredPlayers = sortPlayersByRole(
+                state.players.filter(p => !p.isWildrounds && (!selectedTm || p.teamId === selectedTm))
+            );
+            document.getElementById('adm-player-list').innerHTML = filteredPlayers.length
+                ? filteredPlayers.map(p => {
+                    const tm = state.teams.find(t => t.id === p.teamId);
+                    return rowHtml(`${p.ign} • ${p.role || ''} [${p.region || 'PH'}] (${tm ? tm.name : ''})`, `editPlayerItem('${p.id}')`, `deleteItem('players','${p.id}')`);
+                }).join('')
+                : `<p class="text-[10px] text-slate-500 italic">No players in this team yet.</p>`;
         }
 
         function renderAdminWrPlayerList() {
-            const wrPBox = document.getElementById('adm-wr-player-list');
-            if (!wrPBox) return;
+            const box = document.getElementById('adm-wr-player-list');
+            if (!box) return;
             const wrSel = document.getElementById('adm-wr-player-team');
-            const selectedWrId = wrSel ? wrSel.value : '';
-            const selectedWrObj = state.wildroundsTeams.find(w => w.id === selectedWrId);
-            const filteredWrPlayers = selectedWrObj
-                ? state.players.filter(p => isPlayerInWildroundsTeam(p, selectedWrObj))
-                : state.players.filter(p => p.isWildrounds || p.wrTeamId);
-
-            wrPBox.innerHTML = filteredWrPlayers.map(p => {
-                const wrObj = state.wildroundsTeams.find(w => w.id === p.wrTeamId);
-                return `
-                    <div class="flex items-center justify-between bg-[#090a0f] px-2.5 py-1.5 rounded text-xs">
-                        <span class="truncate text-white">${p.ign || ''} <span class="text-amber-300">(${p.role || 'Player'} • ${wrObj?.name || p.wrTeamName || 'Wildrounds'})</span></span>
-                        <div class="space-x-2 shrink-0">
-                            <button onclick="editWrPlayerItem('${p.id}')" class="text-blue-400 hover:underline text-[11px]">Edit</button>
-                            <button onclick="delNode('players','${p.id}')" class="text-red-400 hover:underline text-[11px]">Del</button>
-                        </div>
-                    </div>
-                `;
-            }).join('') || `<p class="text-[11px] text-slate-500 italic">No players in this Wildrounds team yet.</p>`;
+            const selectedWrId = wrSel?.value || '';
+            const wrObj = state.wildroundsTeams.find(w => w.id === selectedWrId);
+            const filtered = sortPlayersByRole(
+                state.players.filter(p => wrObj ? isPlayerInWildroundsTeam(p, wrObj) : Boolean(p.isWildrounds))
+            );
+            box.innerHTML = filtered.length
+                ? filtered.map(p => rowHtml(`${p.ign} • ${p.role || ''} [${p.region || 'PH'}] (${p.wrTeamName || wrObj?.name || 'WR'})`, `editWrPlayerItem('${p.id}')`, `deleteItem('players','${p.id}')`)).join('')
+                : `<p class="text-[10px] text-slate-500 italic">No players added to this Wildrounds team yet.</p>`;
         }
 
         function renderAdminLists() {
-            const rowHtml = (label, editFn, delFn) => `
-                <div class="flex items-center justify-between bg-[#090a0f] px-2.5 py-1.5 rounded text-xs">
-                    <span class="truncate text-white">${label}</span>
-                    <div class="space-x-2 shrink-0">
-                        <button onclick="${editFn}" class="text-blue-400 hover:underline text-[11px]">Edit</button>
-                        <button onclick="${delFn}" class="text-red-400 hover:underline text-[11px]">Del</button>
-                    </div>
-                </div>
-            `;
-            const nBox = document.getElementById('adm-news-list');
-            if (nBox) nBox.innerHTML = state.news.map(i => rowHtml(i.title || '', `editNews('${i.id}')`, `delNode('news','${i.id}')`)).join('');
-
-            const aBox = document.getElementById('adm-ach-list');
-            if (aBox) aBox.innerHTML = state.achievements.map(i => rowHtml(i.title || '', `editAch('${i.id}')`, `delNode('achievements','${i.id}')`)).join('');
-
-            const vBox = document.getElementById('adm-vid-list');
-            if (vBox) vBox.innerHTML = state.videos.map(i => rowHtml(i.title || '', `editVid('${i.id}')`, `delNode('videos','${i.id}')`)).join('');
-
-            const sBox = document.getElementById('adm-scrim-list');
-            if (sBox) sBox.innerHTML = state.scrims.map(i => rowHtml(`[${i.slotType || 'Scrim'}] ${i.time || ''} (${i.status || ''})`, `editScrim('${i.id}')`, `delNode('scrims','${i.id}')`)).join('');
-
-            const gBox = document.getElementById('adm-group-list');
-            if (gBox) gBox.innerHTML = state.groups.map(i => rowHtml(i.name || '', `editGroup('${i.id}')`, `delNode('groups','${i.id}')`)).join('');
+            document.getElementById('adm-news-list').innerHTML = state.news.map(n => rowHtml(n.title, `editNews('${n.id}')`, `deleteItem('news','${n.id}')`)).join('');
+            document.getElementById('adm-ach-list').innerHTML = state.achievements.map(a => rowHtml(`${a.title} (${a.date || ''})`, `editAch('${a.id}')`, `deleteItem('achievements','${a.id}')`)).join('');
+            document.getElementById('adm-vid-list').innerHTML = state.videos.map(v => rowHtml(v.title, `editVid('${v.id}')`, `deleteItem('videos','${v.id}')`)).join('');
+            document.getElementById('adm-scrim-list').innerHTML = state.scrims.map(s => rowHtml(`[${s.slotType || 'Scrim'}] ${s.game || ''} • ${s.time} (${s.status})`, `editScrim('${s.id}')`, `deleteItem('scrims','${s.id}')`)).join('');
+            document.getElementById('adm-group-list').innerHTML = state.groups.map(g => rowHtml(g.name, `editGroup('${g.id}')`, `deleteItem('groups','${g.id}')`)).join('');
 
             renderAdminSubTeamList();
-
-            const pBox = document.getElementById('adm-player-list');
-            if (pBox) {
-                const rosterPlayers = state.players.filter(p => !p.isWildrounds && !p.wrTeamId);
-                pBox.innerHTML = rosterPlayers.map(i => {
-                    const tm = state.teams.find(t => t.id === i.teamId);
-                    return rowHtml(`${i.ign || ''} (${i.role || 'Player'} • ${tm ? tm.name : 'Team'})`, `editPlayerItem('${i.id}')`, `delNode('players','${i.id}')`);
-                }).join('');
-            }
-
-            const mBox = document.getElementById('adm-match-list');
-            if (mBox) mBox.innerHTML = Object.entries(state.matches).filter(([, m]) => m && typeof m === 'object').map(([id, m]) => rowHtml(`${m.team} vs ${m.opponent} (${m.score || ''})`, `editMatchItem('${id}')`, `delNode('matches','${id}')`)).join('');
-
-            const ptBox = document.getElementById('adm-part-list');
-            if (ptBox) ptBox.innerHTML = state.partners.map(i => rowHtml(i.name || '', `editPart('${i.id}')`, `delNode('partners','${i.id}')`)).join('');
-
-            const wrBox = document.getElementById('adm-wr-list');
-            if (wrBox) wrBox.innerHTML = state.wildroundsTeams.map(i => rowHtml(`[${i.track || 'Wildrounds'}] ${i.name || ''}`, `editWildroundsTeam('${i.id}')`, `delNode('wildroundsTeams','${i.id}')`)).join('');
-
+            renderAdminPlayerList();
             renderAdminWrPlayerList();
 
-            const rkBox = document.getElementById('adm-rank-list');
-            if (rkBox) rkBox.innerHTML = state.customRankings.map(i => rowHtml(`[${i.mode || 'Tournament'}] ${i.ign || ''} (${i.avgKda || ''} KDA)`, `editCustomRanking('${i.id}')`, `delNode('customRankings','${i.id}')`)).join('');
+            document.getElementById('adm-match-list').innerHTML = Object.entries(state.matches).map(([id, m]) => rowHtml(`${m.team} vs ${m.opponent} (${m.score || m.result})`, `editMatchItem('${id}')`, `deleteItem('matches','${id}')`)).join('');
+            document.getElementById('adm-part-list').innerHTML = state.partners.map(p => rowHtml(p.name, `editPart('${p.id}')`, `deleteItem('partners','${p.id}')`)).join('');
+            document.getElementById('adm-wr-list').innerHTML = state.wildroundsTeams.map(w => rowHtml(`${w.name} • ${w.track || 'Community'} (${w.year || '2026'})`, `editWildroundsTeam('${w.id}')`, `deleteItem('wildroundsTeams','${w.id}')`)).join('');
+            document.getElementById('adm-rank-list').innerHTML = state.customRankings.map(r => rowHtml(`[${r.mode || 'Tournament'}] ${r.ign} (${r.team || '-'}) • KDA ${r.avgKda || '-'} • ${r.k||0}/${r.d||0}/${r.a||0}`, `editCustomRanking('${r.id}')`, `deleteItem('customRankings','${r.id}')`)).join('');
         }
     </script>
 </body>
