@@ -323,39 +323,101 @@
             </div>
         </section>
 
-        <!-- PLAYER RANKINGS FOR TOURNAMENTS AND SCRIMS -->
-        <section id="rankings-section" class="space-y-4 scroll-mt-20">
-            <div class="flex flex-wrap items-center justify-between gap-2">
-                <div class="flex items-center space-x-2.5">
-                    <div class="w-1 h-5 bg-red-600 rounded"></div>
-                    <h2 class="display-font font-black text-sm sm:text-base text-white uppercase">Player Rankings — Tournaments & Scrims</h2>
+        <!-- PLAYER RANKINGS: SEPARATED TOURNAMENTS/SCRIMS + WILDROUNDS COMMUNITY & CREATOR TRACKS -->
+        <section id="rankings-section" class="space-y-6 scroll-mt-20">
+            <!-- BOX 1: TOURNAMENTS & SCRIMS (SEPARATE FROM WILDROUNDS) -->
+            <div class="space-y-3">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <div class="flex items-center space-x-2.5">
+                        <div class="w-1 h-5 bg-red-600 rounded"></div>
+                        <h2 class="display-font font-black text-sm sm:text-base text-white uppercase">Player Rankings — Tournaments & Scrims</h2>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-1.5 text-[11px] font-bold">
+                        <input type="text" id="rank-search-input" oninput="renderAllLeaderboards()" placeholder="Search player / team..." class="bg-[#090a0f] border border-white/10 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-red-500">
+                        <button onclick="filterRankings('ALL')" id="rfilter-ALL" class="rfilter-btn bg-red-600 text-white px-3 py-1.5 rounded-lg">ALL</button>
+                        <button onclick="filterRankings('Tournament')" id="rfilter-Tournament" class="rfilter-btn glass-card text-slate-300 px-3 py-1.5 rounded-lg">TOURNAMENT</button>
+                        <button onclick="filterRankings('Scrim')" id="rfilter-Scrim" class="rfilter-btn glass-card text-slate-300 px-3 py-1.5 rounded-lg">SCRIM</button>
+                    </div>
                 </div>
-                <div class="flex flex-wrap items-center gap-1.5 text-[11px] font-bold">
-                    <input type="text" id="rank-search-input" oninput="renderPlayerRankings()" placeholder="Search player / team..." class="bg-[#090a0f] border border-white/10 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-red-500">
-                    <button onclick="filterRankings('ALL')" id="rfilter-ALL" class="rfilter-btn bg-red-600 text-white px-3 py-1.5 rounded-lg">ALL</button>
-                    <button onclick="filterRankings('Tournament')" id="rfilter-Tournament" class="rfilter-btn glass-card text-slate-300 px-3 py-1.5 rounded-lg">TOURNAMENT</button>
-                    <button onclick="filterRankings('Scrim')" id="rfilter-Scrim" class="rfilter-btn glass-card text-slate-300 px-3 py-1.5 rounded-lg">SCRIM</button>
+
+                <div class="glass-card rounded-2xl overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-[#090a0f]/90 border-b border-white/10 text-[10px] font-black uppercase tracking-wider text-slate-400">
+                                    <th class="py-3 px-3">#</th>
+                                    <th class="py-3 px-3">Player</th>
+                                    <th class="py-3 px-3">Team</th>
+                                    <th class="py-3 px-3 text-right">AVG KDA</th>
+                                    <th class="py-3 px-3 text-right">K / D / A</th>
+                                    <th class="py-3 px-3 text-right">Gold</th>
+                                    <th class="py-3 px-3 text-right">GP</th>
+                                </tr>
+                            </thead>
+                            <tbody id="player-rankings-tbody" class="divide-y divide-white/5">
+                                <tr><td colspan="7" class="py-4 px-3 text-center text-slate-400 italic">No player rankings for this filter yet.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <div class="glass-card rounded-2xl overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse text-xs">
-                        <thead>
-                            <tr class="bg-[#090a0f]/90 border-b border-white/10 text-[10px] font-black uppercase tracking-wider text-slate-400">
-                                <th class="py-3 px-3">#</th>
-                                <th class="py-3 px-3">Player</th>
-                                <th class="py-3 px-3">Team</th>
-                                <th class="py-3 px-3 text-right">AVG KDA</th>
-                                <th class="py-3 px-3 text-right">K / D / A</th>
-                                <th class="py-3 px-3 text-right">Gold</th>
-                                <th class="py-3 px-3 text-right">GP</th>
-                            </tr>
-                        </thead>
-                        <tbody id="player-rankings-tbody" class="divide-y divide-white/5">
-                            <tr><td colspan="7" class="py-4 px-3 text-center text-slate-400 italic">No player rankings for this filter yet.</td></tr>
-                        </tbody>
-                    </table>
+            <!-- BOX 2 & BOX 3: WILDROUNDS COMMUNITY TRACK & CREATOR TRACK LEADERBOARDS -->
+            <div class="grid grid-cols-1 xl:grid-cols-2 gap-5 pt-2">
+                <!-- WILDROUNDS COMMUNITY TRACK BOX -->
+                <div class="glass-card rounded-2xl border border-emerald-500/30 overflow-hidden">
+                    <div class="px-4 py-3 border-b border-white/10 flex items-center justify-between bg-[#090a0f]/75">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                            <h3 class="display-font font-black text-xs sm:text-sm text-emerald-300 uppercase">Wildrounds • Community Track</h3>
+                        </div>
+                        <span id="wr-comm-rank-count" class="text-[10px] font-bold text-slate-400">0 Players</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-[#090a0f]/90 border-b border-white/10 text-[10px] font-black uppercase tracking-wider text-slate-400">
+                                    <th class="py-2.5 px-3">#</th>
+                                    <th class="py-2.5 px-3">Player</th>
+                                    <th class="py-2.5 px-3">Team</th>
+                                    <th class="py-2.5 px-3 text-right">AVG KDA</th>
+                                    <th class="py-2.5 px-3 text-right">K/D/A</th>
+                                    <th class="py-2.5 px-3 text-right">GP</th>
+                                </tr>
+                            </thead>
+                            <tbody id="wr-community-rankings-tbody" class="divide-y divide-white/5">
+                                <tr><td colspan="6" class="py-4 px-3 text-center text-slate-400 italic">No Community Track leaderboard stats yet.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- WILDROUNDS CREATOR TRACK BOX -->
+                <div class="glass-card rounded-2xl border border-purple-500/30 overflow-hidden">
+                    <div class="px-4 py-3 border-b border-white/10 flex items-center justify-between bg-[#090a0f]/75">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-purple-400"></span>
+                            <h3 class="display-font font-black text-xs sm:text-sm text-purple-300 uppercase">Wildrounds • Creator Track</h3>
+                        </div>
+                        <span id="wr-creat-rank-count" class="text-[10px] font-bold text-slate-400">0 Creators</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-[#090a0f]/90 border-b border-white/10 text-[10px] font-black uppercase tracking-wider text-slate-400">
+                                    <th class="py-2.5 px-3">#</th>
+                                    <th class="py-2.5 px-3">Creator</th>
+                                    <th class="py-2.5 px-3">Team</th>
+                                    <th class="py-2.5 px-3 text-right">AVG KDA</th>
+                                    <th class="py-2.5 px-3 text-right">K/D/A</th>
+                                    <th class="py-2.5 px-3 text-right">GP</th>
+                                </tr>
+                            </thead>
+                            <tbody id="wr-creator-rankings-tbody" class="divide-y divide-white/5">
+                                <tr><td colspan="6" class="py-4 px-3 text-center text-slate-400 italic">No Creator Track leaderboard stats yet.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </section>
@@ -986,6 +1048,33 @@
                 <button id="save-rank-btn" type="button" onclick="saveCustomRanking()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded text-xs font-extrabold uppercase">Add / Save Player Ranking</button>
                 <div id="adm-rank-list" class="space-y-1.5 max-h-36 overflow-y-auto"></div>
             </div>
+
+            <!-- 12. Wildrounds Community & Creator Track Leaderboard Entries (Separate Database) -->
+            <div class="glass-card p-5 rounded-xl space-y-3 border border-purple-500/30">
+                <div class="flex justify-between items-center">
+                    <h4 class="text-xs font-black uppercase text-purple-300">12. Wildrounds Community / Creator Leaderboard Stats (Separate DB)</h4>
+                    <button id="cancel-wrrank-btn" type="button" onclick="resetForm('wrRanking')" class="hidden text-[10px] text-slate-400 underline">Cancel Edit</button>
+                </div>
+                <input type="hidden" id="edit-wrrank-id">
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
+                    <select id="adm-wrrank-track" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white font-bold">
+                        <option value="Community">Community Track</option>
+                        <option value="Creator">Creator Track</option>
+                    </select>
+                    <input type="text" id="adm-wrrank-ign" placeholder="Player / Creator IGN" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
+                    <input type="text" id="adm-wrrank-team" placeholder="Team (Tag)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
+                    <input type="text" id="adm-wrrank-kda-ratio" placeholder="AVG KDA (e.g. 6.50)" class="w-full bg-[#090a0f] border border-white/10 rounded px-3 py-2 text-xs text-white">
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                    <input type="number" id="adm-wrrank-k" placeholder="Kills (K)" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white">
+                    <input type="number" id="adm-wrrank-d" placeholder="Deaths (D)" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white">
+                    <input type="number" id="adm-wrrank-a" placeholder="Assists (A)" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white">
+                    <input type="text" id="adm-wrrank-gold" placeholder="Gold (optional)" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white">
+                    <input type="number" id="adm-wrrank-gp" placeholder="GP (Games)" class="w-full bg-[#090a0f] border border-white/10 rounded px-2.5 py-2 text-xs text-white">
+                </div>
+                <button id="save-wrrank-btn" type="button" onclick="saveWrTrackRanking()" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded text-xs font-extrabold uppercase">Add / Save Wildrounds Track Stat</button>
+                <div id="adm-wrrank-list" class="space-y-1.5 max-h-36 overflow-y-auto"></div>
+            </div>
         </section>
     </main>
 
@@ -1598,7 +1687,9 @@
             matches: {},
             partners: [],
             wildroundsTeams: [],
-            customRankings: []
+            customRankings: [],
+            wrCommunityRankings: [],
+            wrCreatorRankings: []
         };
         let selectedGroupId = null;
         let currentNewsIdx = 0;
@@ -1672,13 +1763,13 @@
 
             const inRosterTeams = state.teams.some(t => {
                 const n = normalizeTeamKey(t.name);
-                return n && (n === target || n.includes(target) || target.includes(n));
+                return n && n === target;
             });
             if (inRosterTeams) return true;
 
             const inWildroundsTeams = state.wildroundsTeams.some(w => {
                 const n = normalizeTeamKey(w.name);
-                return n && (n === target || n.includes(target) || target.includes(n));
+                return n && n === target;
             });
             return inWildroundsTeams;
         }
@@ -1686,13 +1777,7 @@
         function findMatchingRosterTeam(teamName) {
             const normTarget = normalizeTeamKey(teamName);
             if (!normTarget) return null;
-            let match = state.teams.find(t => normalizeTeamKey(t.name) === normTarget);
-            if (match) return match;
-            match = state.teams.find(t => {
-                const n = normalizeTeamKey(t.name);
-                return n && (n.includes(normTarget) || normTarget.includes(n));
-            });
-            return match || null;
+            return state.teams.find(t => normalizeTeamKey(t.name) === normTarget) || null;
         }
 
         function findTeamLogoByName(teamName) {
@@ -1932,24 +2017,26 @@
         bindList('scrims', 'scrims', renderScrims);
         bindList('groups', 'groups', () => {
             renderTeamGroupsAndSubTeams();
-            renderPlayerRankings();
+            renderAllLeaderboards();
         });
         bindList('teams', 'teams', () => {
             renderTeamGroupsAndSubTeams();
-            renderPlayerRankings();
+            renderAllLeaderboards();
         });
         bindList('players', 'players', () => {
             renderTeamGroupsAndSubTeams();
             renderWildroundsTeams();
-            renderPlayerRankings();
+            renderAllLeaderboards();
         });
         bindList('partners', 'partners', renderPartners);
         bindList('wildroundsTeams', 'wildroundsTeams', () => {
             renderWildroundsTeams();
-            renderPlayerRankings();
+            renderAllLeaderboards();
             renderMatches();
         });
-        bindList('customRankings', 'customRankings', renderPlayerRankings);
+        bindList('customRankings', 'customRankings', renderAllLeaderboards);
+        bindList('wrCommunityRankings', 'wrCommunityRankings', renderAllLeaderboards);
+        bindList('wrCreatorRankings', 'wrCreatorRankings', renderAllLeaderboards);
 
         db.ref('guiangHub/matches').on('value', snap => {
             const raw = snap && snap.exists() ? snap.val() : {};
@@ -1957,7 +2044,7 @@
             safeRun(renderTeamGroupsAndSubTeams, 'matches:teams');
             safeRun(renderWildroundsTeams, 'matches:wr');
             safeRun(renderMatches, 'matches:list');
-            safeRun(renderPlayerRankings, 'matches:rankings');
+            safeRun(renderAllLeaderboards, 'matches:rankings');
             safeRun(renderAdminLists, 'matches:admin');
         }, err => {
             console.error('Firebase read error on matches:', err);
@@ -2155,38 +2242,44 @@
             const champMap = new Map();
 
             Object.values(state.matches).forEach(m => {
-                if (!m || typeof m !== 'object') return;
+                if (!m || typeof m !== 'object' || !m.result) return;
                 const tA = normalizeTeamKey(m.team);
                 const tB = normalizeTeamKey(m.opponent);
                 let sideRows = [];
                 let won = false;
-                if (tA && (tA === target || tA.includes(target) || target.includes(tA))) {
+
+                if (tA && tA === target) {
                     sideRows = parseMatchLines(m.blueData);
                     won = m.result === 'Win';
-                } else if (tB && (tB === target || tB.includes(target) || target.includes(tB))) {
+                } else if (tB && tB === target) {
                     sideRows = parseMatchLines(m.redData);
                     won = m.result === 'Lose';
+                } else {
+                    return;
                 }
+
                 sideRows.forEach(r => {
-                    const key = (r.champ || 'Unknown').trim();
+                    const rawChamp = (r.champ || '').trim();
+                    if (!rawChamp || rawChamp.toLowerCase() === 'unknown') return;
+                    const parsed = parseKdaNumbers(r.kda);
+                    const hasRealStats = Boolean(parsed && (parsed.k > 0 || parsed.d > 0 || parsed.a > 0));
+                    if (!hasRealStats) return;
+
+                    const key = resolveChampKey(rawChamp).toLowerCase() || rawChamp.toLowerCase();
                     if (!champMap.has(key)) {
-                        champMap.set(key, { champ: key, picks: 0, wins: 0, k: 0, d: 0, a: 0, hasKda: false });
+                        champMap.set(key, { champ: rawChamp, picks: 0, wins: 0, k: 0, d: 0, a: 0, hasKda: true });
                     }
                     const entry = champMap.get(key);
                     entry.picks += 1;
                     if (won) entry.wins += 1;
-                    const parsed = parseKdaNumbers(r.kda);
-                    if (parsed) {
-                        entry.k += parsed.k;
-                        entry.d += parsed.d;
-                        entry.a += parsed.a;
-                        entry.hasKda = true;
-                    }
+                    entry.k += parsed.k;
+                    entry.d += parsed.d;
+                    entry.a += parsed.a;
                 });
             });
 
             return Array.from(champMap.values()).map(c => {
-                const kdaRatio = c.hasKda ? kdaToRatio(c.k, c.d, c.a) : 0;
+                const kdaRatio = kdaToRatio(c.k, c.d, c.a);
                 const wr = c.picks > 0 ? Math.round((c.wins / c.picks) * 100) : 0;
                 return { ...c, kdaRatio, wr };
             }).sort((a, b) => b.picks - a.picks || b.kdaRatio - a.kdaRatio);
@@ -2267,9 +2360,9 @@
                 if (!m || typeof m !== 'object') return;
                 const tA = normalizeTeamKey(m.team);
                 const tB = normalizeTeamKey(m.opponent);
-                if (tA && (tA === target || tA.includes(target) || target.includes(tA))) {
+                if (tA && tA === target) {
                     if (m.result === 'Win') wins++; else if (m.result === 'Lose') losses++;
-                } else if (tB && (tB === target || tB.includes(target) || target.includes(tB))) {
+                } else if (tB && tB === target) {
                     if (m.result === 'Lose') wins++; else if (m.result === 'Win') losses++;
                 }
             });
@@ -2284,33 +2377,86 @@
             });
             const active = document.getElementById(`rfilter-${mode}`);
             if (active) active.className = 'rfilter-btn bg-red-600 text-white px-3 py-1.5 rounded-lg';
-            renderPlayerRankings();
+            renderAllLeaderboards();
         }
 
-        function renderPlayerRankings() {
-            const tbody = document.getElementById('player-rankings-tbody');
-            if (!tbody) return;
+        function getWildroundsTrackByTeamName(teamName) {
+            const target = normalizeTeamKey(teamName);
+            if (!target) return null;
+            const found = state.wildroundsTeams.find(w => normalizeTeamKey(w.name) === target);
+            if (!found) return null;
+            return (found.track || '').toLowerCase().includes('community') ? 'Community' : 'Creator';
+        }
 
-            const search = (document.getElementById('rank-search-input')?.value || '').trim().toLowerCase();
-            const map = new Map();
+        function findScopedPlayerMeta(ign, scope = 'regular') {
+            const targetIgn = (ign || '').trim().toLowerCase();
+            const candidates = state.players.filter(p => (p.ign || '').trim().toLowerCase() === targetIgn);
 
-            const findPlayerMeta = (ign) => {
-                const found = state.players.find(p => (p.ign || '').trim().toLowerCase() === ign.toLowerCase());
-                const team = found?.teamId ? state.teams.find(t => t.id === found.teamId) : null;
-                const wrTeam = found?.wrTeamId ? state.wildroundsTeams.find(w => w.id === found.wrTeamId) : null;
-                return {
-                    id: found?.id || '',
-                    role: found?.role || '',
-                    teamName: wrTeam?.name || found?.wrTeamName || team?.name || '',
-                    pfp: found?.pfp || '',
-                    gold: found?.gold || ''
-                };
+            if (scope === 'creator') {
+                const wrCreatorPlayer = candidates.find(p => {
+                    if (!p.isWildrounds) return false;
+                    const wrTeam = state.wildroundsTeams.find(w => w.id === p.wrTeamId);
+                    const track = (wrTeam?.track || '').toLowerCase();
+                    return !track.includes('community');
+                }) || candidates.find(p => p.isWildrounds);
+
+                if (wrCreatorPlayer) {
+                    const wrTeam = state.wildroundsTeams.find(w => w.id === wrCreatorPlayer.wrTeamId);
+                    return {
+                        id: wrCreatorPlayer.id,
+                        role: wrCreatorPlayer.role || 'Creator',
+                        teamName: wrTeam?.name || wrCreatorPlayer.wrTeamName || '',
+                        pfp: wrCreatorPlayer.pfp || '',
+                        gold: wrCreatorPlayer.gold || ''
+                    };
+                }
+                return { id: '', role: 'Creator', teamName: '', pfp: '', gold: '' };
+            }
+
+            if (scope === 'community') {
+                const wrCommPlayer = candidates.find(p => {
+                    if (!p.isWildrounds) return false;
+                    const wrTeam = state.wildroundsTeams.find(w => w.id === p.wrTeamId);
+                    return (wrTeam?.track || '').toLowerCase().includes('community');
+                }) || candidates.find(p => p.isWildrounds);
+
+                if (wrCommPlayer) {
+                    const wrTeam = state.wildroundsTeams.find(w => w.id === wrCommPlayer.wrTeamId);
+                    return {
+                        id: wrCommPlayer.id,
+                        role: wrCommPlayer.role || '',
+                        teamName: wrTeam?.name || wrCommPlayer.wrTeamName || '',
+                        pfp: wrCommPlayer.pfp || '',
+                        gold: wrCommPlayer.gold || ''
+                    };
+                }
+                return { id: '', role: '', teamName: '', pfp: '', gold: '' };
+            }
+
+            const regularPlayer = candidates.find(p => !p.isWildrounds) || candidates[0];
+            const team = regularPlayer?.teamId ? state.teams.find(t => t.id === regularPlayer.teamId) : null;
+            return {
+                id: regularPlayer?.id || '',
+                role: regularPlayer?.role || '',
+                teamName: team?.name || '',
+                pfp: regularPlayer?.pfp || '',
+                gold: regularPlayer?.gold || ''
             };
+        }
+
+        function buildLeaderboardRows({ scope = 'regular', modeFilter = 'ALL', manualEntries = [], search = '' }) {
+            const map = new Map();
 
             Object.values(state.matches).forEach(m => {
                 if (!m || typeof m !== 'object') return;
-                const mType = (m.type || 'Tournament').toLowerCase();
-                if (rankFilterType !== 'ALL' && mType !== rankFilterType.toLowerCase()) return;
+                const mType = (m.type || 'Tournament').trim().toLowerCase();
+
+                if (scope === 'regular') {
+                    if (mType === 'wildrounds') return;
+                    if (modeFilter !== 'ALL' && mType !== modeFilter.toLowerCase()) return;
+                } else {
+                    if (mType !== 'wildrounds') return;
+                }
 
                 const sides = [
                     { rows: parseMatchLines(m.blueData), team: m.team || 'Team A' },
@@ -2318,12 +2464,18 @@
                 ];
 
                 sides.forEach(side => {
-                    if (!isTeamInDatabase(side.team)) return;
+                    if (scope === 'regular') {
+                        if (!isTeamInDatabase(side.team)) return;
+                    } else {
+                        const track = getWildroundsTrackByTeamName(side.team);
+                        if (scope === 'community' && track !== 'Community') return;
+                        if (scope === 'creator' && track !== 'Creator') return;
+                    }
 
                     side.rows.forEach(r => {
-                        const key = r.ign.trim().toLowerCase();
+                        const key = (r.ign || '').trim().toLowerCase();
                         if (!key) return;
-                        const meta = findPlayerMeta(r.ign);
+                        const meta = findScopedPlayerMeta(r.ign, scope);
                         if (!map.has(key)) {
                             map.set(key, {
                                 playerId: meta.id,
@@ -2351,14 +2503,16 @@
                 });
             });
 
-            state.customRankings.forEach(cr => {
-                const mode = (cr.mode || 'Tournament').toLowerCase();
-                if (rankFilterType !== 'ALL' && mode !== rankFilterType.toLowerCase()) return;
-                if (cr.team && !isTeamInDatabase(cr.team)) return;
+            manualEntries.forEach(cr => {
+                if (scope === 'regular') {
+                    const mode = (cr.mode || 'Tournament').toLowerCase();
+                    if (modeFilter !== 'ALL' && mode !== modeFilter.toLowerCase()) return;
+                    if (cr.team && !isTeamInDatabase(cr.team)) return;
+                }
 
                 const key = (cr.ign || '').trim().toLowerCase();
                 if (!key) return;
-                const meta = findPlayerMeta(cr.ign);
+                const meta = findScopedPlayerMeta(cr.ign, scope);
                 const k = parseInt(cr.k, 10) || 0;
                 const d = parseInt(cr.d, 10) || 0;
                 const a = parseInt(cr.a, 10) || 0;
@@ -2389,7 +2543,7 @@
                 }
             });
 
-            const rows = Array.from(map.values()).map(item => {
+            return Array.from(map.values()).map(item => {
                 const computedKda = kdaToRatio(item.k, item.d, item.a);
                 const avgKda = item.customKda !== null ? item.customKda : computedKda;
                 return { ...item, avgKda, goldDisplay: item.goldDisplay || '-' };
@@ -2397,6 +2551,18 @@
                 if (!search) return true;
                 return item.ign.toLowerCase().includes(search) || (item.team || '').toLowerCase().includes(search);
             }).sort((a, b) => b.avgKda - a.avgKda || b.k - a.k);
+        }
+
+        function renderPlayerRankings() {
+            const tbody = document.getElementById('player-rankings-tbody');
+            if (!tbody) return;
+            const search = (document.getElementById('rank-search-input')?.value || '').trim().toLowerCase();
+            const rows = buildLeaderboardRows({
+                scope: 'regular',
+                modeFilter: rankFilterType,
+                manualEntries: state.customRankings,
+                search
+            });
 
             if (!rows.length) {
                 tbody.innerHTML = `<tr><td colspan="7" class="py-4 px-3 text-center text-slate-400 italic">No player rankings for this filter yet.</td></tr>`;
@@ -2435,6 +2601,66 @@
                     </tr>
                 `;
             }).join('');
+        }
+
+        function renderWildroundsTrackLeaderboards() {
+            const commTbody = document.getElementById('wr-community-rankings-tbody');
+            const creatTbody = document.getElementById('wr-creator-rankings-tbody');
+            const commCount = document.getElementById('wr-comm-rank-count');
+            const creatCount = document.getElementById('wr-creat-rank-count');
+            const search = (document.getElementById('rank-search-input')?.value || '').trim().toLowerCase();
+
+            const commRows = buildLeaderboardRows({
+                scope: 'community',
+                manualEntries: state.wrCommunityRankings,
+                search
+            });
+            const creatRows = buildLeaderboardRows({
+                scope: 'creator',
+                manualEntries: state.wrCreatorRankings,
+                search
+            });
+
+            if (commCount) commCount.textContent = `${commRows.length} ${commRows.length === 1 ? 'Player' : 'Players'}`;
+            if (creatCount) creatCount.textContent = `${creatRows.length} ${creatRows.length === 1 ? 'Creator' : 'Creators'}`;
+
+            const paintCompactRows = (tbody, rows, emptyText) => {
+                if (!tbody) return;
+                if (!rows.length) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="py-4 px-3 text-center text-slate-400 italic">${emptyText}</td></tr>`;
+                    return;
+                }
+                tbody.innerHTML = rows.map((p, idx) => {
+                    const safeIgn = encodeURIComponent(p.ign);
+                    const safeTeam = encodeURIComponent(p.team || '');
+                    return `
+                        <tr onclick="openPlayerByName('${safeIgn}', '${safeTeam}')" class="hover:bg-white/5 transition cursor-pointer">
+                            <td class="py-2.5 px-3 font-black text-slate-300">${idx + 1}</td>
+                            <td class="py-2.5 px-3">
+                                <div class="flex items-center gap-2">
+                                    ${renderAvatarHtml(p.pfp, p.ign, 'w-7 h-7 rounded-lg', 'player')}
+                                    <div class="min-w-0">
+                                        <p class="font-extrabold text-white truncate">${p.ign}</p>
+                                        ${p.role ? `<p class="text-[10px] text-slate-400 truncate">${p.role}</p>` : ''}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-2.5 px-3 font-bold text-slate-300 truncate">${p.team || '-'}</td>
+                            <td class="py-2.5 px-3 text-right font-black text-emerald-400">${p.avgKda.toFixed(2)}</td>
+                            <td class="py-2.5 px-3 text-right font-mono text-[11px] text-slate-200">${p.k}/${p.d}/${p.a}</td>
+                            <td class="py-2.5 px-3 text-right font-bold text-slate-300">${p.gp}</td>
+                        </tr>
+                    `;
+                }).join('');
+            };
+
+            paintCompactRows(commTbody, commRows, 'No Community Track leaderboard stats yet.');
+            paintCompactRows(creatTbody, creatRows, 'No Creator Track leaderboard stats yet.');
+        }
+
+        function renderAllLeaderboards() {
+            renderPlayerRankings();
+            renderWildroundsTrackLeaderboards();
         }
 
         function isPlayerInWildroundsTeam(player, wrItem) {
@@ -2828,7 +3054,7 @@
 
         function isWildroundsMatch(m) {
             if (!m || typeof m !== 'object') return false;
-            if ((m.type || '').toLowerCase() === 'wildrounds') return true;
+            if ((m.type || '').trim().toLowerCase() === 'wildrounds') return true;
             const tA = normalizeTeamKey(m.team);
             const tB = normalizeTeamKey(m.opponent);
             return state.wildroundsTeams.some(w => {
@@ -3127,6 +3353,19 @@
                 document.getElementById('adm-rank-gp').value = '';
                 document.getElementById('save-rank-btn').textContent = 'Add / Save Player Ranking';
                 document.getElementById('cancel-rank-btn').classList.add('hidden');
+            } else if (type === 'wrRanking') {
+                document.getElementById('edit-wrrank-id').value = '';
+                document.getElementById('adm-wrrank-track').value = 'Community';
+                document.getElementById('adm-wrrank-ign').value = '';
+                document.getElementById('adm-wrrank-team').value = '';
+                document.getElementById('adm-wrrank-kda-ratio').value = '';
+                document.getElementById('adm-wrrank-k').value = '';
+                document.getElementById('adm-wrrank-d').value = '';
+                document.getElementById('adm-wrrank-a').value = '';
+                document.getElementById('adm-wrrank-gold').value = '';
+                document.getElementById('adm-wrrank-gp').value = '';
+                document.getElementById('save-wrrank-btn').textContent = 'Add / Save Wildrounds Track Stat';
+                document.getElementById('cancel-wrrank-btn').classList.add('hidden');
             }
         }
 
@@ -3258,23 +3497,17 @@
 
         function saveSubTeam() {
             const id = document.getElementById('edit-subteam-id').value;
-            const groupId = document.getElementById('adm-subteam-group').value || selectedGroupId || (state.groups[0] && state.groups[0].id);
+            const groupId = document.getElementById('adm-subteam-group').value;
             const name = document.getElementById('adm-subteam-name').value.trim();
             const game = document.getElementById('adm-subteam-game').value.trim();
             const achievements = document.getElementById('adm-subteam-achievements').value.trim();
             const logo = document.getElementById('adm-subteam-logo').value.trim();
-            if (!groupId) return alert('Please add or select a Team Group first.');
-            if (!name) return alert('Please enter Team (Tag).');
-            upsert('teams', id, { groupId, name, game, achievements, logo }, 'subteam', `Team "${name}"`, (createdKey) => {
-                selectedGroupId = groupId;
-                const grpSel = document.getElementById('adm-subteam-group');
-                if (grpSel) grpSel.value = groupId;
-                renderAdminSubTeamList();
-                renderTeamGroupsAndSubTeams();
-                if (createdKey) {
-                    const tmSel = document.getElementById('adm-player-team');
-                    if (tmSel) tmSel.value = createdKey;
-                }
+            if (!groupId) return alert('Create a Team Group first.');
+            if (!name) return alert('Please enter team name.');
+            upsert('teams', id, { groupId, name, game, achievements, logo }, 'subteam', 'Team', (createdKey) => {
+                if (groupId) selectedGroupId = groupId;
+                const plSel = document.getElementById('adm-player-team');
+                if (plSel && createdKey) plSel.value = createdKey;
             });
         }
         function editSubTeam(id) {
@@ -3288,26 +3521,24 @@
             setCleanImgSrc(document.getElementById('preview-subteam-logo'), item.logo || '', 'logo');
             document.getElementById('save-subteam-btn').textContent = 'Update Team';
             document.getElementById('cancel-subteam-btn').classList.remove('hidden');
+            renderAdminSubTeamList();
         }
 
         function savePlayer() {
             const id = document.getElementById('edit-player-id').value;
-            const teamId = document.getElementById('adm-player-team').value || (state.teams[0] && state.teams[0].id);
+            const teamId = document.getElementById('adm-player-team').value;
             const ign = document.getElementById('adm-player-ign').value.trim();
-            const role = document.getElementById('adm-player-role').value.trim();
+            const role = document.getElementById('adm-player-role').value;
             const region = (document.getElementById('adm-player-region').value || 'PH').trim().toUpperCase();
             const gold = document.getElementById('adm-player-gold').value.trim();
             const mvp = parseInt(document.getElementById('adm-player-mvp').value, 10) || 0;
             const pfp = document.getElementById('adm-player-pfp').value.trim();
             const achievements = document.getElementById('adm-player-achievements').value.trim();
-            if (!teamId) return alert('Please add or select a Team first.');
-            if (!ign) return alert('Please enter player IGN.');
-            upsert('players', id, { isWildrounds: false, teamId, ign, role, region, gold, mvp, pfp, achievements }, 'player', 'Player', () => {
-                const tmSel = document.getElementById('adm-player-team');
-                if (tmSel) tmSel.value = teamId;
-            });
+            if (!teamId) return alert('Create a Team first.');
+            if (!ign) return alert('Please enter Player IGN.');
+            upsert('players', id, { teamId, ign, role, region, gold, mvp, pfp, achievements, isWildrounds: false }, 'player', 'Player');
         }
-        function editPlayerItem(id) {
+        function editPlayer(id) {
             const item = state.players.find(i => i.id === id); if (!item) return;
             document.getElementById('edit-player-id').value = id;
             document.getElementById('adm-player-team').value = item.teamId || '';
@@ -3315,67 +3546,13 @@
             document.getElementById('adm-player-role').value = item.role || 'Owner';
             document.getElementById('adm-player-region').value = item.region || 'PH';
             document.getElementById('adm-player-gold').value = item.gold || '';
-            document.getElementById('adm-player-mvp').value = item.mvp ?? '';
+            document.getElementById('adm-player-mvp').value = item.mvp ? String(item.mvp) : '';
             document.getElementById('adm-player-pfp').value = item.pfp || '';
             document.getElementById('adm-player-achievements').value = item.achievements || '';
             setCleanImgSrc(document.getElementById('preview-player-pfp'), item.pfp || '', 'player');
             document.getElementById('save-player-btn').textContent = 'Update Player';
             document.getElementById('cancel-player-btn').classList.remove('hidden');
-        }
-
-        function saveWrPlayer() {
-            const id = document.getElementById('edit-wr-player-id').value;
-            const wrTeamId = document.getElementById('adm-wr-player-team').value || (state.wildroundsTeams[0] && state.wildroundsTeams[0].id);
-            const wrTeamObj = state.wildroundsTeams.find(w => w.id === wrTeamId);
-            const wrTeamName = wrTeamObj ? wrTeamObj.name : '';
-            const ign = document.getElementById('adm-wr-player-ign').value.trim();
-            const role = document.getElementById('adm-wr-player-role').value.trim();
-            const region = (document.getElementById('adm-wr-player-region').value || 'PH').trim().toUpperCase();
-            const gold = document.getElementById('adm-wr-player-gold').value.trim();
-            const mvp = parseInt(document.getElementById('adm-wr-player-mvp').value, 10) || 0;
-            const pfp = document.getElementById('adm-wr-player-pfp').value.trim();
-            const achievements = document.getElementById('adm-wr-player-achievements').value.trim();
-            if (!wrTeamId) return alert('Please add or select a Wildrounds Team first.');
-            if (!ign) return alert('Please enter player IGN.');
-
-            const payload = {
-                isWildrounds: true,
-                wrTeamId,
-                wrTeamName,
-                teamId: '',
-                ign,
-                role,
-                region,
-                gold,
-                mvp,
-                pfp,
-                achievements
-            };
-
-            upsert('players', id, payload, 'wrPlayer', `Wildrounds Player "${ign}" (${wrTeamName})`, () => {
-                const wrSel = document.getElementById('adm-wr-player-team');
-                if (wrSel) wrSel.value = wrTeamId;
-                renderAdminWrPlayerList();
-                renderWildroundsTeams();
-            });
-        }
-
-        function editWrPlayerItem(id) {
-            const item = state.players.find(i => i.id === id); if (!item) return;
-            document.getElementById('edit-wr-player-id').value = id;
-            if (item.wrTeamId) {
-                document.getElementById('adm-wr-player-team').value = item.wrTeamId;
-            }
-            document.getElementById('adm-wr-player-ign').value = item.ign || '';
-            document.getElementById('adm-wr-player-role').value = item.role || 'Baron';
-            document.getElementById('adm-wr-player-region').value = item.region || 'PH';
-            document.getElementById('adm-wr-player-gold').value = item.gold || '';
-            document.getElementById('adm-wr-player-mvp').value = item.mvp ?? '';
-            document.getElementById('adm-wr-player-pfp').value = item.pfp || '';
-            document.getElementById('adm-wr-player-achievements').value = item.achievements || '';
-            setCleanImgSrc(document.getElementById('preview-wr-player-pfp'), item.pfp || '', 'player');
-            document.getElementById('save-wr-player-btn').textContent = 'Update Wildrounds Player';
-            document.getElementById('cancel-wr-player-btn').classList.remove('hidden');
+            renderAdminPlayerList();
         }
 
         function saveMatch() {
@@ -3396,10 +3573,17 @@
             const date = document.getElementById('adm-m-date').value.trim();
             const blueData = document.getElementById('adm-m-blue').value.trim();
             const redData = document.getElementById('adm-m-red').value.trim();
-            if (!team || !opponent) return alert('Please enter both Team (Tag) A and Team (Tag) B.');
-            upsert('matches', id, { team, opponent, score, teamBans, oppBans, teamGold, oppGold, teamKda, oppKda, teamLogo, oppLogo, type, result, date, blueData, redData }, 'match', 'Match');
+            if (!team || !opponent) return alert('Please enter both Team A and Team B.');
+            upsert('matches', id, {
+                team, opponent, score,
+                teamBans, oppBans,
+                teamGold, oppGold,
+                teamKda, oppKda,
+                teamLogo, oppLogo,
+                type, result, date, blueData, redData
+            }, 'match', 'Match');
         }
-        function editMatchItem(id) {
+        function editMatch(id) {
             const item = state.matches[id]; if (!item) return;
             document.getElementById('edit-match-id').value = id;
             document.getElementById('adm-m-team').value = item.team || '';
@@ -3429,10 +3613,10 @@
             const name = document.getElementById('adm-part-name').value.trim();
             const logo = document.getElementById('adm-part-logo').value.trim();
             const link = document.getElementById('adm-part-link').value.trim();
-            if (!name) return alert('Please enter partner name.');
+            if (!name) return alert('Please enter partner / sponsor name.');
             upsert('partners', id, { name, logo, link }, 'part', 'Partner / Sponsor');
         }
-        function editPart(id) {
+        function editPartner(id) {
             const item = state.partners.find(i => i.id === id); if (!item) return;
             document.getElementById('edit-part-id').value = id;
             document.getElementById('adm-part-name').value = item.name || '';
@@ -3447,32 +3631,64 @@
             const id = document.getElementById('edit-wr-id').value;
             const track = document.getElementById('adm-wr-track').value;
             const name = document.getElementById('adm-wr-team').value.trim();
-            const year = document.getElementById('adm-wr-year').value.trim() || '2026';
+            const year = document.getElementById('adm-wr-year').value.trim() || 'Wildrounds Intl • This Year';
             const logo = document.getElementById('adm-wr-logo').value.trim();
             const notes = document.getElementById('adm-wr-notes').value.trim();
             if (!name) return alert('Please enter Wildrounds team name.');
-            upsert('wildroundsTeams', id, { track, name, year, logo, notes }, 'wildrounds', `Wildrounds Team "${name}"`, (createdKey) => {
-                if (createdKey) {
-                    const wrSel = document.getElementById('adm-wr-player-team');
-                    if (wrSel) wrSel.value = createdKey;
-                }
-                renderWildroundsTeams();
-                renderAdminWrPlayerList();
-                renderMatches();
+            upsert('wildroundsTeams', id, { track, name, year, logo, notes }, 'wildrounds', 'Wildrounds Team', (createdKey) => {
+                const wrSel = document.getElementById('adm-wr-player-team');
+                if (wrSel && createdKey) wrSel.value = createdKey;
             });
         }
-
-        function editWildroundsItem(id) {
+        function editWildroundsTeam(id) {
             const item = state.wildroundsTeams.find(i => i.id === id); if (!item) return;
             document.getElementById('edit-wr-id').value = id;
             document.getElementById('adm-wr-track').value = item.track || 'Community Track Team';
             document.getElementById('adm-wr-team').value = item.name || '';
-            document.getElementById('adm-wr-year').value = item.year || '2026';
+            document.getElementById('adm-wr-year').value = item.year || '';
             document.getElementById('adm-wr-logo').value = item.logo || '';
             document.getElementById('adm-wr-notes').value = item.notes || '';
             setCleanImgSrc(document.getElementById('preview-wr-logo'), item.logo || '', 'logo');
             document.getElementById('save-wr-btn').textContent = 'Update Wildrounds Team';
             document.getElementById('cancel-wr-btn').classList.remove('hidden');
+        }
+
+        function saveWrPlayer() {
+            const id = document.getElementById('edit-wr-player-id').value;
+            const wrTeamId = document.getElementById('adm-wr-player-team').value;
+            const ign = document.getElementById('adm-wr-player-ign').value.trim();
+            const role = document.getElementById('adm-wr-player-role').value;
+            const region = (document.getElementById('adm-wr-player-region').value || 'PH').trim().toUpperCase();
+            const gold = document.getElementById('adm-wr-player-gold').value.trim();
+            const mvp = parseInt(document.getElementById('adm-wr-player-mvp').value, 10) || 0;
+            const pfp = document.getElementById('adm-wr-player-pfp').value.trim();
+            const achievements = document.getElementById('adm-wr-player-achievements').value.trim();
+            if (!wrTeamId) return alert('Add a Wildrounds Team first under 10A.');
+            if (!ign) return alert('Please enter Wildrounds Player IGN.');
+            const wrTeam = state.wildroundsTeams.find(w => w.id === wrTeamId);
+            upsert('players', id, {
+                wrTeamId,
+                wrTeamName: wrTeam?.name || '',
+                teamId: '',
+                ign, role, region, gold, mvp, pfp, achievements,
+                isWildrounds: true
+            }, 'wrPlayer', 'Wildrounds Player');
+        }
+        function editWrPlayer(id) {
+            const item = state.players.find(i => i.id === id); if (!item) return;
+            document.getElementById('edit-wr-player-id').value = id;
+            document.getElementById('adm-wr-player-team').value = item.wrTeamId || '';
+            document.getElementById('adm-wr-player-ign').value = item.ign || '';
+            document.getElementById('adm-wr-player-role').value = item.role || 'Baron';
+            document.getElementById('adm-wr-player-region').value = item.region || 'PH';
+            document.getElementById('adm-wr-player-gold').value = item.gold || '';
+            document.getElementById('adm-wr-player-mvp').value = item.mvp ? String(item.mvp) : '';
+            document.getElementById('adm-wr-player-pfp').value = item.pfp || '';
+            document.getElementById('adm-wr-player-achievements').value = item.achievements || '';
+            setCleanImgSrc(document.getElementById('preview-wr-player-pfp'), item.pfp || '', 'player');
+            document.getElementById('save-wr-player-btn').textContent = 'Update Wildrounds Player';
+            document.getElementById('cancel-wr-player-btn').classList.remove('hidden');
+            renderAdminWrPlayerList();
         }
 
         function saveCustomRanking() {
@@ -3489,7 +3705,6 @@
             if (!ign) return alert('Please enter Player IGN.');
             upsert('customRankings', id, { mode, ign, team, avgKda, k, d, a, gold, gp }, 'ranking', 'Player Ranking');
         }
-
         function editCustomRanking(id) {
             const item = state.customRankings.find(i => i.id === id); if (!item) return;
             document.getElementById('edit-rank-id').value = id;
@@ -3506,118 +3721,171 @@
             document.getElementById('cancel-rank-btn').classList.remove('hidden');
         }
 
-        function deleteItem(path, id) {
+        function saveWrTrackRanking() {
+            const id = document.getElementById('edit-wrrank-id').value;
+            const track = document.getElementById('adm-wrrank-track').value;
+            const ign = document.getElementById('adm-wrrank-ign').value.trim();
+            const team = document.getElementById('adm-wrrank-team').value.trim();
+            const avgKda = document.getElementById('adm-wrrank-kda-ratio').value.trim();
+            const k = parseInt(document.getElementById('adm-wrrank-k').value, 10) || 0;
+            const d = parseInt(document.getElementById('adm-wrrank-d').value, 10) || 0;
+            const a = parseInt(document.getElementById('adm-wrrank-a').value, 10) || 0;
+            const gold = document.getElementById('adm-wrrank-gold').value.trim();
+            const gp = parseInt(document.getElementById('adm-wrrank-gp').value, 10) || 1;
+            if (!ign) return alert('Please enter Player / Creator IGN.');
+
+            const dbPath = track === 'Creator' ? 'wrCreatorRankings' : 'wrCommunityRankings';
+            upsert(dbPath, id, { track, ign, team, avgKda, k, d, a, gold, gp }, 'wrRanking', `Wildrounds ${track} Stat`);
+        }
+        function editWrTrackRanking(trackType, id) {
+            const srcList = trackType === 'Creator' ? state.wrCreatorRankings : state.wrCommunityRankings;
+            const item = srcList.find(i => i.id === id);
+            if (!item) return;
+            document.getElementById('edit-wrrank-id').value = id;
+            document.getElementById('adm-wrrank-track').value = trackType;
+            document.getElementById('adm-wrrank-ign').value = item.ign || '';
+            document.getElementById('adm-wrrank-team').value = item.team || '';
+            document.getElementById('adm-wrrank-kda-ratio').value = item.avgKda || '';
+            document.getElementById('adm-wrrank-k').value = item.k ?? '';
+            document.getElementById('adm-wrrank-d').value = item.d ?? '';
+            document.getElementById('adm-wrrank-a').value = item.a ?? '';
+            document.getElementById('adm-wrrank-gold').value = item.gold || '';
+            document.getElementById('adm-wrrank-gp').value = item.gp ?? '';
+            document.getElementById('save-wrrank-btn').textContent = 'Update Wildrounds Track Stat';
+            document.getElementById('cancel-wrrank-btn').classList.remove('hidden');
+        }
+
+        function delItem(path, id) {
             if (!confirm('Delete this item?')) return;
             db.ref(`guiangHub/${path}/${id}`).remove()
                 .then(() => setAdminStatus('Item deleted.'))
-                .catch(err => setAdminStatus('Error deleting item: ' + err.message, true));
+                .catch(err => setAdminStatus('Delete failed: ' + err.message, true));
         }
 
         function renderAdminSelects() {
             const grpSel = document.getElementById('adm-subteam-group');
+            const plSel = document.getElementById('adm-player-team');
+            const wrSel = document.getElementById('adm-wr-player-team');
+            if (!grpSel || !plSel) return;
+
             const prevGrp = grpSel.value || selectedGroupId;
+            const prevPl = plSel.value;
+            const prevWr = wrSel ? wrSel.value : '';
+
             grpSel.innerHTML = state.groups.length
                 ? state.groups.map(g => `<option value="${g.id}">${g.name}</option>`).join('')
-                : `<option value="">No Team Groups Yet</option>`;
+                : `<option value="">Create a Group first</option>`;
             if (prevGrp && state.groups.some(g => g.id === prevGrp)) {
                 grpSel.value = prevGrp;
             }
 
-            const tmSel = document.getElementById('adm-player-team');
-            const prevTm = tmSel.value;
-            tmSel.innerHTML = state.teams.length
-                ? state.teams.map(t => {
-                    const grp = state.groups.find(g => g.id === t.groupId);
-                    return `<option value="${t.id}">${t.name}${grp ? ` (${grp.name})` : ''}</option>`;
-                }).join('')
-                : `<option value="">No Teams Yet</option>`;
-            if (prevTm && state.teams.some(t => t.id === prevTm)) {
-                tmSel.value = prevTm;
+            plSel.innerHTML = state.teams.length
+                ? state.teams.map(t => `<option value="${t.id}">${t.name} (${t.game || 'Esports'})</option>`).join('')
+                : `<option value="">Create a Team first</option>`;
+            if (prevPl && state.teams.some(t => t.id === prevPl)) {
+                plSel.value = prevPl;
             }
 
-            const wrSel = document.getElementById('adm-wr-player-team');
             if (wrSel) {
-                const prevWr = wrSel.value;
                 wrSel.innerHTML = state.wildroundsTeams.length
                     ? state.wildroundsTeams.map(w => `<option value="${w.id}">${w.name} (${w.track || 'Wildrounds'})</option>`).join('')
-                    : `<option value="">No Wildrounds Teams Yet</option>`;
+                    : `<option value="">Add a Wildrounds Team first</option>`;
                 if (prevWr && state.wildroundsTeams.some(w => w.id === prevWr)) {
                     wrSel.value = prevWr;
                 }
             }
         }
 
-        function renderAdminSubTeamList() {
-            const grpId = document.getElementById('adm-subteam-group').value;
-            const list = grpId ? state.teams.filter(t => t.groupId === grpId) : state.teams;
-            document.getElementById('adm-subteam-list').innerHTML = list.map(t => `
-                <div class="bg-[#090a0f] px-2.5 py-1.5 rounded flex justify-between items-center text-[11px]">
-                    <span class="truncate"><b>${t.name}</b> <span class="text-slate-400">(${t.game || ''})</span></span>
-                    <span class="space-x-2 shrink-0">
-                        <button type="button" onclick="editSubTeam('${t.id}')" class="text-blue-400 underline">Edit</button>
-                        <button type="button" onclick="deleteItem('teams', '${t.id}')" class="text-red-400 underline">Del</button>
-                    </span>
+        function rowHtml(label, sub, onEdit, onDelete) {
+            return `
+                <div class="bg-[#090a0f] border border-white/10 px-2.5 py-1.5 rounded flex items-center justify-between gap-2 text-[11px]">
+                    <div class="min-w-0">
+                        <span class="font-bold text-white truncate block">${label}</span>
+                        ${sub ? `<span class="text-[10px] text-slate-400 truncate block">${sub}</span>` : ''}
+                    </div>
+                    <div class="flex items-center space-x-2 shrink-0">
+                        <button type="button" onclick="${onEdit}" class="text-blue-400 hover:text-blue-300 font-bold">Edit</button>
+                        <button type="button" onclick="${onDelete}" class="text-red-400 hover:text-red-300 font-bold">Del</button>
+                    </div>
                 </div>
-            `).join('');
+            `;
+        }
+
+        function renderAdminSubTeamList() {
+            const subBox = document.getElementById('adm-subteam-list');
+            const grpId = document.getElementById('adm-subteam-group')?.value;
+            if (!subBox) return;
+            const list = grpId ? state.teams.filter(t => t.groupId === grpId) : state.teams;
+            subBox.innerHTML = list.map(t => rowHtml(t.name, t.game || '', `editSubTeam('${t.id}')`, `delItem('teams','${t.id}')`)).join('');
         }
 
         function renderAdminPlayerList() {
-            const tmId = document.getElementById('adm-player-team').value;
+            const plBox = document.getElementById('adm-player-list');
+            const teamId = document.getElementById('adm-player-team')?.value;
+            if (!plBox) return;
             const regularPlayers = state.players.filter(p => !p.isWildrounds);
-            const list = tmId ? regularPlayers.filter(p => p.teamId === tmId) : regularPlayers;
-            document.getElementById('adm-player-list').innerHTML = list.map(p => `
-                <div class="bg-[#090a0f] px-2.5 py-1.5 rounded flex justify-between items-center text-[11px]">
-                    <span class="truncate"><b>${p.ign}</b> <span class="text-slate-400">(${p.role || ''} • ${p.region || 'PH'})</span></span>
-                    <span class="space-x-2 shrink-0">
-                        <button type="button" onclick="editPlayerItem('${p.id}')" class="text-blue-400 underline">Edit</button>
-                        <button type="button" onclick="deleteItem('players', '${p.id}')" class="text-red-400 underline">Del</button>
-                    </span>
-                </div>
-            `).join('');
+            const list = teamId ? regularPlayers.filter(p => p.teamId === teamId) : regularPlayers;
+            plBox.innerHTML = list.map(p => rowHtml(`${p.ign} (${p.region || 'PH'})`, `${p.role || ''} • Gold: ${p.gold || '-'} • MVP: ${p.mvp || 0}`, `editPlayer('${p.id}')`, `delItem('players','${p.id}')`)).join('');
         }
 
         function renderAdminWrPlayerList() {
-            const box = document.getElementById('adm-wr-player-list');
-            const sel = document.getElementById('adm-wr-player-team');
-            if (!box || !sel) return;
-            const wrId = sel.value;
-            const wrTeam = state.wildroundsTeams.find(w => w.id === wrId);
-            const list = wrTeam ? state.players.filter(p => isPlayerInWildroundsTeam(p, wrTeam)) : [];
-            box.innerHTML = list.length ? list.map(p => `
-                <div class="bg-[#090a0f] px-2.5 py-1.5 rounded flex justify-between items-center text-[11px]">
-                    <span class="truncate"><b>${p.ign}</b> <span class="text-amber-300">(${p.role || ''} • ${p.region || 'PH'})</span></span>
-                    <span class="space-x-2 shrink-0">
-                        <button type="button" onclick="editWrPlayerItem('${p.id}')" class="text-blue-400 underline">Edit</button>
-                        <button type="button" onclick="deleteItem('players', '${p.id}')" class="text-red-400 underline">Del</button>
-                    </span>
-                </div>
-            `).join('') : `<p class="text-[10px] text-slate-500 italic">No players in selected Wildrounds team yet.</p>`;
+            const wrPlBox = document.getElementById('adm-wr-player-list');
+            const wrTeamId = document.getElementById('adm-wr-player-team')?.value;
+            if (!wrPlBox) return;
+            const wrPlayers = state.players.filter(p => p.isWildrounds);
+            const list = wrTeamId ? wrPlayers.filter(p => p.wrTeamId === wrTeamId) : wrPlayers;
+            wrPlBox.innerHTML = list.map(p => rowHtml(`${p.ign} (${p.region || 'PH'})`, `${p.role || ''} • ${p.wrTeamName || ''}`, `editWrPlayer('${p.id}')`, `delItem('players','${p.id}')`)).join('');
         }
 
         function renderAdminLists() {
-            const row = (label, editFn, delFn) => `
-                <div class="bg-[#090a0f] px-2.5 py-1.5 rounded flex justify-between items-center text-[11px]">
-                    <span class="truncate pr-2">${label}</span>
-                    <span class="space-x-2 shrink-0">
-                        <button type="button" onclick="${editFn}" class="text-blue-400 underline">Edit</button>
-                        <button type="button" onclick="${delFn}" class="text-red-400 underline">Del</button>
-                    </span>
-                </div>
-            `;
-            document.getElementById('adm-news-list').innerHTML = state.news.map(n => row(n.title, `editNews('${n.id}')`, `deleteItem('news', '${n.id}')`)).join('');
-            document.getElementById('adm-ach-list').innerHTML = state.achievements.map(a => row(`${a.title} (${a.date || ''})`, `editAch('${a.id}')`, `deleteItem('achievements', '${a.id}')`)).join('');
-            document.getElementById('adm-vid-list').innerHTML = state.videos.map(v => row(v.title, `editVid('${v.id}')`, `deleteItem('videos', '${v.id}')`)).join('');
-            document.getElementById('adm-scrim-list').innerHTML = state.scrims.map(s => row(`[${s.slotType || 'Scrim'}] ${s.game || ''} — ${s.time} (${s.status})`, `editScrim('${s.id}')`, `deleteItem('scrims', '${s.id}')`)).join('');
-            document.getElementById('adm-group-list').innerHTML = state.groups.map(g => row(g.name, `editGroup('${g.id}')`, `deleteItem('groups', '${g.id}')`)).join('');
+            const newsBox = document.getElementById('adm-news-list');
+            if (newsBox) newsBox.innerHTML = state.news.map(n => rowHtml(n.title, n.desc, `editNews('${n.id}')`, `delItem('news','${n.id}')`)).join('');
+
+            const achBox = document.getElementById('adm-ach-list');
+            if (achBox) achBox.innerHTML = state.achievements.map(a => rowHtml(a.title, a.date, `editAch('${a.id}')`, `delItem('achievements','${a.id}')`)).join('');
+
+            const vidBox = document.getElementById('adm-vid-list');
+            if (vidBox) vidBox.innerHTML = state.videos.map(v => rowHtml(v.title, v.url, `editVid('${v.id}')`, `delItem('videos','${v.id}')`)).join('');
+
+            const scrimBox = document.getElementById('adm-scrim-list');
+            if (scrimBox) scrimBox.innerHTML = state.scrims.map(s => rowHtml(`${s.slotType || 'Scrim'} • ${s.time}`, `${s.game || ''} • ${s.status}`, `editScrim('${s.id}')`, `delItem('scrims','${s.id}')`)).join('');
+
+            const grpBox = document.getElementById('adm-group-list');
+            if (grpBox) grpBox.innerHTML = state.groups.map(g => rowHtml(g.name, g.achievements || '', `editGroup('${g.id}')`, `delItem('groups','${g.id}')`)).join('');
+
             renderAdminSubTeamList();
             renderAdminPlayerList();
             renderAdminWrPlayerList();
-            document.getElementById('adm-match-list').innerHTML = Object.entries(state.matches)
-                .filter(([, m]) => m && typeof m === 'object')
-                .map(([id, m]) => row(`${m.team} vs ${m.opponent} (${m.type || 'Match'})`, `editMatchItem('${id}')`, `deleteItem('matches', '${id}')`)).join('');
-            document.getElementById('adm-part-list').innerHTML = state.partners.map(p => row(p.name, `editPart('${p.id}')`, `deleteItem('partners', '${p.id}')`)).join('');
-            document.getElementById('adm-wr-list').innerHTML = state.wildroundsTeams.map(w => row(`[${w.track || 'Wildrounds'}] ${w.name} (${w.year || '2026'})`, `editWildroundsItem('${w.id}')`, `deleteItem('wildroundsTeams', '${w.id}')`)).join('');
-            document.getElementById('adm-rank-list').innerHTML = state.customRankings.map(r => row(`[${r.mode || 'Tournament'}] ${r.ign} (${r.team || '-'}) — KDA ${r.avgKda || '-'}`, `editCustomRanking('${r.id}')`, `deleteItem('customRankings', '${r.id}')`)).join('');
+
+            const mBox = document.getElementById('adm-match-list');
+            if (mBox) {
+                mBox.innerHTML = Object.entries(state.matches)
+                    .filter(([, m]) => m && typeof m === 'object')
+                    .map(([id, m]) => rowHtml(`${m.team} vs ${m.opponent}`, `${m.type} • ${m.result} • ${m.score || ''}`, `editMatch('${id}')`, `delItem('matches','${id}')`)).join('');
+            }
+
+            const pBox = document.getElementById('adm-part-list');
+            if (pBox) pBox.innerHTML = state.partners.map(p => rowHtml(p.name, p.link, `editPartner('${p.id}')`, `delItem('partners','${p.id}')`)).join('');
+
+            const wrBox = document.getElementById('adm-wr-list');
+            if (wrBox) wrBox.innerHTML = state.wildroundsTeams.map(w => rowHtml(`${w.name} (${w.track})`, w.year || '', `editWildroundsTeam('${w.id}')`, `delItem('wildroundsTeams','${w.id}')`)).join('');
+
+            const rBox = document.getElementById('adm-rank-list');
+            if (rBox) rBox.innerHTML = state.customRankings.map(r => rowHtml(`${r.ign} (${r.team || '-'})`, `${r.mode || 'Tournament'} • KDA: ${r.avgKda || '-'} • ${r.k||0}/${r.d||0}/${r.a||0} • GP: ${r.gp||1}`, `editCustomRanking('${r.id}')`, `delItem('customRankings','${r.id}')`)).join('');
+
+            const wrRankBox = document.getElementById('adm-wrrank-list');
+            if (wrRankBox) {
+                const combinedWrRanks = [
+                    ...state.wrCommunityRankings.map(r => ({ ...r, _track: 'Community' })),
+                    ...state.wrCreatorRankings.map(r => ({ ...r, _track: 'Creator' }))
+                ];
+                wrRankBox.innerHTML = combinedWrRanks.map(r => rowHtml(
+                    `${r.ign} (${r.team || '-'}) • [${r._track}]`,
+                    `KDA: ${r.avgKda || '-'} • ${r.k||0}/${r.d||0}/${r.a||0} • GP: ${r.gp||1}`,
+                    `editWrTrackRanking('${r._track}','${r.id}')`,
+                    `delItem('${r._track === 'Creator' ? 'wrCreatorRankings' : 'wrCommunityRankings'}','${r.id}')`
+                )).join('');
+            }
         }
     </script>
 </body>
