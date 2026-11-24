@@ -1480,22 +1480,151 @@
             reader.readAsDataURL(file);
         }
 
-        const DDRAGON_VER = "14.24.1";
-        function getChampIcon(name) {
-            if (!name) return FALLBACKS.champ;
-            const clean = name.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
-            const map = {
-                'kaisa': 'KaiSa', 'khazix': 'KhaZix', 'chogath': 'ChoGath',
-                'velkoz': 'Velkoz', 'wukong': 'MonkeyKing', 'monkeyking': 'MonkeyKing',
-                'jarvan': 'JarvanIV', 'jarvaniv': 'JarvanIV', 'missfortune': 'MissFortune',
-                'mf': 'MissFortune', 'twistedfate': 'TwistedFate', 'drmundo': 'DrMundo',
-                'masteryi': 'MasterYi', 'leesin': 'LeeSin', 'xinzhao': 'XinZhao',
-                'aurelionsol': 'AurelionSol', 'renata': 'Renata', 'leblanc': 'Leblanc',
-                'kogmaw': 'KogMaw', 'reksai': 'RekSai', 'ksante': 'KSante'
-            };
-            const formatted = map[clean] || (clean.charAt(0).toUpperCase() + clean.slice(1));
-            return `https://ddragon.leagueoflegends.com/cdn/${DDRAGON_VER}/img/champion/${formatted}.png`;
-        }
+        cconst DDRAGON_VER = "14.24.1";
+
+function getChampIcon(name) {
+    if (!name) return FALLBACKS.champ;
+
+    const raw = String(name).trim().toLowerCase();
+    const clean = raw.replace(/[^a-z0-9]/g, '');
+
+    const map = {
+        'aatrox': 'Aatrox',
+        'ahri': 'Ahri',
+        'akali': 'Akali',
+        'akshan': 'Akshan',
+        'alistar': 'Alistar',
+        'ambessa': 'Ambessa',
+        'amumu': 'Amumu',
+        'annie': 'Annie',
+        'ashe': 'Ashe',
+        'aurelionsol': 'AurelionSol',
+        'asol': 'AurelionSol',
+        'blitzcrank': 'Blitzcrank',
+        'brand': 'Brand',
+        'braum': 'Braum',
+        'caitlyn': 'Caitlyn',
+        'camille': 'Camille',
+        'chogath': 'ChoGath',
+        'corki': 'Corki',
+        'darius': 'Darius',
+        'diana': 'Diana',
+        'drmundo': 'DrMundo',
+        'mundo': 'DrMundo',
+        'draven': 'Draven',
+        'ekko': 'Ekko',
+        'evelynn': 'Evelynn',
+        'ezreal': 'Ezreal',
+        'fiddlesticks': 'Fiddlesticks',
+        'fiora': 'Fiora',
+        'fizz': 'Fizz',
+        'galio': 'Galio',
+        'garen': 'Garen',
+        'gragas': 'Gragas',
+        'graves': 'Graves',
+        'gwen': 'Gwen',
+        'heimerdinger': 'Heimerdinger',
+        'irelia': 'Irelia',
+        'janna': 'Janna',
+        'jarvan': 'JarvanIV',
+        'jarvaniv': 'JarvanIV',
+        'jax': 'Jax',
+        'jayce': 'Jayce',
+        'jhin': 'Jhin',
+        'jinx': 'Jinx',
+        'kaisa': 'KaiSa',
+        'karmah': 'Karma',
+        'karma': 'Karma',
+        'kassadin': 'Kassadin',
+        'katarina': 'Katarina',
+        'kennen': 'Kennen',
+        'khazix': 'KhaZix',
+        'kogmaw': 'KogMaw',
+        'ksante': 'KSante',
+        'leblanc': 'Leblanc',
+        'leesin': 'LeeSin',
+        'leona': 'Leona',
+        'lillia': 'Lillia',
+        'lucian': 'Lucian',
+        'lulu': 'Lulu',
+        'lux': 'Lux',
+        'malphite': 'Malphite',
+        'maokai': 'Maokai',
+        'masteryi': 'MasterYi',
+        'yi': 'MasterYi',
+        'mf': 'MissFortune',
+        'missfortune': 'MissFortune',
+        'monkeyking': 'MonkeyKing',
+        'wukong': 'MonkeyKing',
+        'morgana': 'Morgana',
+        'nami': 'Nami',
+        'nasus': 'Nasus',
+        'nautilus': 'Nautilus',
+        'nilah': 'Nilah',
+        'nunu': 'Nunu',
+        'nunuandwillump': 'Nunu',
+        'olaf': 'Olaf',
+        'orianna': 'Orianna',
+        'ornn': 'Ornn',
+        'pantheon': 'Pantheon',
+        'poppy': 'Poppy',
+        'pyke': 'Pyke',
+        'rakan': 'Rakan',
+        'rammus': 'Rammus',
+        'reksai': 'RekSai',
+        'renekton': 'Renekton',
+        'rengar': 'Rengar',
+        'riven': 'Riven',
+        'rumble': 'Rumble',
+        'samira': 'Samira',
+        'senna': 'Senna',
+        'seraphine': 'Seraphine',
+        'sett': 'Sett',
+        'shen': 'Shen',
+        'shyvana': 'Shyvana',
+        'singed': 'Singed',
+        'sion': 'Sion',
+        'sivir': 'Sivir',
+        'sona': 'Sona',
+        'soraka': 'Soraka',
+        'swain': 'Swain',
+        'syndra': 'Syndra',
+        'talon': 'Talon',
+        'teemo': 'Teemo',
+        'thresh': 'Thresh',
+        'tristana': 'Tristana',
+        'tryndamere': 'Tryndamere',
+        'twistedfate': 'TwistedFate',
+        'tf': 'TwistedFate',
+        'twitch': 'Twitch',
+        'urgot': 'Urgot',
+        'varus': 'Varus',
+        'vayne': 'Vayne',
+        'veigar': 'Veigar',
+        'velkoz': 'Velkoz',
+        'vi': 'Vi',
+        'viego': 'Viego',
+        'viktor': 'Viktor',
+        'vladimir': 'Vladimir',
+        'volibear': 'Volibear',
+        'warwick': 'Warwick',
+        'xayah': 'Xayah',
+        'xin': 'XinZhao',
+        'xinzhao': 'XinZhao',
+        'yasuo': 'Yasuo',
+        'yone': 'Yone',
+        'yuumi': 'Yuumi',
+        'zed': 'Zed',
+        'zeri': 'Zeri',
+        'ziggs': 'Ziggs',
+        'zoe': 'Zoe',
+        'zyra': 'Zyra'
+    };
+
+    if (!clean) return FALLBACKS.champ;
+    const formatted = map[clean] || (clean.charAt(0).toUpperCase() + clean.slice(1));
+    return `https://ddragon.leagueoflegends.com/cdn/${DDRAGON_VER}/img/champion/${formatted}.png`;
+}
 
         let state = {
             settings: {
