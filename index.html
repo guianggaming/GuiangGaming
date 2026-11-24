@@ -360,22 +360,35 @@
             </div>
         </section>
 
-        <!-- MATCH HISTORY (WITH GOLD, TEAM KDA & BAN CHAMPS) -->
+        <!-- MATCH HISTORY (WITH GOLD, TEAM KDA, BAN CHAMPS & WILDROUNDS BOX) -->
         <section id="matches-section" class="space-y-4 scroll-mt-20">
             <div class="flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center space-x-2.5">
                     <div class="w-1 h-5 bg-red-600 rounded"></div>
                     <h2 class="display-font font-black text-sm sm:text-base text-white uppercase">Match History • Bans, Gold, Team KDA & Scoreboards</h2>
                 </div>
-                <div class="flex gap-1.5 text-[11px] font-bold">
+                <div class="flex flex-wrap gap-1.5 text-[11px] font-bold">
                     <button onclick="filterMatches('ALL')" id="mfilter-ALL" class="mfilter-btn bg-red-600 text-white px-3 py-1.5 rounded-lg">ALL</button>
                     <button onclick="filterMatches('Tournament')" id="mfilter-Tournament" class="mfilter-btn glass-card text-slate-300 px-3 py-1.5 rounded-lg">TOURNAMENT</button>
                     <button onclick="filterMatches('Scrim')" id="mfilter-Scrim" class="mfilter-btn glass-card text-slate-300 px-3 py-1.5 rounded-lg">SCRIM</button>
+                    <button onclick="filterMatches('Wildrounds')" id="mfilter-Wildrounds" class="mfilter-btn glass-card text-slate-300 px-3 py-1.5 rounded-lg">WILDROUNDS</button>
                 </div>
             </div>
 
             <div id="match-history-list" class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <p class="text-xs text-slate-400 italic">No match history found.</p>
+            </div>
+
+            <div id="wildrounds-match-box" class="glass-card p-4 rounded-2xl border border-amber-500/30 space-y-3">
+                <div class="flex items-center justify-between border-b border-white/10 pb-2">
+                    <span class="text-xs font-black uppercase tracking-wider text-amber-300">
+                        <i class="fa-solid fa-earth-asia mr-1.5"></i>Wildrounds Match History
+                    </span>
+                    <span id="wr-match-history-count" class="text-[10px] font-bold text-slate-400">0 Matches</span>
+                </div>
+                <div id="wildrounds-match-history-list" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <p class="text-xs text-slate-400 italic col-span-full">No Wildrounds matches recorded yet.</p>
+                </div>
             </div>
         </section>
 
@@ -839,6 +852,7 @@
                         <select id="adm-m-type" class="w-full bg-[#090a0f] border border-white/10 rounded px-2 py-2 text-xs text-white">
                             <option value="Tournament">Tournament</option>
                             <option value="Scrim">Scrim</option>
+                            <option value="Wildrounds">Wildrounds</option>
                         </select>
                         <select id="adm-m-result" class="w-full bg-[#090a0f] border border-white/10 rounded px-2 py-2 text-xs text-white">
                             <option value="Win">Team A Win</option>
@@ -1933,6 +1947,7 @@
         bindList('wildroundsTeams', 'wildroundsTeams', () => {
             renderWildroundsTeams();
             renderPlayerRankings();
+            renderMatches();
         });
         bindList('customRankings', 'customRankings', renderPlayerRankings);
 
@@ -2186,7 +2201,7 @@
             Object.values(state.matches).forEach(m => {
                 if (!m || typeof m !== 'object') return;
                 const mType = (m.type || '').toLowerCase();
-                if (mType !== 'tournament' && mType !== 'scrim') return;
+                if (mType !== 'tournament' && mType !== 'scrim' && mType !== 'wildrounds') return;
 
                 const blueRows = parseMatchLines(m.blueData);
                 const redRows = parseMatchLines(m.redData);
@@ -2811,77 +2826,100 @@
             renderMatches();
         }
 
+        function isWildroundsMatch(m) {
+            if (!m || typeof m !== 'object') return false;
+            if ((m.type || '').toLowerCase() === 'wildrounds') return true;
+            const tA = normalizeTeamKey(m.team);
+            const tB = normalizeTeamKey(m.opponent);
+            return state.wildroundsTeams.some(w => {
+                const wn = normalizeTeamKey(w.name);
+                return wn && (wn === tA || wn === tB);
+            });
+        }
+
+        function buildMatchCardHtml(id, m) {
+            const winBadge = m.result === 'Win'
+                ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
+                : 'bg-red-500/15 text-red-400 border-red-500/30';
+            const teamALogo = m.teamLogo || findTeamLogoByName(m.team) || '';
+            const teamBLogo = m.oppLogo || findTeamLogoByName(m.opponent) || '';
+            const winnerName = m.result === 'Win' ? (m.team || 'Team A') : (m.opponent || 'Team B');
+            const goldA = (m.teamGold || '').trim();
+            const goldB = (m.oppGold || '').trim();
+            const kdaA = computeSideTeamKda(m, 'blue');
+            const kdaB = computeSideTeamKda(m, 'red');
+            const bansA = parseBanChampsList(m.teamBans);
+            const bansB = parseBanChampsList(m.oppBans);
+
+            return `
+                <div onclick="openMatchModal('${id}')" class="glass-card hover:border-red-500/40 p-4 rounded-xl cursor-pointer transition space-y-2.5">
+                    <div class="flex items-center justify-between text-[10px] font-bold uppercase text-slate-400">
+                        <span>${m.date || 'No Date'} • ${m.type || 'Match'}</span>
+                        <span class="px-2.5 py-0.5 rounded border font-black ${winBadge}">${winnerName} WIN</span>
+                    </div>
+                    <div class="flex items-center justify-between gap-2">
+                        <div class="flex items-center gap-2 min-w-0">
+                            ${renderAvatarHtml(teamALogo, m.team || 'TA', 'w-8 h-8 rounded-lg', 'logo')}
+                            <div class="min-w-0">
+                                <span class="text-xs sm:text-sm font-black text-white uppercase truncate block">${m.team || 'Team A'}</span>
+                                <span class="text-[10px] font-bold text-blue-300 block">KDA: ${kdaA}</span>
+                            </div>
+                        </div>
+                        <span class="text-[11px] font-black text-slate-400 shrink-0">vs</span>
+                        <div class="flex items-center justify-end gap-2 min-w-0">
+                            <div class="min-w-0 text-right">
+                                <span class="text-xs sm:text-sm font-black text-white uppercase truncate block">${m.opponent || 'Team B'}</span>
+                                <span class="text-[10px] font-bold text-red-300 block">KDA: ${kdaB}</span>
+                            </div>
+                            ${renderAvatarHtml(teamBLogo, m.opponent || 'TB', 'w-8 h-8 rounded-lg', 'logo')}
+                        </div>
+                    </div>
+                    ${(bansA.length || bansB.length) ? `
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1.5 border-t border-white/5 text-[10px]">
+                            <div class="truncate">
+                                <span class="font-black uppercase text-rose-300 mr-1">${m.team || 'Team A'} Bans:</span>
+                                <span class="text-slate-300">${bansA.length ? bansA.join(', ') : '-'}</span>
+                            </div>
+                            <div class="truncate sm:text-right">
+                                <span class="font-black uppercase text-rose-300 mr-1">${m.opponent || 'Team B'} Bans:</span>
+                                <span class="text-slate-300">${bansB.length ? bansB.join(', ') : '-'}</span>
+                            </div>
+                        </div>
+                    ` : ''}
+                    <div class="flex items-center justify-between text-[11px] font-extrabold pt-1 border-t border-white/5">
+                        <span class="text-amber-300">${goldA ? `💰 ${goldA}` : ''}</span>
+                        <span class="text-slate-200">${m.score || ''}</span>
+                        <span class="text-amber-300">${goldB ? `💰 ${goldB}` : ''}</span>
+                    </div>
+                </div>
+            `;
+        }
+
         function renderMatches() {
             const box = document.getElementById('match-history-list');
+            const wrBox = document.getElementById('wildrounds-match-history-list');
+            const wrCount = document.getElementById('wr-match-history-count');
             if (!box) return;
-            const entries = Object.entries(state.matches).filter(([, m]) => {
-                if (!m || typeof m !== 'object') return false;
+
+            const allEntries = Object.entries(state.matches).filter(([, m]) => m && typeof m === 'object');
+
+            const filteredEntries = allEntries.filter(([, m]) => {
                 if (matchFilterType === 'ALL') return true;
+                if (matchFilterType === 'Wildrounds') return isWildroundsMatch(m);
                 return (m.type || '').toLowerCase() === matchFilterType.toLowerCase();
             });
 
-            if (!entries.length) {
-                box.innerHTML = `<p class="text-xs text-slate-400 italic col-span-full">No match history found.</p>`;
-                return;
+            box.innerHTML = filteredEntries.length
+                ? filteredEntries.map(([id, m]) => buildMatchCardHtml(id, m)).join('')
+                : `<p class="text-xs text-slate-400 italic col-span-full">No match history found.</p>`;
+
+            if (wrBox) {
+                const wrEntries = allEntries.filter(([, m]) => isWildroundsMatch(m));
+                if (wrCount) wrCount.textContent = `${wrEntries.length} ${wrEntries.length === 1 ? 'Match' : 'Matches'}`;
+                wrBox.innerHTML = wrEntries.length
+                    ? wrEntries.map(([id, m]) => buildMatchCardHtml(id, m)).join('')
+                    : `<p class="text-xs text-slate-400 italic col-span-full">No Wildrounds matches recorded yet.</p>`;
             }
-
-            box.innerHTML = entries.map(([id, m]) => {
-                const winBadge = m.result === 'Win'
-                    ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
-                    : 'bg-red-500/15 text-red-400 border-red-500/30';
-                const teamALogo = m.teamLogo || findTeamLogoByName(m.team) || '';
-                const teamBLogo = m.oppLogo || findTeamLogoByName(m.opponent) || '';
-                const winnerName = m.result === 'Win' ? (m.team || 'Team A') : (m.opponent || 'Team B');
-                const goldA = (m.teamGold || '').trim();
-                const goldB = (m.oppGold || '').trim();
-                const kdaA = computeSideTeamKda(m, 'blue');
-                const kdaB = computeSideTeamKda(m, 'red');
-                const bansA = parseBanChampsList(m.teamBans);
-                const bansB = parseBanChampsList(m.oppBans);
-
-                return `
-                    <div onclick="openMatchModal('${id}')" class="glass-card hover:border-red-500/40 p-4 rounded-xl cursor-pointer transition space-y-2.5">
-                        <div class="flex items-center justify-between text-[10px] font-bold uppercase text-slate-400">
-                            <span>${m.date || 'No Date'} • ${m.type || 'Match'}</span>
-                            <span class="px-2.5 py-0.5 rounded border font-black ${winBadge}">${winnerName} WIN</span>
-                        </div>
-                        <div class="flex items-center justify-between gap-2">
-                            <div class="flex items-center gap-2 min-w-0">
-                                ${renderAvatarHtml(teamALogo, m.team || 'TA', 'w-8 h-8 rounded-lg', 'logo')}
-                                <div class="min-w-0">
-                                    <span class="text-xs sm:text-sm font-black text-white uppercase truncate block">${m.team || 'Team A'}</span>
-                                    <span class="text-[10px] font-bold text-blue-300 block">KDA: ${kdaA}</span>
-                                </div>
-                            </div>
-                            <span class="text-[11px] font-black text-slate-400 shrink-0">vs</span>
-                            <div class="flex items-center justify-end gap-2 min-w-0">
-                                <div class="min-w-0 text-right">
-                                    <span class="text-xs sm:text-sm font-black text-white uppercase truncate block">${m.opponent || 'Team B'}</span>
-                                    <span class="text-[10px] font-bold text-red-300 block">KDA: ${kdaB}</span>
-                                </div>
-                                ${renderAvatarHtml(teamBLogo, m.opponent || 'TB', 'w-8 h-8 rounded-lg', 'logo')}
-                            </div>
-                        </div>
-                        ${(bansA.length || bansB.length) ? `
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1.5 border-t border-white/5 text-[10px]">
-                                <div class="truncate">
-                                    <span class="font-black uppercase text-rose-300 mr-1">${m.team || 'Team A'} Bans:</span>
-                                    <span class="text-slate-300">${bansA.length ? bansA.join(', ') : '-'}</span>
-                                </div>
-                                <div class="truncate sm:text-right">
-                                    <span class="font-black uppercase text-rose-300 mr-1">${m.opponent || 'Team B'} Bans:</span>
-                                    <span class="text-slate-300">${bansB.length ? bansB.join(', ') : '-'}</span>
-                                </div>
-                            </div>
-                        ` : ''}
-                        <div class="flex items-center justify-between text-[11px] font-extrabold pt-1 border-t border-white/5">
-                            <span class="text-amber-300">${goldA ? `💰 ${goldA}` : ''}</span>
-                            <span class="text-slate-200">${m.score || ''}</span>
-                            <span class="text-amber-300">${goldB ? `💰 ${goldB}` : ''}</span>
-                        </div>
-                    </div>
-                `;
-            }).join('');
         }
 
         function openMatchModal(id) {
@@ -3420,14 +3458,16 @@
                 }
                 renderWildroundsTeams();
                 renderAdminWrPlayerList();
+                renderMatches();
             });
         }
-        function editWildroundsTeam(id) {
+
+        function editWildroundsItem(id) {
             const item = state.wildroundsTeams.find(i => i.id === id); if (!item) return;
             document.getElementById('edit-wr-id').value = id;
             document.getElementById('adm-wr-track').value = item.track || 'Community Track Team';
             document.getElementById('adm-wr-team').value = item.name || '';
-            document.getElementById('adm-wr-year').value = item.year || '';
+            document.getElementById('adm-wr-year').value = item.year || '2026';
             document.getElementById('adm-wr-logo').value = item.logo || '';
             document.getElementById('adm-wr-notes').value = item.notes || '';
             setCleanImgSrc(document.getElementById('preview-wr-logo'), item.logo || '', 'logo');
@@ -3447,8 +3487,9 @@
             const gold = document.getElementById('adm-rank-gold').value.trim();
             const gp = parseInt(document.getElementById('adm-rank-gp').value, 10) || 1;
             if (!ign) return alert('Please enter Player IGN.');
-            upsert('customRankings', id, { mode, ign, team, avgKda, k, d, a, gold, gp }, 'ranking', `Ranking for "${ign}"`);
+            upsert('customRankings', id, { mode, ign, team, avgKda, k, d, a, gold, gp }, 'ranking', 'Player Ranking');
         }
+
         function editCustomRanking(id) {
             const item = state.customRankings.find(i => i.id === id); if (!item) return;
             document.getElementById('edit-rank-id').value = id;
@@ -3469,23 +3510,27 @@
             if (!confirm('Delete this item?')) return;
             db.ref(`guiangHub/${path}/${id}`).remove()
                 .then(() => setAdminStatus('Item deleted.'))
-                .catch(err => setAdminStatus('Delete failed: ' + err.message, true));
+                .catch(err => setAdminStatus('Error deleting item: ' + err.message, true));
         }
 
         function renderAdminSelects() {
             const grpSel = document.getElementById('adm-subteam-group');
             const prevGrp = grpSel.value || selectedGroupId;
-            grpSel.innerHTML = state.groups.map(g => `<option value="${g.id}">${g.name}</option>`).join('');
+            grpSel.innerHTML = state.groups.length
+                ? state.groups.map(g => `<option value="${g.id}">${g.name}</option>`).join('')
+                : `<option value="">No Team Groups Yet</option>`;
             if (prevGrp && state.groups.some(g => g.id === prevGrp)) {
                 grpSel.value = prevGrp;
             }
 
             const tmSel = document.getElementById('adm-player-team');
             const prevTm = tmSel.value;
-            tmSel.innerHTML = state.teams.map(t => {
-                const g = state.groups.find(x => x.id === t.groupId);
-                return `<option value="${t.id}">${t.name} (${g ? g.name : 'Group'})</option>`;
-            }).join('');
+            tmSel.innerHTML = state.teams.length
+                ? state.teams.map(t => {
+                    const grp = state.groups.find(g => g.id === t.groupId);
+                    return `<option value="${t.id}">${t.name}${grp ? ` (${grp.name})` : ''}</option>`;
+                }).join('')
+                : `<option value="">No Teams Yet</option>`;
             if (prevTm && state.teams.some(t => t.id === prevTm)) {
                 tmSel.value = prevTm;
             }
@@ -3493,71 +3538,86 @@
             const wrSel = document.getElementById('adm-wr-player-team');
             if (wrSel) {
                 const prevWr = wrSel.value;
-                wrSel.innerHTML = state.wildroundsTeams.map(w => `<option value="${w.id}">${w.name} (${w.track || 'Wildrounds'})</option>`).join('');
+                wrSel.innerHTML = state.wildroundsTeams.length
+                    ? state.wildroundsTeams.map(w => `<option value="${w.id}">${w.name} (${w.track || 'Wildrounds'})</option>`).join('')
+                    : `<option value="">No Wildrounds Teams Yet</option>`;
                 if (prevWr && state.wildroundsTeams.some(w => w.id === prevWr)) {
                     wrSel.value = prevWr;
                 }
             }
         }
 
-        function rowHtml(label, editFn, delFn) {
-            return `<div class="flex items-center justify-between bg-[#090a0f] border border-white/10 px-2.5 py-1.5 rounded text-[11px] gap-2"><span class="truncate text-slate-200">${label}</span><div class="flex items-center gap-2 shrink-0"><button type="button" onclick="${editFn}" class="text-blue-400 hover:underline font-bold">Edit</button><button type="button" onclick="${delFn}" class="text-red-400 hover:underline font-bold">Delete</button></div></div>`;
-        }
-
         function renderAdminSubTeamList() {
-            const grpSel = document.getElementById('adm-subteam-group');
-            const selectedGrp = grpSel?.value || selectedGroupId || '';
-            const filteredTeams = selectedGrp
-                ? state.teams.filter(t => t.groupId === selectedGrp)
-                : state.teams;
-            document.getElementById('adm-subteam-list').innerHTML = filteredTeams.length
-                ? filteredTeams.map(t => rowHtml(`${t.name} (${t.game || ''})`, `editSubTeam('${t.id}')`, `deleteItem('teams','${t.id}')`)).join('')
-                : `<p class="text-[10px] text-slate-500 italic">No teams in this group yet.</p>`;
+            const grpId = document.getElementById('adm-subteam-group').value;
+            const list = grpId ? state.teams.filter(t => t.groupId === grpId) : state.teams;
+            document.getElementById('adm-subteam-list').innerHTML = list.map(t => `
+                <div class="bg-[#090a0f] px-2.5 py-1.5 rounded flex justify-between items-center text-[11px]">
+                    <span class="truncate"><b>${t.name}</b> <span class="text-slate-400">(${t.game || ''})</span></span>
+                    <span class="space-x-2 shrink-0">
+                        <button type="button" onclick="editSubTeam('${t.id}')" class="text-blue-400 underline">Edit</button>
+                        <button type="button" onclick="deleteItem('teams', '${t.id}')" class="text-red-400 underline">Del</button>
+                    </span>
+                </div>
+            `).join('');
         }
 
         function renderAdminPlayerList() {
-            const tmSel = document.getElementById('adm-player-team');
-            const selectedTm = tmSel?.value || '';
-            const filteredPlayers = sortPlayersByRole(
-                state.players.filter(p => !p.isWildrounds && (!selectedTm || p.teamId === selectedTm))
-            );
-            document.getElementById('adm-player-list').innerHTML = filteredPlayers.length
-                ? filteredPlayers.map(p => {
-                    const tm = state.teams.find(t => t.id === p.teamId);
-                    return rowHtml(`${p.ign} • ${p.role || ''} [${p.region || 'PH'}] (${tm ? tm.name : ''})`, `editPlayerItem('${p.id}')`, `deleteItem('players','${p.id}')`);
-                }).join('')
-                : `<p class="text-[10px] text-slate-500 italic">No players in this team yet.</p>`;
+            const tmId = document.getElementById('adm-player-team').value;
+            const regularPlayers = state.players.filter(p => !p.isWildrounds);
+            const list = tmId ? regularPlayers.filter(p => p.teamId === tmId) : regularPlayers;
+            document.getElementById('adm-player-list').innerHTML = list.map(p => `
+                <div class="bg-[#090a0f] px-2.5 py-1.5 rounded flex justify-between items-center text-[11px]">
+                    <span class="truncate"><b>${p.ign}</b> <span class="text-slate-400">(${p.role || ''} • ${p.region || 'PH'})</span></span>
+                    <span class="space-x-2 shrink-0">
+                        <button type="button" onclick="editPlayerItem('${p.id}')" class="text-blue-400 underline">Edit</button>
+                        <button type="button" onclick="deleteItem('players', '${p.id}')" class="text-red-400 underline">Del</button>
+                    </span>
+                </div>
+            `).join('');
         }
 
         function renderAdminWrPlayerList() {
             const box = document.getElementById('adm-wr-player-list');
-            if (!box) return;
-            const wrSel = document.getElementById('adm-wr-player-team');
-            const selectedWrId = wrSel?.value || '';
-            const wrObj = state.wildroundsTeams.find(w => w.id === selectedWrId);
-            const filtered = sortPlayersByRole(
-                state.players.filter(p => wrObj ? isPlayerInWildroundsTeam(p, wrObj) : Boolean(p.isWildrounds))
-            );
-            box.innerHTML = filtered.length
-                ? filtered.map(p => rowHtml(`${p.ign} • ${p.role || ''} [${p.region || 'PH'}] (${p.wrTeamName || wrObj?.name || 'WR'})`, `editWrPlayerItem('${p.id}')`, `deleteItem('players','${p.id}')`)).join('')
-                : `<p class="text-[10px] text-slate-500 italic">No players added to this Wildrounds team yet.</p>`;
+            const sel = document.getElementById('adm-wr-player-team');
+            if (!box || !sel) return;
+            const wrId = sel.value;
+            const wrTeam = state.wildroundsTeams.find(w => w.id === wrId);
+            const list = wrTeam ? state.players.filter(p => isPlayerInWildroundsTeam(p, wrTeam)) : [];
+            box.innerHTML = list.length ? list.map(p => `
+                <div class="bg-[#090a0f] px-2.5 py-1.5 rounded flex justify-between items-center text-[11px]">
+                    <span class="truncate"><b>${p.ign}</b> <span class="text-amber-300">(${p.role || ''} • ${p.region || 'PH'})</span></span>
+                    <span class="space-x-2 shrink-0">
+                        <button type="button" onclick="editWrPlayerItem('${p.id}')" class="text-blue-400 underline">Edit</button>
+                        <button type="button" onclick="deleteItem('players', '${p.id}')" class="text-red-400 underline">Del</button>
+                    </span>
+                </div>
+            `).join('') : `<p class="text-[10px] text-slate-500 italic">No players in selected Wildrounds team yet.</p>`;
         }
 
         function renderAdminLists() {
-            document.getElementById('adm-news-list').innerHTML = state.news.map(n => rowHtml(n.title, `editNews('${n.id}')`, `deleteItem('news','${n.id}')`)).join('');
-            document.getElementById('adm-ach-list').innerHTML = state.achievements.map(a => rowHtml(`${a.title} (${a.date || ''})`, `editAch('${a.id}')`, `deleteItem('achievements','${a.id}')`)).join('');
-            document.getElementById('adm-vid-list').innerHTML = state.videos.map(v => rowHtml(v.title, `editVid('${v.id}')`, `deleteItem('videos','${v.id}')`)).join('');
-            document.getElementById('adm-scrim-list').innerHTML = state.scrims.map(s => rowHtml(`[${s.slotType || 'Scrim'}] ${s.game || ''} • ${s.time} (${s.status})`, `editScrim('${s.id}')`, `deleteItem('scrims','${s.id}')`)).join('');
-            document.getElementById('adm-group-list').innerHTML = state.groups.map(g => rowHtml(g.name, `editGroup('${g.id}')`, `deleteItem('groups','${g.id}')`)).join('');
-
+            const row = (label, editFn, delFn) => `
+                <div class="bg-[#090a0f] px-2.5 py-1.5 rounded flex justify-between items-center text-[11px]">
+                    <span class="truncate pr-2">${label}</span>
+                    <span class="space-x-2 shrink-0">
+                        <button type="button" onclick="${editFn}" class="text-blue-400 underline">Edit</button>
+                        <button type="button" onclick="${delFn}" class="text-red-400 underline">Del</button>
+                    </span>
+                </div>
+            `;
+            document.getElementById('adm-news-list').innerHTML = state.news.map(n => row(n.title, `editNews('${n.id}')`, `deleteItem('news', '${n.id}')`)).join('');
+            document.getElementById('adm-ach-list').innerHTML = state.achievements.map(a => row(`${a.title} (${a.date || ''})`, `editAch('${a.id}')`, `deleteItem('achievements', '${a.id}')`)).join('');
+            document.getElementById('adm-vid-list').innerHTML = state.videos.map(v => row(v.title, `editVid('${v.id}')`, `deleteItem('videos', '${v.id}')`)).join('');
+            document.getElementById('adm-scrim-list').innerHTML = state.scrims.map(s => row(`[${s.slotType || 'Scrim'}] ${s.game || ''} — ${s.time} (${s.status})`, `editScrim('${s.id}')`, `deleteItem('scrims', '${s.id}')`)).join('');
+            document.getElementById('adm-group-list').innerHTML = state.groups.map(g => row(g.name, `editGroup('${g.id}')`, `deleteItem('groups', '${g.id}')`)).join('');
             renderAdminSubTeamList();
             renderAdminPlayerList();
             renderAdminWrPlayerList();
-
-            document.getElementById('adm-match-list').innerHTML = Object.entries(state.matches).map(([id, m]) => rowHtml(`${m.team} vs ${m.opponent} (${m.score || m.result})`, `editMatchItem('${id}')`, `deleteItem('matches','${id}')`)).join('');
-            document.getElementById('adm-part-list').innerHTML = state.partners.map(p => rowHtml(p.name, `editPart('${p.id}')`, `deleteItem('partners','${p.id}')`)).join('');
-            document.getElementById('adm-wr-list').innerHTML = state.wildroundsTeams.map(w => rowHtml(`${w.name} • ${w.track || 'Community'} (${w.year || '2026'})`, `editWildroundsTeam('${w.id}')`, `deleteItem('wildroundsTeams','${w.id}')`)).join('');
-            document.getElementById('adm-rank-list').innerHTML = state.customRankings.map(r => rowHtml(`[${r.mode || 'Tournament'}] ${r.ign} (${r.team || '-'}) • KDA ${r.avgKda || '-'} • ${r.k||0}/${r.d||0}/${r.a||0}`, `editCustomRanking('${r.id}')`, `deleteItem('customRankings','${r.id}')`)).join('');
+            document.getElementById('adm-match-list').innerHTML = Object.entries(state.matches)
+                .filter(([, m]) => m && typeof m === 'object')
+                .map(([id, m]) => row(`${m.team} vs ${m.opponent} (${m.type || 'Match'})`, `editMatchItem('${id}')`, `deleteItem('matches', '${id}')`)).join('');
+            document.getElementById('adm-part-list').innerHTML = state.partners.map(p => row(p.name, `editPart('${p.id}')`, `deleteItem('partners', '${p.id}')`)).join('');
+            document.getElementById('adm-wr-list').innerHTML = state.wildroundsTeams.map(w => row(`[${w.track || 'Wildrounds'}] ${w.name} (${w.year || '2026'})`, `editWildroundsItem('${w.id}')`, `deleteItem('wildroundsTeams', '${w.id}')`)).join('');
+            document.getElementById('adm-rank-list').innerHTML = state.customRankings.map(r => row(`[${r.mode || 'Tournament'}] ${r.ign} (${r.team || '-'}) — KDA ${r.avgKda || '-'}`, `editCustomRanking('${r.id}')`, `deleteItem('customRankings', '${r.id}')`)).join('');
         }
     </script>
 </body>
