@@ -187,7 +187,7 @@
                     <h2 class="display-font font-black text-sm text-white uppercase">Achievements & Milestones</h2>
                 </div>
                 <div id="achievements-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <p class="text-xs text-slate-400 italic">Loading achievements...</p>
+                    <p class="text-xs text-slate-400 italic">No achievements added yet.</p>
                 </div>
             </section>
         </div>
@@ -202,7 +202,7 @@
                 <a href="https://www.youtube.com/@guianggaming?si=D4fTp0J-rFGiF1Jo" target="_blank" class="text-xs font-bold text-red-400 hover:text-red-300">More on YouTube <i class="fa-solid fa-arrow-up-right-from-square ml-1"></i></a>
             </div>
             <div id="videos-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <p class="text-xs text-slate-400 italic">Loading videos...</p>
+                <p class="text-xs text-slate-400 italic">No videos added yet.</p>
             </div>
         </section>
 
@@ -235,7 +235,7 @@
                 <div class="lg:col-span-2 glass-card p-5 rounded-2xl space-y-3">
                     <h3 class="text-xs font-black uppercase tracking-wider text-red-400">Upcoming / Active Scrim & Tournament Slots</h3>
                     <div id="scrim-schedule-list" class="space-y-2.5 max-h-[420px] overflow-y-auto pr-1">
-                        <p class="text-xs text-slate-400 italic">Loading scrim & tournament schedule...</p>
+                        <p class="text-xs text-slate-400 italic">No scrim or tournament slots scheduled.</p>
                     </div>
                 </div>
 
@@ -298,7 +298,7 @@
                 <div class="glass-card p-4 rounded-2xl space-y-2.5">
                     <h3 class="text-[11px] font-black uppercase tracking-wider text-slate-400 px-1">Team Groups</h3>
                     <div id="team-groups-list" class="space-y-2 max-h-[420px] overflow-y-auto pr-1">
-                        <p class="text-xs text-slate-400 italic px-1">Loading team groups...</p>
+                        <p class="text-xs text-slate-400 italic px-1">No team groups yet.</p>
                     </div>
                 </div>
 
@@ -349,7 +349,7 @@
                             </tr>
                         </thead>
                         <tbody id="player-rankings-tbody" class="divide-y divide-white/5">
-                            <tr><td colspan="7" class="py-4 px-3 text-center text-slate-400 italic">Loading player rankings...</td></tr>
+                            <tr><td colspan="7" class="py-4 px-3 text-center text-slate-400 italic">No player rankings for this filter yet.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -371,7 +371,7 @@
             </div>
 
             <div id="match-history-list" class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <p class="text-xs text-slate-400 italic">Loading matches...</p>
+                <p class="text-xs text-slate-400 italic">No match history found.</p>
             </div>
         </section>
 
@@ -460,7 +460,7 @@
                     <h2 class="display-font font-black text-xs sm:text-sm text-white uppercase">Sponsors & Partnerships</h2>
                 </div>
                 <div id="partners-grid" class="flex flex-wrap gap-3">
-                    <p class="text-xs text-slate-400 italic">Loading sponsors & partners...</p>
+                    <p class="text-xs text-slate-400 italic">Open for sponsorships & partnerships.</p>
                 </div>
             </div>
 
@@ -1216,6 +1216,14 @@
             el.className = isError ? "text-[11px] text-red-400 mt-0.5" : "text-[11px] text-emerald-400 mt-0.5";
         }
 
+        function safeRun(fn, label = 'render') {
+            try {
+                if (typeof fn === 'function') fn();
+            } catch (err) {
+                console.error(`[${label}] error:`, err);
+            }
+        }
+
         function updatePublicClock() {
             const now = new Date();
             const formatted = now.toLocaleTimeString([], {
@@ -1480,151 +1488,53 @@
             reader.readAsDataURL(file);
         }
 
-        cconst DDRAGON_VER = "14.24.1";
+        const DDRAGON_VER = "14.24.1";
+        function getChampIcon(name) {
+            if (!name) return FALLBACKS.champ;
+            const clean = String(name).trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+            if (!clean) return FALLBACKS.champ;
 
-function getChampIcon(name) {
-    if (!name) return FALLBACKS.champ;
+            const map = {
+                'aatrox': 'Aatrox', 'ahri': 'Ahri', 'akali': 'Akali', 'akshan': 'Akshan',
+                'alistar': 'Alistar', 'ambessa': 'Ambessa', 'amumu': 'Amumu', 'annie': 'Annie',
+                'ashe': 'Ashe', 'aurelionsol': 'AurelionSol', 'asol': 'AurelionSol',
+                'blitzcrank': 'Blitzcrank', 'brand': 'Brand', 'braum': 'Braum', 'caitlyn': 'Caitlyn',
+                'camille': 'Camille', 'chogath': 'ChoGath', 'corki': 'Corki', 'darius': 'Darius',
+                'diana': 'Diana', 'drmundo': 'DrMundo', 'mundo': 'DrMundo', 'draven': 'Draven',
+                'ekko': 'Ekko', 'evelynn': 'Evelynn', 'ezreal': 'Ezreal', 'fiddlesticks': 'Fiddlesticks',
+                'fiora': 'Fiora', 'fizz': 'Fizz', 'galio': 'Galio', 'garen': 'Garen',
+                'gragas': 'Gragas', 'graves': 'Graves', 'gwen': 'Gwen', 'heimerdinger': 'Heimerdinger',
+                'irelia': 'Irelia', 'janna': 'Janna', 'jarvan': 'JarvanIV', 'jarvaniv': 'JarvanIV',
+                'jax': 'Jax', 'jayce': 'Jayce', 'jhin': 'Jhin', 'jinx': 'Jinx',
+                'kaisa': 'KaiSa', 'karma': 'Karma', 'kassadin': 'Kassadin', 'katarina': 'Katarina',
+                'kennen': 'Kennen', 'khazix': 'KhaZix', 'kogmaw': 'KogMaw', 'ksante': 'KSante',
+                'leblanc': 'Leblanc', 'leesin': 'LeeSin', 'leona': 'Leona', 'lillia': 'Lillia',
+                'lucian': 'Lucian', 'lulu': 'Lulu', 'lux': 'Lux', 'malphite': 'Malphite',
+                'maokai': 'Maokai', 'masteryi': 'MasterYi', 'yi': 'MasterYi',
+                'mf': 'MissFortune', 'missfortune': 'MissFortune',
+                'monkeyking': 'MonkeyKing', 'wukong': 'MonkeyKing',
+                'morgana': 'Morgana', 'nami': 'Nami', 'nasus': 'Nasus', 'nautilus': 'Nautilus',
+                'nilah': 'Nilah', 'nunu': 'Nunu', 'nunuandwillump': 'Nunu', 'olaf': 'Olaf',
+                'orianna': 'Orianna', 'ornn': 'Ornn', 'pantheon': 'Pantheon', 'poppy': 'Poppy',
+                'pyke': 'Pyke', 'rakan': 'Rakan', 'rammus': 'Rammus', 'reksai': 'RekSai',
+                'renekton': 'Renekton', 'rengar': 'Rengar', 'riven': 'Riven', 'rumble': 'Rumble',
+                'samira': 'Samira', 'senna': 'Senna', 'seraphine': 'Seraphine', 'sett': 'Sett',
+                'shen': 'Shen', 'shyvana': 'Shyvana', 'singed': 'Singed', 'sion': 'Sion',
+                'sivir': 'Sivir', 'sona': 'Sona', 'soraka': 'Soraka', 'swain': 'Swain',
+                'syndra': 'Syndra', 'talon': 'Talon', 'teemo': 'Teemo', 'thresh': 'Thresh',
+                'tristana': 'Tristana', 'tryndamere': 'Tryndamere',
+                'twistedfate': 'TwistedFate', 'tf': 'TwistedFate',
+                'twitch': 'Twitch', 'urgot': 'Urgot', 'varus': 'Varus', 'vayne': 'Vayne',
+                'veigar': 'Veigar', 'velkoz': 'Velkoz', 'vi': 'Vi', 'viego': 'Viego',
+                'viktor': 'Viktor', 'vladimir': 'Vladimir', 'volibear': 'Volibear', 'warwick': 'Warwick',
+                'xayah': 'Xayah', 'xin': 'XinZhao', 'xinzhao': 'XinZhao',
+                'yasuo': 'Yasuo', 'yone': 'Yone', 'yuumi': 'Yuumi', 'zed': 'Zed',
+                'zeri': 'Zeri', 'ziggs': 'Ziggs', 'zoe': 'Zoe', 'zyra': 'Zyra'
+            };
 
-    const raw = String(name).trim().toLowerCase();
-    const clean = raw.replace(/[^a-z0-9]/g, '');
-
-    const map = {
-        'aatrox': 'Aatrox',
-        'ahri': 'Ahri',
-        'akali': 'Akali',
-        'akshan': 'Akshan',
-        'alistar': 'Alistar',
-        'ambessa': 'Ambessa',
-        'amumu': 'Amumu',
-        'annie': 'Annie',
-        'ashe': 'Ashe',
-        'aurelionsol': 'AurelionSol',
-        'asol': 'AurelionSol',
-        'blitzcrank': 'Blitzcrank',
-        'brand': 'Brand',
-        'braum': 'Braum',
-        'caitlyn': 'Caitlyn',
-        'camille': 'Camille',
-        'chogath': 'ChoGath',
-        'corki': 'Corki',
-        'darius': 'Darius',
-        'diana': 'Diana',
-        'drmundo': 'DrMundo',
-        'mundo': 'DrMundo',
-        'draven': 'Draven',
-        'ekko': 'Ekko',
-        'evelynn': 'Evelynn',
-        'ezreal': 'Ezreal',
-        'fiddlesticks': 'Fiddlesticks',
-        'fiora': 'Fiora',
-        'fizz': 'Fizz',
-        'galio': 'Galio',
-        'garen': 'Garen',
-        'gragas': 'Gragas',
-        'graves': 'Graves',
-        'gwen': 'Gwen',
-        'heimerdinger': 'Heimerdinger',
-        'irelia': 'Irelia',
-        'janna': 'Janna',
-        'jarvan': 'JarvanIV',
-        'jarvaniv': 'JarvanIV',
-        'jax': 'Jax',
-        'jayce': 'Jayce',
-        'jhin': 'Jhin',
-        'jinx': 'Jinx',
-        'kaisa': 'KaiSa',
-        'karmah': 'Karma',
-        'karma': 'Karma',
-        'kassadin': 'Kassadin',
-        'katarina': 'Katarina',
-        'kennen': 'Kennen',
-        'khazix': 'KhaZix',
-        'kogmaw': 'KogMaw',
-        'ksante': 'KSante',
-        'leblanc': 'Leblanc',
-        'leesin': 'LeeSin',
-        'leona': 'Leona',
-        'lillia': 'Lillia',
-        'lucian': 'Lucian',
-        'lulu': 'Lulu',
-        'lux': 'Lux',
-        'malphite': 'Malphite',
-        'maokai': 'Maokai',
-        'masteryi': 'MasterYi',
-        'yi': 'MasterYi',
-        'mf': 'MissFortune',
-        'missfortune': 'MissFortune',
-        'monkeyking': 'MonkeyKing',
-        'wukong': 'MonkeyKing',
-        'morgana': 'Morgana',
-        'nami': 'Nami',
-        'nasus': 'Nasus',
-        'nautilus': 'Nautilus',
-        'nilah': 'Nilah',
-        'nunu': 'Nunu',
-        'nunuandwillump': 'Nunu',
-        'olaf': 'Olaf',
-        'orianna': 'Orianna',
-        'ornn': 'Ornn',
-        'pantheon': 'Pantheon',
-        'poppy': 'Poppy',
-        'pyke': 'Pyke',
-        'rakan': 'Rakan',
-        'rammus': 'Rammus',
-        'reksai': 'RekSai',
-        'renekton': 'Renekton',
-        'rengar': 'Rengar',
-        'riven': 'Riven',
-        'rumble': 'Rumble',
-        'samira': 'Samira',
-        'senna': 'Senna',
-        'seraphine': 'Seraphine',
-        'sett': 'Sett',
-        'shen': 'Shen',
-        'shyvana': 'Shyvana',
-        'singed': 'Singed',
-        'sion': 'Sion',
-        'sivir': 'Sivir',
-        'sona': 'Sona',
-        'soraka': 'Soraka',
-        'swain': 'Swain',
-        'syndra': 'Syndra',
-        'talon': 'Talon',
-        'teemo': 'Teemo',
-        'thresh': 'Thresh',
-        'tristana': 'Tristana',
-        'tryndamere': 'Tryndamere',
-        'twistedfate': 'TwistedFate',
-        'tf': 'TwistedFate',
-        'twitch': 'Twitch',
-        'urgot': 'Urgot',
-        'varus': 'Varus',
-        'vayne': 'Vayne',
-        'veigar': 'Veigar',
-        'velkoz': 'Velkoz',
-        'vi': 'Vi',
-        'viego': 'Viego',
-        'viktor': 'Viktor',
-        'vladimir': 'Vladimir',
-        'volibear': 'Volibear',
-        'warwick': 'Warwick',
-        'xayah': 'Xayah',
-        'xin': 'XinZhao',
-        'xinzhao': 'XinZhao',
-        'yasuo': 'Yasuo',
-        'yone': 'Yone',
-        'yuumi': 'Yuumi',
-        'zed': 'Zed',
-        'zeri': 'Zeri',
-        'ziggs': 'Ziggs',
-        'zoe': 'Zoe',
-        'zyra': 'Zyra'
-    };
-
-    if (!clean) return FALLBACKS.champ;
-    const formatted = map[clean] || (clean.charAt(0).toUpperCase() + clean.slice(1));
-    return `https://ddragon.leagueoflegends.com/cdn/${DDRAGON_VER}/img/champion/${formatted}.png`;
-}
+            const formatted = map[clean] || (clean.charAt(0).toUpperCase() + clean.slice(1));
+            return `https://ddragon.leagueoflegends.com/cdn/${DDRAGON_VER}/img/champion/${formatted}.png`;
+        }
 
         let state = {
             settings: {
@@ -1662,6 +1572,8 @@ function getChampIcon(name) {
                 closeAdminModal();
                 document.getElementById('admin-dashboard-section').classList.remove('hidden');
                 document.getElementById('admin-pass-input').value = '';
+                renderAdminSelects();
+                renderAdminLists();
                 document.getElementById('admin-dashboard-section').scrollIntoView({ behavior: 'smooth' });
             } else {
                 alert('Incorrect password.');
@@ -1809,36 +1721,40 @@ function getChampIcon(name) {
             const admNote = document.getElementById('adm-live-scrim-note');
             const admBadge = document.getElementById('adm-live-scrim-badge');
 
-            if (isActive) {
-                banner.className = 'glass-card p-4 rounded-2xl border border-emerald-500/35 flex flex-wrap items-center justify-between gap-3';
-                dot.className = 'w-3 h-3 rounded-full bg-emerald-400 animate-pulse shrink-0';
-                txt.className = 'text-xs sm:text-sm font-extrabold text-emerald-400';
-                txt.textContent = 'ACTIVE — Available to Schedule Scrim for Live Stream';
-                pill.className = 'text-[10px] font-black uppercase px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shrink-0';
-                pill.textContent = 'ACTIVE';
-                if (admBadge) {
-                    admBadge.className = 'text-[10px] font-black uppercase px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300';
-                    admBadge.textContent = 'ACTIVE';
-                }
-            } else {
-                banner.className = 'glass-card p-4 rounded-2xl border border-red-500/35 flex flex-wrap items-center justify-between gap-3';
-                dot.className = 'w-3 h-3 rounded-full bg-red-500 shrink-0';
-                txt.className = 'text-xs sm:text-sm font-extrabold text-red-400';
-                txt.textContent = 'NOT ACTIVE — Not Available to Schedule Scrim for Live Stream';
-                pill.className = 'text-[10px] font-black uppercase px-3 py-1 rounded-full bg-red-500/20 text-red-300 border border-red-500/40 shrink-0';
-                pill.textContent = 'NOT ACTIVE';
-                if (admBadge) {
-                    admBadge.className = 'text-[10px] font-black uppercase px-2 py-0.5 rounded bg-red-500/20 text-red-300';
-                    admBadge.textContent = 'NOT ACTIVE';
+            if (banner && dot && txt && pill) {
+                if (isActive) {
+                    banner.className = 'glass-card p-4 rounded-2xl border border-emerald-500/35 flex flex-wrap items-center justify-between gap-3';
+                    dot.className = 'w-3 h-3 rounded-full bg-emerald-400 animate-pulse shrink-0';
+                    txt.className = 'text-xs sm:text-sm font-extrabold text-emerald-400';
+                    txt.textContent = 'ACTIVE — Available to Schedule Scrim for Live Stream';
+                    pill.className = 'text-[10px] font-black uppercase px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shrink-0';
+                    pill.textContent = 'ACTIVE';
+                    if (admBadge) {
+                        admBadge.className = 'text-[10px] font-black uppercase px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300';
+                        admBadge.textContent = 'ACTIVE';
+                    }
+                } else {
+                    banner.className = 'glass-card p-4 rounded-2xl border border-red-500/35 flex flex-wrap items-center justify-between gap-3';
+                    dot.className = 'w-3 h-3 rounded-full bg-red-500 shrink-0';
+                    txt.className = 'text-xs sm:text-sm font-extrabold text-red-400';
+                    txt.textContent = 'NOT ACTIVE — Not Available to Schedule Scrim for Live Stream';
+                    pill.className = 'text-[10px] font-black uppercase px-3 py-1 rounded-full bg-red-500/20 text-red-300 border border-red-500/40 shrink-0';
+                    pill.textContent = 'NOT ACTIVE';
+                    if (admBadge) {
+                        admBadge.className = 'text-[10px] font-black uppercase px-2 py-0.5 rounded bg-red-500/20 text-red-300';
+                        admBadge.textContent = 'NOT ACTIVE';
+                    }
                 }
             }
 
-            if (note) {
-                noteEl.textContent = note;
-                noteEl.classList.remove('hidden');
-            } else {
-                noteEl.textContent = '';
-                noteEl.classList.add('hidden');
+            if (noteEl) {
+                if (note) {
+                    noteEl.textContent = note;
+                    noteEl.classList.remove('hidden');
+                } else {
+                    noteEl.textContent = '';
+                    noteEl.classList.add('hidden');
+                }
             }
 
             if (admSel) admSel.value = isActive ? 'Active' : 'Not Active';
@@ -1859,7 +1775,7 @@ function getChampIcon(name) {
                 status: d.status || 'Active',
                 note: d.note || ''
             };
-            renderLiveScrimStatus();
+            safeRun(renderLiveScrimStatus, 'renderLiveScrimStatus');
         });
 
         db.ref('guiangHub/settings').on('value', s => {
@@ -1878,7 +1794,7 @@ function getChampIcon(name) {
             applyWebsiteBackground(state.settings.bg);
 
             document.getElementById('about-text').textContent = state.settings.about;
-            renderContactsUI();
+            safeRun(renderContactsUI, 'renderContactsUI');
 
             document.getElementById('adm-cover-url').value = state.settings.cover;
             document.getElementById('adm-bg-url').value = state.settings.bg;
@@ -1909,7 +1825,7 @@ function getChampIcon(name) {
                 if (inp) inp.value = state.rolePhotos[r] || '';
                 setCleanImgSrc(prev, resolved, `role-${r}`);
             });
-            renderTeamGroupsAndSubTeams();
+            safeRun(renderTeamGroupsAndSubTeams, 'renderTeamGroupsAndSubTeams');
         });
 
         function saveRolePhotos() {
@@ -1929,10 +1845,12 @@ function getChampIcon(name) {
         function bindList(path, key, onUpdateFn) {
             db.ref(`guiangHub/${path}`).on('value', snap => {
                 const arr = [];
-                if (snap.exists()) {
+                if (snap && snap.exists()) {
                     snap.forEach(c => {
-                        const val = c.val() || {};
-                        arr.push({ id: c.key, ...val });
+                        const val = c.val();
+                        if (val && typeof val === 'object') {
+                            arr.push({ id: c.key, ...val });
+                        }
                     });
                 }
                 arr.sort((a, b) => {
@@ -1941,9 +1859,9 @@ function getChampIcon(name) {
                     return ta - tb;
                 });
                 state[key] = arr;
-                onUpdateFn();
-                renderAdminSelects();
-                renderAdminLists();
+                safeRun(onUpdateFn, `update:${path}`);
+                safeRun(renderAdminSelects, `selects:${path}`);
+                safeRun(renderAdminLists, `lists:${path}`);
             }, err => {
                 console.error(`Firebase read error on ${path}:`, err);
                 setAdminStatus(`Database read error (${path}): ${err.message}`, true);
@@ -1966,12 +1884,15 @@ function getChampIcon(name) {
         bindList('customRankings', 'customRankings', renderPlayerRankings);
 
         db.ref('guiangHub/matches').on('value', snap => {
-            state.matches = snap.val() || {};
-            renderTeamGroupsAndSubTeams();
-            renderWildroundsTeams();
-            renderMatches();
-            renderPlayerRankings();
-            renderAdminLists();
+            const raw = snap && snap.exists() ? snap.val() : {};
+            state.matches = raw && typeof raw === 'object' ? raw : {};
+            safeRun(renderTeamGroupsAndSubTeams, 'matches:teams');
+            safeRun(renderWildroundsTeams, 'matches:wr');
+            safeRun(renderMatches, 'matches:list');
+            safeRun(renderPlayerRankings, 'matches:rankings');
+            safeRun(renderAdminLists, 'matches:admin');
+        }, err => {
+            console.error('Firebase read error on matches:', err);
         });
 
         function renderNews() {
@@ -1979,6 +1900,7 @@ function getChampIcon(name) {
             const box = document.getElementById('news-carousel-container');
             const allBox = document.getElementById('news-all-list');
             const nav = document.getElementById('news-nav-controls');
+            if (!sec || !box || !allBox || !nav) return;
             if (!state.news.length) { sec.classList.add('hidden'); return; }
             sec.classList.remove('hidden');
             nav.classList.toggle('hidden', state.news.length <= 1);
@@ -1988,8 +1910,8 @@ function getChampIcon(name) {
                 <div class="p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div class="space-y-1.5">
                         <span class="text-[10px] font-black uppercase px-2.5 py-0.5 rounded bg-red-600/20 text-red-400 border border-red-500/30">Featured ${currentNewsIdx + 1}/${state.news.length}</span>
-                        <h3 class="text-base sm:text-lg font-extrabold text-white">${n.title}</h3>
-                        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">${n.desc}</p>
+                        <h3 class="text-base sm:text-lg font-extrabold text-white">${n.title || ''}</h3>
+                        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">${n.desc || ''}</p>
                     </div>
                     ${n.link ? `<a href="${n.link}" target="_blank" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-xs font-bold uppercase shrink-0 text-center">Open Link</a>` : ''}
                 </div>
@@ -1998,7 +1920,7 @@ function getChampIcon(name) {
             allBox.innerHTML = state.news.map((item, idx) => `
                 <div onclick="currentNewsIdx=${idx};renderNews();" class="glass-card hover:border-red-500/40 p-4 rounded-xl cursor-pointer transition space-y-1">
                     <div class="flex items-center justify-between gap-2">
-                        <h4 class="text-xs font-extrabold text-white truncate">${item.title}</h4>
+                        <h4 class="text-xs font-extrabold text-white truncate">${item.title || ''}</h4>
                         <span class="text-[10px] font-bold text-red-400 shrink-0">#${idx + 1}</span>
                     </div>
                     <p class="text-[11px] text-slate-300 line-clamp-2">${item.desc || ''}</p>
@@ -2010,6 +1932,7 @@ function getChampIcon(name) {
 
         function renderAchievements() {
             const grid = document.getElementById('achievements-grid');
+            if (!grid) return;
             if (!state.achievements.length) {
                 grid.innerHTML = `<div class="bg-[#090a0f]/70 border border-white/10 p-4 rounded-xl"><p class="text-xs font-bold text-white">Wild Rift & League of Legends Shoutcasting</p><p class="text-[11px] text-slate-400 mt-1">Active shoutcaster, creator, and scrim organizer.</p></div>`;
                 return;
@@ -2017,7 +1940,7 @@ function getChampIcon(name) {
             grid.innerHTML = state.achievements.map(a => `
                 <div class="bg-[#090a0f]/75 border border-white/10 p-4 rounded-xl space-y-1">
                     <div class="flex items-center justify-between gap-2">
-                        <h3 class="text-xs font-extrabold text-white uppercase">${a.title}</h3>
+                        <h3 class="text-xs font-extrabold text-white uppercase">${a.title || ''}</h3>
                         <span class="text-[10px] font-bold text-red-400 bg-red-600/15 px-2 py-0.5 rounded">${a.date || 'Milestone'}</span>
                     </div>
                     <p class="text-[11px] text-slate-300 leading-relaxed">${a.desc || ''}</p>
@@ -2033,6 +1956,7 @@ function getChampIcon(name) {
         }
         function renderVideos() {
             const grid = document.getElementById('videos-grid');
+            if (!grid) return;
             if (!state.videos.length) {
                 grid.innerHTML = `<p class="text-xs text-slate-400 italic col-span-full">No videos added yet.</p>`;
                 return;
@@ -2042,11 +1966,11 @@ function getChampIcon(name) {
                 return `
                     <div class="glass-card rounded-xl overflow-hidden flex flex-col">
                         ${vidId
-                            ? `<div class="aspect-video bg-black"><iframe class="w-full h-full" src="https://www.youtube.com/embed/${vidId}" title="${v.title}" frameborder="0" allowfullscreen></iframe></div>`
+                            ? `<div class="aspect-video bg-black"><iframe class="w-full h-full" src="https://www.youtube.com/embed/${vidId}" title="${v.title || 'Video'}" frameborder="0" allowfullscreen></iframe></div>`
                             : `<div class="aspect-video bg-[#090a0f] flex items-center justify-center p-4 text-center"><a href="${v.url}" target="_blank" class="text-xs font-bold text-red-400 underline">Watch Video Link</a></div>`
                         }
                         <div class="p-3.5 flex items-center justify-between gap-2">
-                            <p class="text-xs font-extrabold text-white truncate">${v.title}</p>
+                            <p class="text-xs font-extrabold text-white truncate">${v.title || ''}</p>
                             <a href="${v.url}" target="_blank" class="text-[11px] text-slate-400 hover:text-white shrink-0"><i class="fa-solid fa-up-right-from-square"></i></a>
                         </div>
                     </div>
@@ -2056,6 +1980,7 @@ function getChampIcon(name) {
 
         function renderScrims() {
             const box = document.getElementById('scrim-schedule-list');
+            if (!box) return;
             if (!state.scrims.length) {
                 box.innerHTML = `<p class="text-xs text-slate-400 italic">No scrim or tournament slots scheduled.</p>`;
                 return;
@@ -2111,7 +2036,7 @@ function getChampIcon(name) {
 
         function parseMatchLines(rawText) {
             if (!rawText) return [];
-            return rawText.split('\n').map(line => line.trim()).filter(Boolean).map(line => {
+            return String(rawText).split('\n').map(line => line.trim()).filter(Boolean).map(line => {
                 const parts = line.split('|').map(p => p.trim());
                 const ign = parts[0] || 'Player';
                 const champ = parts[1] || 'Unknown';
@@ -2162,6 +2087,7 @@ function getChampIcon(name) {
             const champMap = new Map();
 
             Object.values(state.matches).forEach(m => {
+                if (!m || typeof m !== 'object') return;
                 const tA = normalizeTeamKey(m.team);
                 const tB = normalizeTeamKey(m.opponent);
                 let sideRows = [];
@@ -2205,6 +2131,7 @@ function getChampIcon(name) {
             const champs = {};
 
             Object.values(state.matches).forEach(m => {
+                if (!m || typeof m !== 'object') return;
                 const mType = (m.type || '').toLowerCase();
                 if (mType !== 'tournament' && mType !== 'scrim') return;
 
@@ -2269,6 +2196,7 @@ function getChampIcon(name) {
             if (!target) return '0%';
             let wins = 0, losses = 0;
             Object.values(state.matches).forEach(m => {
+                if (!m || typeof m !== 'object') return;
                 const tA = normalizeTeamKey(m.team);
                 const tB = normalizeTeamKey(m.opponent);
                 if (tA && (tA === target || tA.includes(target) || target.includes(tA))) {
@@ -2312,6 +2240,7 @@ function getChampIcon(name) {
             };
 
             Object.values(state.matches).forEach(m => {
+                if (!m || typeof m !== 'object') return;
                 const mType = (m.type || 'Tournament').toLowerCase();
                 if (rankFilterType !== 'ALL' && mType !== rankFilterType.toLowerCase()) return;
 
@@ -2480,7 +2409,7 @@ function getChampIcon(name) {
                                 <div class="flex items-center gap-3 min-w-0">
                                     ${renderAvatarHtml(logoToUse, item.name, 'w-11 h-11 rounded-xl', 'logo')}
                                     <div class="min-w-0">
-                                        <p class="text-xs sm:text-sm font-black text-white uppercase truncate">${item.name}</p>
+                                        <p class="text-xs sm:text-sm font-black text-white uppercase truncate">${item.name || ''}</p>
                                         <p class="text-[10px] font-bold ${accentClass}">${item.year || 'Wildrounds International • This Year'} • ${pCount} ${pCount === 1 ? 'Player' : 'Players'}</p>
                                     </div>
                                 </div>
@@ -2512,6 +2441,7 @@ function getChampIcon(name) {
             const titleEl = document.getElementById('selected-group-title');
             const groupAchEl = document.getElementById('selected-group-achievements');
             const countEl = document.getElementById('selected-group-count');
+            if (!groupsBox || !subGrid || !titleEl || !groupAchEl || !countEl) return;
 
             if (!state.groups.length) {
                 groupsBox.innerHTML = `<p class="text-xs text-slate-400 italic px-1">No team groups yet.</p>`;
@@ -2532,7 +2462,7 @@ function getChampIcon(name) {
                     <button onclick="selectTeamGroup('${g.id}')" type="button" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 transition border ${active ? 'bg-red-600/20 border-red-500 text-white' : 'bg-[#090a0f]/75 border-white/10 text-slate-300 hover:border-white/25'}">
                         ${renderAvatarHtml(g.logo, g.name, 'w-10 h-10 rounded-lg', 'logo')}
                         <div class="min-w-0 flex-1">
-                            <p class="text-xs font-extrabold uppercase truncate">${g.name}</p>
+                            <p class="text-xs font-extrabold uppercase truncate">${g.name || ''}</p>
                             <p class="text-[10px] text-slate-400">${state.teams.filter(t => t.groupId === g.id).length} teams</p>
                         </div>
                         <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
@@ -2563,7 +2493,7 @@ function getChampIcon(name) {
                             <div class="flex items-center space-x-3 min-w-0">
                                 ${renderAvatarHtml(logoUrl, t.name, 'w-11 h-11 rounded-xl', 'logo')}
                                 <div class="min-w-0">
-                                    <h4 class="text-sm font-black text-white uppercase truncate">${t.name}</h4>
+                                    <h4 class="text-sm font-black text-white uppercase truncate">${t.name || ''}</h4>
                                     <p class="text-[11px] text-slate-400">${t.game || 'Esports'} • ${pCount} Players</p>
                                 </div>
                             </div>
@@ -2826,7 +2756,9 @@ function getChampIcon(name) {
 
         function renderMatches() {
             const box = document.getElementById('match-history-list');
+            if (!box) return;
             const entries = Object.entries(state.matches).filter(([, m]) => {
+                if (!m || typeof m !== 'object') return false;
                 if (matchFilterType === 'ALL') return true;
                 return (m.type || '').toLowerCase() === matchFilterType.toLowerCase();
             });
@@ -2953,6 +2885,7 @@ function getChampIcon(name) {
 
         function renderPartners() {
             const box = document.getElementById('partners-grid');
+            if (!box) return;
             if (!state.partners.length) {
                 box.innerHTML = `<p class="text-xs text-slate-400 italic">Open for sponsorships & partnerships.</p>`;
                 return;
@@ -2960,7 +2893,7 @@ function getChampIcon(name) {
             box.innerHTML = state.partners.map(p => `
                 <a href="${p.link || '#'}" target="_blank" class="glass-card hover:border-red-500/40 px-4 py-2.5 rounded-xl flex items-center space-x-2.5 transition">
                     ${p.logo ? `<img src="${p.logo}" onerror="handleImgError(this, 'logo')" class="h-6 w-6 rounded object-contain">` : `<i class="fa-solid fa-handshake text-red-400 text-sm"></i>`}
-                    <span class="text-xs font-extrabold text-white">${p.name}</span>
+                    <span class="text-xs font-extrabold text-white">${p.name || ''}</span>
                 </a>
             `).join('');
         }
@@ -3485,26 +3418,30 @@ function getChampIcon(name) {
 
         function renderAdminSelects() {
             const grpSel = document.getElementById('adm-subteam-group');
-            const prevGrpVal = grpSel.value || selectedGroupId;
-            grpSel.innerHTML = state.groups.map(g => `<option value="${g.id}">${g.name}</option>`).join('') || `<option value="">No groups yet</option>`;
-            if (prevGrpVal && state.groups.some(g => g.id === prevGrpVal)) {
-                grpSel.value = prevGrpVal;
+            if (grpSel) {
+                const prevGrpVal = grpSel.value || selectedGroupId;
+                grpSel.innerHTML = state.groups.map(g => `<option value="${g.id}">${g.name || ''}</option>`).join('') || `<option value="">No groups yet</option>`;
+                if (prevGrpVal && state.groups.some(g => g.id === prevGrpVal)) {
+                    grpSel.value = prevGrpVal;
+                }
             }
 
             const tmSel = document.getElementById('adm-player-team');
-            const prevTmVal = tmSel.value;
-            tmSel.innerHTML = state.teams.map(t => {
-                const grp = state.groups.find(g => g.id === t.groupId);
-                return `<option value="${t.id}">${t.name}${grp ? ` (${grp.name})` : ''}</option>`;
-            }).join('') || `<option value="">No teams yet</option>`;
-            if (prevTmVal && state.teams.some(t => t.id === prevTmVal)) {
-                tmSel.value = prevTmVal;
+            if (tmSel) {
+                const prevTmVal = tmSel.value;
+                tmSel.innerHTML = state.teams.map(t => {
+                    const grp = state.groups.find(g => g.id === t.groupId);
+                    return `<option value="${t.id}">${t.name || ''}${grp ? ` (${grp.name})` : ''}</option>`;
+                }).join('') || `<option value="">No teams yet</option>`;
+                if (prevTmVal && state.teams.some(t => t.id === prevTmVal)) {
+                    tmSel.value = prevTmVal;
+                }
             }
 
             const wrSel = document.getElementById('adm-wr-player-team');
             if (wrSel) {
                 const prevWrVal = wrSel.value;
-                wrSel.innerHTML = state.wildroundsTeams.map(w => `<option value="${w.id}">${w.name} (${w.track || 'Wildrounds'})</option>`).join('') || `<option value="">No Wildrounds teams yet</option>`;
+                wrSel.innerHTML = state.wildroundsTeams.map(w => `<option value="${w.id}">${w.name || ''} (${w.track || 'Wildrounds'})</option>`).join('') || `<option value="">No Wildrounds teams yet</option>`;
                 if (prevWrVal && state.wildroundsTeams.some(w => w.id === prevWrVal)) {
                     wrSel.value = prevWrVal;
                 }
@@ -3512,104 +3449,101 @@ function getChampIcon(name) {
         }
 
         function renderAdminSubTeamList() {
+            const subBox = document.getElementById('adm-subteam-list');
+            if (!subBox) return;
             const grpSel = document.getElementById('adm-subteam-group');
-            const filterGrpId = grpSel ? grpSel.value : '';
-            const listEl = document.getElementById('adm-subteam-list');
-            if (!listEl) return;
-
-            const filtered = filterGrpId
-                ? state.teams.filter(t => t.groupId === filterGrpId)
+            const selectedGrpId = grpSel ? grpSel.value : '';
+            const filteredTeams = selectedGrpId
+                ? state.teams.filter(t => t.groupId === selectedGrpId)
                 : state.teams;
 
-            listEl.innerHTML = filtered.map(i => {
-                const grp = state.groups.find(g => g.id === i.groupId);
+            subBox.innerHTML = filteredTeams.map(t => {
+                const g = state.groups.find(gr => gr.id === t.groupId);
                 return `
-                    <div class="flex items-center justify-between bg-[#090a0f] px-2.5 py-1.5 rounded border border-white/10 text-[11px]">
-                        <span class="truncate pr-2">${i.name}${grp ? ` <span class="text-slate-400">(${grp.name})</span>` : ''}</span>
-                        <div class="flex items-center space-x-2 shrink-0">
-                            <button type="button" onclick="editSubTeam('${i.id}')" class="text-blue-400 hover:text-blue-300 font-bold">Edit</button>
-                            <button type="button" onclick="delNode('teams', '${i.id}')" class="text-red-400 hover:text-red-300 font-bold">Delete</button>
+                    <div class="flex items-center justify-between bg-[#090a0f] px-2.5 py-1.5 rounded text-xs">
+                        <span class="truncate text-white">${t.name || ''} <span class="text-slate-400">(${g ? g.name : 'Group'})</span></span>
+                        <div class="space-x-2 shrink-0">
+                            <button onclick="editSubTeam('${t.id}')" class="text-blue-400 hover:underline text-[11px]">Edit</button>
+                            <button onclick="delNode('teams','${t.id}')" class="text-red-400 hover:underline text-[11px]">Del</button>
                         </div>
                     </div>
                 `;
-            }).join('');
-        }
-
-        function renderAdminPlayerList() {
-            const tmSel = document.getElementById('adm-player-team');
-            const filterTeamId = tmSel ? tmSel.value : '';
-            const listEl = document.getElementById('adm-player-list');
-            if (!listEl) return;
-
-            const filtered = sortPlayersByRole(
-                state.players.filter(p => !p.isWildrounds && (!filterTeamId || p.teamId === filterTeamId))
-            );
-
-            listEl.innerHTML = filtered.map(i => `
-                <div class="flex items-center justify-between bg-[#090a0f] px-2.5 py-1.5 rounded border border-white/10 text-[11px]">
-                    <span class="truncate pr-2">[${i.region || 'PH'} • ${i.role || 'Player'}] ${i.ign}</span>
-                    <div class="flex items-center space-x-2 shrink-0">
-                        <button type="button" onclick="editPlayerItem('${i.id}')" class="text-blue-400 hover:text-blue-300 font-bold">Edit</button>
-                        <button type="button" onclick="delNode('players', '${i.id}')" class="text-red-400 hover:text-red-300 font-bold">Delete</button>
-                    </div>
-                </div>
-            `).join('');
+            }).join('') || `<p class="text-[11px] text-slate-500 italic">No teams in this group yet.</p>`;
         }
 
         function renderAdminWrPlayerList() {
+            const wrPBox = document.getElementById('adm-wr-player-list');
+            if (!wrPBox) return;
             const wrSel = document.getElementById('adm-wr-player-team');
-            const filterWrId = wrSel ? wrSel.value : '';
-            const listEl = document.getElementById('adm-wr-player-list');
-            if (!listEl) return;
+            const selectedWrId = wrSel ? wrSel.value : '';
+            const selectedWrObj = state.wildroundsTeams.find(w => w.id === selectedWrId);
+            const filteredWrPlayers = selectedWrObj
+                ? state.players.filter(p => isPlayerInWildroundsTeam(p, selectedWrObj))
+                : state.players.filter(p => p.isWildrounds || p.wrTeamId);
 
-            const wrObj = state.wildroundsTeams.find(w => w.id === filterWrId);
-
-            const filtered = sortPlayersByRole(
-                state.players.filter(p => {
-                    if (!filterWrId) return Boolean(p.isWildrounds || p.wrTeamId);
-                    return wrObj ? isPlayerInWildroundsTeam(p, wrObj) : p.wrTeamId === filterWrId;
-                })
-            );
-
-            if (!filtered.length) {
-                listEl.innerHTML = `<p class="text-[11px] text-slate-400 italic">No Wildrounds players added to this team yet.</p>`;
-                return;
-            }
-
-            listEl.innerHTML = filtered.map(i => `
-                <div class="flex items-center justify-between bg-[#090a0f] px-2.5 py-1.5 rounded border border-amber-500/20 text-[11px]">
-                    <span class="truncate pr-2">[${i.region || 'PH'} • ${i.role || 'Player'}] ${i.ign} <span class="text-amber-300">(${i.wrTeamName || wrObj?.name || 'WR'})</span></span>
-                    <div class="flex items-center space-x-2 shrink-0">
-                        <button type="button" onclick="editWrPlayerItem('${i.id}')" class="text-blue-400 hover:text-blue-300 font-bold">Edit</button>
-                        <button type="button" onclick="delNode('players', '${i.id}')" class="text-red-400 hover:text-red-300 font-bold">Delete</button>
+            wrPBox.innerHTML = filteredWrPlayers.map(p => {
+                const wrObj = state.wildroundsTeams.find(w => w.id === p.wrTeamId);
+                return `
+                    <div class="flex items-center justify-between bg-[#090a0f] px-2.5 py-1.5 rounded text-xs">
+                        <span class="truncate text-white">${p.ign || ''} <span class="text-amber-300">(${p.role || 'Player'} • ${wrObj?.name || p.wrTeamName || 'Wildrounds'})</span></span>
+                        <div class="space-x-2 shrink-0">
+                            <button onclick="editWrPlayerItem('${p.id}')" class="text-blue-400 hover:underline text-[11px]">Edit</button>
+                            <button onclick="delNode('players','${p.id}')" class="text-red-400 hover:underline text-[11px]">Del</button>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('') || `<p class="text-[11px] text-slate-500 italic">No players in this Wildrounds team yet.</p>`;
         }
 
         function renderAdminLists() {
             const rowHtml = (label, editFn, delFn) => `
-                <div class="flex items-center justify-between bg-[#090a0f] px-2.5 py-1.5 rounded border border-white/10 text-[11px]">
-                    <span class="truncate pr-2">${label}</span>
-                    <div class="flex items-center space-x-2 shrink-0">
-                        <button type="button" onclick="${editFn}" class="text-blue-400 hover:text-blue-300 font-bold">Edit</button>
-                        <button type="button" onclick="${delFn}" class="text-red-400 hover:text-red-300 font-bold">Delete</button>
+                <div class="flex items-center justify-between bg-[#090a0f] px-2.5 py-1.5 rounded text-xs">
+                    <span class="truncate text-white">${label}</span>
+                    <div class="space-x-2 shrink-0">
+                        <button onclick="${editFn}" class="text-blue-400 hover:underline text-[11px]">Edit</button>
+                        <button onclick="${delFn}" class="text-red-400 hover:underline text-[11px]">Del</button>
                     </div>
                 </div>
             `;
+            const nBox = document.getElementById('adm-news-list');
+            if (nBox) nBox.innerHTML = state.news.map(i => rowHtml(i.title || '', `editNews('${i.id}')`, `delNode('news','${i.id}')`)).join('');
 
-            document.getElementById('adm-news-list').innerHTML = state.news.map(i => rowHtml(i.title, `editNews('${i.id}')`, `delNode('news', '${i.id}')`)).join('');
-            document.getElementById('adm-ach-list').innerHTML = state.achievements.map(i => rowHtml(i.title, `editAch('${i.id}')`, `delNode('achievements', '${i.id}')`)).join('');
-            document.getElementById('adm-vid-list').innerHTML = state.videos.map(i => rowHtml(i.title, `editVid('${i.id}')`, `delNode('videos', '${i.id}')`)).join('');
-            document.getElementById('adm-scrim-list').innerHTML = state.scrims.map(i => rowHtml(`[${i.slotType || 'Scrim'}] ${i.time} — ${i.status}`, `editScrim('${i.id}')`, `delNode('scrims', '${i.id}')`)).join('');
-            document.getElementById('adm-group-list').innerHTML = state.groups.map(i => rowHtml(i.name, `editGroup('${i.id}')`, `delNode('groups', '${i.id}')`)).join('');
+            const aBox = document.getElementById('adm-ach-list');
+            if (aBox) aBox.innerHTML = state.achievements.map(i => rowHtml(i.title || '', `editAch('${i.id}')`, `delNode('achievements','${i.id}')`)).join('');
+
+            const vBox = document.getElementById('adm-vid-list');
+            if (vBox) vBox.innerHTML = state.videos.map(i => rowHtml(i.title || '', `editVid('${i.id}')`, `delNode('videos','${i.id}')`)).join('');
+
+            const sBox = document.getElementById('adm-scrim-list');
+            if (sBox) sBox.innerHTML = state.scrims.map(i => rowHtml(`[${i.slotType || 'Scrim'}] ${i.time || ''} (${i.status || ''})`, `editScrim('${i.id}')`, `delNode('scrims','${i.id}')`)).join('');
+
+            const gBox = document.getElementById('adm-group-list');
+            if (gBox) gBox.innerHTML = state.groups.map(i => rowHtml(i.name || '', `editGroup('${i.id}')`, `delNode('groups','${i.id}')`)).join('');
+
             renderAdminSubTeamList();
-            renderAdminPlayerList();
+
+            const pBox = document.getElementById('adm-player-list');
+            if (pBox) {
+                const rosterPlayers = state.players.filter(p => !p.isWildrounds && !p.wrTeamId);
+                pBox.innerHTML = rosterPlayers.map(i => {
+                    const tm = state.teams.find(t => t.id === i.teamId);
+                    return rowHtml(`${i.ign || ''} (${i.role || 'Player'} • ${tm ? tm.name : 'Team'})`, `editPlayerItem('${i.id}')`, `delNode('players','${i.id}')`);
+                }).join('');
+            }
+
+            const mBox = document.getElementById('adm-match-list');
+            if (mBox) mBox.innerHTML = Object.entries(state.matches).filter(([, m]) => m && typeof m === 'object').map(([id, m]) => rowHtml(`${m.team} vs ${m.opponent} (${m.score || ''})`, `editMatchItem('${id}')`, `delNode('matches','${id}')`)).join('');
+
+            const ptBox = document.getElementById('adm-part-list');
+            if (ptBox) ptBox.innerHTML = state.partners.map(i => rowHtml(i.name || '', `editPart('${i.id}')`, `delNode('partners','${i.id}')`)).join('');
+
+            const wrBox = document.getElementById('adm-wr-list');
+            if (wrBox) wrBox.innerHTML = state.wildroundsTeams.map(i => rowHtml(`[${i.track || 'Wildrounds'}] ${i.name || ''}`, `editWildroundsTeam('${i.id}')`, `delNode('wildroundsTeams','${i.id}')`)).join('');
+
             renderAdminWrPlayerList();
-            document.getElementById('adm-match-list').innerHTML = Object.entries(state.matches).map(([id, i]) => rowHtml(`${i.team} vs ${i.opponent} (${i.score || i.result})`, `editMatchItem('${id}')`, `delNode('matches', '${id}')`)).join('');
-            document.getElementById('adm-part-list').innerHTML = state.partners.map(i => rowHtml(i.name, `editPart('${i.id}')`, `delNode('partners', '${i.id}')`)).join('');
-            document.getElementById('adm-wr-list').innerHTML = state.wildroundsTeams.map(i => rowHtml(`[${i.track || 'WR'}] ${i.name} (${i.year || '2026'})`, `editWildroundsTeam('${i.id}')`, `delNode('wildroundsTeams', '${i.id}')`)).join('');
-            document.getElementById('adm-rank-list').innerHTML = state.customRankings.map(i => rowHtml(`[${i.mode || 'Tournament'}] ${i.ign} (${i.team || '-'}) • KDA ${i.avgKda || '-'}`, `editCustomRanking('${i.id}')`, `delNode('customRankings', '${i.id}')`)).join('');
+
+            const rkBox = document.getElementById('adm-rank-list');
+            if (rkBox) rkBox.innerHTML = state.customRankings.map(i => rowHtml(`[${i.mode || 'Tournament'}] ${i.ign || ''} (${i.avgKda || ''} KDA)`, `editCustomRanking('${i.id}')`, `delNode('customRankings','${i.id}')`)).join('');
         }
     </script>
 </body>
